@@ -22,6 +22,7 @@ log = logging.getLogger(__name__)
 
 DATALAKE = Path(__file__).resolve().parent / 'datalake'
 ETAPAS = ('tudo', 'baixar-fontes', 'ingerir-app', 'gerar-simulado', 'tratar', 'refinar')
+SUFIXOS_DE_DADOS = ('.json', '.xlsx', '.gz', '.csv')  # os que contar_linhas lê: um .baixando perdido não entra
 
 
 def executar(etapa: str, datalake: Path = DATALAKE) -> None:
@@ -56,7 +57,7 @@ def resumo(datalake: Path = DATALAKE) -> str:
     for camada, padrao in (('raw', '*.*'), ('trusted', '*.csv'), ('refined', '*.csv')):
         pasta = datalake / camada
         linhas = {arquivo.relative_to(pasta).as_posix(): contar_linhas(arquivo)
-                  for arquivo in sorted(pasta.rglob(padrao))}
+                  for arquivo in sorted(pasta.rglob(padrao)) if arquivo.suffix in SUFIXOS_DE_DADOS}
         texto.append(f'{camada}: {sum(linhas.values()):,} linhas em {len(linhas)} arquivos'.replace(',', '.'))
         texto += [f'  {nome}: {total:,}'.replace(',', '.') for nome, total in linhas.items()]
     excel = datalake / 'refined' / 'merenda_do_vizinho.xlsx'

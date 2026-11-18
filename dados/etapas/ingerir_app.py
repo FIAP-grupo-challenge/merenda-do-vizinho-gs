@@ -2,6 +2,7 @@
 Sem o app (fora do ar, chave recusada ou resposta inválida), avisa e devolve None: o pipeline segue sem ele."""
 
 import datetime
+import http.client
 import json
 import logging
 import urllib.error
@@ -29,7 +30,7 @@ def ingerir_app(url: str, chave: str, raw: Path) -> Path | None:
         motivo = 'chave de serviço recusada' if erro.code == 401 else 'erro no app'
         log.warning('o app respondeu %s (%s): o pipeline segue sem os dados do app', erro.code, motivo)
         return None
-    except (OSError, ValueError) as erro:  # URLError é OSError; JSON inválido é ValueError
+    except (OSError, ValueError, http.client.HTTPException) as erro:  # sem rede, JSON inválido ou corpo cortado
         log.warning('app fora do ar ou resposta inválida em %s (%s): o pipeline segue sem os dados do app', url, erro)
         return None
     if not isinstance(exportacao, dict) or not all(isinstance(exportacao.get(nome), list) for nome in COLECOES):

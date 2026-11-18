@@ -40,8 +40,14 @@ def refinar(trusted: Path, refined: Path) -> dict[str, Path]:
 
 
 def fato_pnae_af(af: pd.DataFrame, municipios: pd.DataFrame) -> pd.DataFrame:
-    """Uma linha por (ano, cod_ibge, esfera). Nas secretarias estaduais, o código e o município são os da capital."""
-    fato = af.merge(municipios[['cod_ibge', 'municipio', 'regiao']], on='cod_ibge', how='left')
+    """Uma linha por entidade e ano. As secretarias estaduais ficam sem cod_ibge e município: o FNDE grava nelas o
+    código de um município da UF (a capital em 2018 e 2019; depois, o primeiro em ordem alfabética), e ligado a
+    dim_municipio ele levaria o repasse do estado a essa cidade. A região vem da UF."""
+    fato = af.merge(municipios[['cod_ibge', 'municipio']], on='cod_ibge', how='left')
+    fato['regiao'] = fato['uf'].map(municipios.drop_duplicates('uf').set_index('uf')['regiao'])
+    estadual = fato['esfera'] == 'ESTADUAL'
+    fato['cod_ibge'] = fato['cod_ibge'].astype('Int64').mask(estadual)  # Int64: o vazio não vira 1200013.0 no CSV
+    fato['municipio'] = fato['municipio'].mask(estadual)
     fato['minimo'] = fato['ano'].map(minimo_do_ano)
     fato['falta_minimo_reais'] = list(map(gap_reais, fato['repasse'], fato['compra_af'], fato['ano']))
     fato['falta_45_reais'] = [gap_reais(repasse, compra, ANO_REGRA_45)

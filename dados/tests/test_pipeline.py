@@ -1,5 +1,6 @@
 """Pipeline do data lake. Da raiz do repositório: .venv/bin/python -m unittest discover -s dados/tests -t ."""
 
+import http.client
 import io
 import json
 import logging.handlers
@@ -14,6 +15,7 @@ from unittest import mock
 import pandas as pd
 
 from dados import pipeline
+from dados.etapas.baixar_fontes import ASSINATURAS, COPIA_VERSIONADA, FONTES, baixar, baixar_fontes
 from dados.etapas.gerar_simulado import gerar_simulado
 from dados.etapas.ingerir_app import ingerir_app
 from dados.etapas.tratar import esfera_pelo_nome, numero_br
@@ -21,6 +23,26 @@ from dados.regras import faixa, gap_reais, minimo_do_ano
 
 FIXTURES = Path(__file__).resolve().parent / 'fixtures'
 ABAS = ['fato_pnae_af', 'fato_repasse_uf', 'fato_entregas', 'fato_camara_fria', 'dim_produto', 'dim_municipio']
+
+
+class _SocketFalso:
+    """O que o http.client pede de um socket: o makefile() com os bytes que o servidor 'enviou'."""
+
+    def __init__(self, bruto: bytes):
+        self.bruto = bruto
+
+    def makefile(self, *args, **kwargs):
+        return io.BytesIO(self.bruto)
+
+
+def resposta_http(corpo: bytes, content_length: int | None = None) -> http.client.HTTPResponse:
+    """A resposta que o urlopen devolve, lida de um socket falso. Com content_length maior que o corpo, o servidor
+    fechou a conexão no meio do arquivo."""
+    tamanho = len(corpo) if content_length is None else content_length
+    cabecalho = f'HTTP/1.1 200 OK\r\nContent-Length: {tamanho}\r\n\r\n'.encode()
+    resposta = http.client.HTTPResponse(_SocketFalso(cabecalho + corpo))
+    resposta.begin()
+    return resposta
 
 
 class TestRegras(unittest.TestCase):
@@ -87,6 +109,87 @@ class TestIngerirApp(unittest.TestCase):
             self.assertIsNone(ingerir_app('http://localhost:3000', 'chave-teste', Path(pasta)))
         self.assertIn('fora do ar', avisos.output[0])
 
+    def test_resposta_cortada_no_meio_devolve_none_com_aviso(self):
+        cortada = resposta_http(b'{"agricultores": [{"pseudonimo": "a1"', content_length=5000)  # o app caiu no meio
+        with tempfile.TemporaryDirectory() as pasta, mock.patch('urllib.request.urlopen', return_value=cortada), \
+                self.assertLogs('dados', 'WARNING') as avisos:
+            self.assertIsNone(ingerir_app('http://app:3000', 'chave-teste', Path(pasta)))
+            self.assertEqual(list(Path(pasta).rglob('*.json')), [])
+        self.assertIn('IncompleteRead', avisos.output[0])
+
+
+class TestBaixarFontes(unittest.TestCase):
+    """O urlopen é simulado, com respostas HTTP de verdade (nenhum teste usa a rede)."""
+
+    def test_falha_no_download_usa_a_copia_versionada_com_aviso_e_sem_arquivo_temporario(self):
+        def cortado(url, timeout=None):  # anuncia 5 mil bytes, manda 100 e fecha a conexão
+            nome = next(arquivo for _, arquivo, endereco in FONTES if endereco == url)
+            return resposta_http(ASSINATURAS[Path(nome).suffix] + b'x' * 100, content_length=5000)
+
+        falhas = {  # caso: (o que o urlopen faz, trecho esperado no aviso)
+            'sem rede': (urllib.error.URLError('sem rede'), 'sem rede'),
+            'corpo cortado': (cortado, 'IncompleteRead'),
+            'página de erro': (lambda url, timeout=None: resposta_http(b'<html>Erro 500</html>'), 'esperado'),
+        }
+        for caso, (falha, trecho) in falhas.items():
+            with self.subTest(caso), tempfile.TemporaryDirectory() as pasta, \
+                    mock.patch.dict(os.environ, {'PIPELINE_OFFLINE': '0'}), \
+                    mock.patch('urllib.request.urlopen', side_effect=falha), \
+                    self.assertLogs('dados', 'WARNING') as avisos:
+                arquivos = baixar_fontes(Path(pasta))
+                self.assertEqual(len(arquivos), len(FONTES))
+                self.assertEqual(len(avisos.output), len(FONTES))  # um aviso por arquivo
+                self.assertTrue(all(trecho in aviso for aviso in avisos.output), avisos.output)
+                for arquivo in arquivos:
+                    versionado = COPIA_VERSIONADA / arquivo.relative_to(Path(pasta) / 'publicos')
+                    self.assertEqual(arquivo.read_bytes(), versionado.read_bytes(), arquivo.name)
+                self.assertEqual(list(Path(pasta).rglob('*.baixando')), [])
+
+    def test_download_cortado_ou_em_html_deixa_o_arquivo_como_estava(self):
+        respostas = {'cortado': resposta_http(b'PK\x03\x04parte', content_length=5000),
+                     'html': resposta_http(b'<html>Erro 500</html>')}
+        for caso, resposta in respostas.items():
+            with self.subTest(caso), tempfile.TemporaryDirectory() as pasta, \
+                    mock.patch('urllib.request.urlopen', return_value=resposta), self.assertLogs('dados', 'WARNING'):
+                destino = Path(pasta) / 'dado.xlsx'
+                destino.write_bytes(b'PK\x03\x04versao-boa')
+                self.assertFalse(baixar('https://exemplo.gov.br/dado.xlsx', destino))
+                self.assertEqual(destino.read_bytes(), b'PK\x03\x04versao-boa')
+                self.assertEqual(list(Path(pasta).iterdir()), [destino])  # sem dado.xlsx.baixando
+
+    def test_download_completo_troca_o_arquivo_sem_deixar_temporario(self):
+        with tempfile.TemporaryDirectory() as pasta, self.assertNoLogs('dados', 'WARNING'), \
+                mock.patch('urllib.request.urlopen', return_value=resposta_http(b'PK\x03\x04versao-nova')):
+            destino = Path(pasta) / 'dado.xlsx'
+            destino.write_bytes(b'PK\x03\x04versao-boa')
+            self.assertTrue(baixar('https://exemplo.gov.br/dado.xlsx', destino))
+            self.assertEqual(destino.read_bytes(), b'PK\x03\x04versao-nova')
+            self.assertEqual(list(Path(pasta).iterdir()), [destino])
+
+    def test_interrupcao_antes_da_troca_nao_deixa_o_arquivo_temporario(self):
+        with tempfile.TemporaryDirectory() as pasta, \
+                mock.patch('urllib.request.urlopen', return_value=resposta_http(b'PK\x03\x04versao-nova')), \
+                mock.patch.object(Path, 'replace', side_effect=KeyboardInterrupt):  # Ctrl+C entre gravar e trocar
+            destino = Path(pasta) / 'dado.xlsx'
+            destino.write_bytes(b'PK\x03\x04versao-boa')
+            with self.assertRaises(KeyboardInterrupt):
+                baixar('https://exemplo.gov.br/dado.xlsx', destino)
+            self.assertEqual(list(Path(pasta).iterdir()), [destino])
+            self.assertEqual(destino.read_bytes(), b'PK\x03\x04versao-boa')
+
+
+class TestResumo(unittest.TestCase):
+    def test_resumo_ignora_arquivo_que_nao_e_dado(self):  # ex.: .baixando de um download que o processo não terminou
+        with tempfile.TemporaryDirectory() as pasta:
+            datalake = Path(pasta)
+            for camada in ('raw', 'trusted', 'refined'):
+                (datalake / camada).mkdir()
+            (datalake / 'raw' / 'dado.json').write_text('[{"a": 1}]', encoding='utf-8')
+            (datalake / 'raw' / 'dado.xlsx.baixando').write_bytes(b'PK\x03\x04cortado')
+            texto = pipeline.resumo(datalake)
+        self.assertIn('raw: 1 linhas em 1 arquivos', texto)
+        self.assertNotIn('baixando', texto)
+
 
 class TestPipelineTudo(unittest.TestCase):
     """`tudo` com PIPELINE_OFFLINE=1, uma vez para a classe. O app devolve o controle com nome, CPF e CAF."""
@@ -152,16 +255,30 @@ class TestPipelineTudo(unittest.TestCase):
         self.assertAlmostEqual(af['falta_45_reais'].sum() / 1e6, 461.3, delta=0.1)  # com as secretarias estaduais
 
     def test_af_com_chave_unica_codigo_ibge_conferido_e_preliminar_de_2020_a_2022(self):
-        self.assertFalse(self.af.duplicated(['ano', 'cod_ibge', 'esfera']).any())
+        prefeituras = self.af[self.af['esfera'] == 'MUNICIPAL']
+        secretarias = self.af[self.af['esfera'] == 'ESTADUAL']
+        self.assertFalse(prefeituras.duplicated(['ano', 'cod_ibge']).any())
+        self.assertFalse(secretarias.duplicated(['ano', 'uf', 'entidade']).any())  # o AP tem duas em 2020 e 2021
         sitio_novo = self.af[(self.af['ano'] == 2022) & (self.af['entidade'] == 'PREF MUN DE SITIO NOVO')]
         self.assertEqual(sorted(zip(sitio_novo['uf'], sitio_novo['cod_ibge'])),  # o de TO vinha com o código do MA
                          [('MA', 2111805), ('RN', 2413706), ('TO', 1720804)])
-        self.assertFalse(self.af['municipio'].isna().any())  # todo código existe na tabela do IBGE
+        self.assertFalse(prefeituras['municipio'].isna().any())  # todo código existe na tabela do IBGE
         self.assertEqual(self.af.groupby('ano')['preliminar'].all().to_dict(),
                          {2018: False, 2019: False, 2020: True, 2021: True, 2022: True})
         zero = self.af[self.af['repasse_zero']]
         self.assertTrue(zero['pct_af'].isna().all())
         self.assertEqual((zero['ano'] == 2022).sum(), 42)
+
+    def test_secretarias_estaduais_ficam_sem_cod_ibge_e_municipio_mas_com_uf_e_regiao(self):
+        # O FNDE grava nelas o código de um município da UF (a capital em 2018 e 2019; de 2020 a 2022, o primeiro em
+        # ordem alfabética: a Bahia vem como Abaíra). Ligado a dim_municipio, o repasse do estado iria para essa cidade.
+        estaduais = self.af[self.af['esfera'] == 'ESTADUAL']
+        self.assertEqual(len(estaduais), 135)
+        self.assertTrue(estaduais[['cod_ibge', 'municipio']].isna().all().all())
+        self.assertFalse(estaduais[['uf', 'regiao']].isna().any().any())
+        self.assertEqual(estaduais.loc[estaduais['uf'] == 'BA', 'regiao'].unique().tolist(), ['Nordeste'])
+        prefeituras = self.af[self.af['esfera'] == 'MUNICIPAL']
+        self.assertFalse(prefeituras[['cod_ibge', 'municipio', 'regiao']].isna().any().any())
 
     def test_entregas_do_app_com_unidade_kg_so_em_kg_e_sem_agricultor(self):
         entregas = pd.read_csv(self.refined / 'fato_entregas.csv')

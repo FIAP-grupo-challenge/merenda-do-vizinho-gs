@@ -6,6 +6,9 @@ node_modules/
 __pycache__/
 .venv/
 
+# download em andamento do baixar-fontes: se o processo morrer no meio, o temporário não vai para o Git
+*.baixando
+
 # camadas geradas pelo pipeline de dados: só raw/publicos vai para o Git
 dados/datalake/raw/app/
 dados/datalake/raw/simulado/

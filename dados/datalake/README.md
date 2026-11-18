@@ -18,7 +18,7 @@ As etapas também rodam sozinhas, nesta ordem: `baixar-fontes`, `ingerir-app`, `
 | `APP_URL` | endereço do app (padrão `http://localhost:3000`) |
 | `CHAVE_SERVICO` | chave do cabeçalho `X-Chave-Servico` da exportação do app |
 
-Sem o app (fora do ar, sem chave ou com chave recusada, o 401), o pipeline avisa e segue só com os dados públicos e o simulado.
+Sem o app (fora do ar, sem chave, com chave recusada, o 401, ou com a resposta cortada no meio), o pipeline avisa e segue só com os dados públicos e o simulado.
 
 Testes: `.venv/bin/python -m unittest discover -s dados/tests -t .`
 
@@ -32,7 +32,7 @@ Testes: `.venv/bin/python -m unittest discover -s dados/tests -t .`
 | `trusted/` | `pnae_af`, `repasses`, `municipios`, `agricultores`, `entregas` e `leituras`, em CSV | não |
 | `refined/` | as seis tabelas do painel, em CSV, e `merenda_do_vizinho.xlsx`, com uma aba por tabela | não |
 
-Com rede, `baixar-fontes` baixa cada arquivo de novo e só troca a cópia de `raw/publicos/` se o arquivo baixado começar como o tipo esperado (`.xlsx`, `.gz` ou JSON); assim, uma página de erro nunca substitui o dado. Se a fonte oficial mudar, o `git status` mostra o arquivo alterado.
+Com rede, `baixar-fontes` baixa cada arquivo de novo e só troca a cópia de `raw/publicos/` se o arquivo chegar inteiro (com os bytes que o servidor anunciou no `Content-Length`) e começar como o tipo esperado (`.xlsx`, `.gz` ou JSON). Sem rede, com erro HTTP, com o download cortado no meio ou com uma página de erro no lugar, o pipeline avisa e fica com a cópia versionada, que nunca é alterada por um download ruim. O download passa por um arquivo `<nome>.baixando`, que é apagado no fim (mesmo com erro) e fica fora do Git; o resumo do fim da execução só conta arquivos de dados. Se a fonte oficial mudar, o `git status` mostra o arquivo alterado.
 
 ## Fontes públicas (`raw/publicos/`)
 
@@ -62,7 +62,7 @@ Ficam de fora:
 7. **Esfera.** De 2020 a 2022, vem da coluna `ESFERA`. Em 2018 e 2019, que não têm essa coluna, vem do nome da entidade: é `MUNICIPAL` quando o nome começa com "PREF" ou "PM", ou tem "MUN" ou "MUNIC" ("SEC MUN DE EDUC DE NATAL", "MUNICIPIO DE MARIANA"); o resto (secretarias e governos de estado) é `ESTADUAL`. Essa regra dá o mesmo resultado que a coluna `ESFERA` em todas as linhas de 2020 a 2022. A regra mais simples, só "PREF...", tomaria sete prefeituras por estaduais em 2018, e a secretaria municipal de Natal repetiria a chave da secretaria estadual do RN.
 8. `repasse_zero` marca o repasse igual a 0 (42 linhas em 2022). `pct_af = compra_af / repasse` é recalculado e fica vazio quando o repasse é 0 ou está em branco, ou quando um dos dois valores não é número (em 2022, Carrasco Bonito, TO, com a compra em branco).
 9. `preliminar` marca 2020 a 2022, que a planilha chama de "DADOS PRELIMINARES - PASSÍVEIS DE REVISÃO".
-10. A chave é (ano, código IBGE, esfera). O código sozinho não serve, porque as secretarias estaduais usam o código da capital.
+10. A chave é (ano, código IBGE, esfera). O código sozinho não serve: as secretarias estaduais trazem o código de um município da UF, que não é o do estado. É a capital em 2018 e 2019 e, de 2020 a 2022, quase sempre o primeiro município da UF em ordem alfabética (Acrelândia no AC, Abaíra na BA). Por isso, em cada ano, de 22 a 26 códigos aparecem numa prefeitura e numa secretaria. No `trusted`, o código fica como o FNDE gravou, só para a chave; o `refined` o esvazia nas secretarias (veja `fato_pnae_af`).
 
 **Repasses** (`trusted/repasses.csv`): separador `;`, UTF-8 com BOM. As 921 linhas sem `Valor_Repasse` saem. A chave é (ano, CNPJ da entidade).
 
@@ -77,19 +77,19 @@ Ficam de fora:
 
 ## Tabelas do painel (refined)
 
-Relações para o Power BI: `fato_pnae_af[cod_ibge]` com `dim_municipio[cod_ibge]` e `fato_entregas[produto_id]` com `dim_produto[produto_id]`.
+Relações para o Power BI: `fato_pnae_af[cod_ibge]` com `dim_municipio[cod_ibge]` e `fato_entregas[produto_id]` com `dim_produto[produto_id]`. As secretarias estaduais não têm `cod_ibge`, então não se ligam a nenhum município: **todo visual ou medida por município (ou por região imediata ou intermediária) deve filtrar `esfera = 'MUNICIPAL'`**. Para UF e região, que as secretarias têm, use `fato_pnae_af[uf]` e `fato_pnae_af[regiao]`, não as colunas de `dim_municipio`.
 
-**`fato_pnae_af`**: uma linha por (ano, `cod_ibge`, `esfera`), de 2018 a 2022.
+**`fato_pnae_af`**: uma linha por entidade executora e ano, de 2018 a 2022. A chave é (`ano`, `cod_ibge`) nas prefeituras (`MUNICIPAL`) e (`ano`, `uf`, `entidade`) nas secretarias estaduais (`ESTADUAL`; o Amapá tem duas em 2020 e em 2021). As secretarias ficam **sem `cod_ibge` e sem `municipio`**: o FNDE grava nelas o código de um município da UF, não o do estado, e ligado a `dim_municipio` ele levaria o repasse do estado a essa cidade (em 2022, os R$ 51,0 milhões da secretaria da Bahia ficariam em Abaíra, ao lado dos R$ 0,09 milhão da prefeitura). `uf`, `regiao` e `entidade` continuam preenchidos.
 
 | Coluna | O que é |
 |---|---|
 | `ano` | ano do repasse |
-| `cod_ibge` | código IBGE de 7 dígitos. Nas secretarias estaduais, o da capital |
-| `municipio` | nome do município no IBGE. Nas secretarias estaduais, a capital |
+| `cod_ibge` | código IBGE de 7 dígitos da prefeitura. **Vazio nas secretarias estaduais** |
+| `municipio` | nome do município no IBGE. **Vazio nas secretarias estaduais** |
 | `entidade` | entidade executora, como o FNDE escreve |
 | `esfera` | `MUNICIPAL` ou `ESTADUAL` |
 | `uf` | sigla da UF |
-| `regiao` | região do IBGE (Norte, Nordeste, Sudeste, Sul ou Centro-Oeste), pelo código |
+| `regiao` | região do IBGE da UF (Norte, Nordeste, Sudeste, Sul ou Centro-Oeste), também nas secretarias |
 | `repasse` | valor transferido pelo FNDE no ano, em R$ |
 | `compra_af` | valor comprado da agricultura familiar, em R$ |
 | `pct_af` | `compra_af / repasse`. Vazio com repasse 0 ou em branco, ou com valor não numérico |

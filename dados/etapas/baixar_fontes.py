@@ -1,6 +1,7 @@
 """Etapa baixar-fontes: baixa os dados públicos para raw/publicos. Se a rede falhar, ou com PIPELINE_OFFLINE=1,
 usa a cópia versionada em dados/datalake/raw/publicos. Fontes, links e licenças: dados/datalake/README.md."""
 
+import http.client
 import logging
 import os
 import shutil
@@ -50,17 +51,20 @@ def baixar_fontes(raw: Path) -> list[Path]:
 
 
 def baixar(url: str, destino: Path) -> bool:
-    """Baixa para um arquivo temporário e só troca o destino se o conteúdo tiver a assinatura esperada."""
+    """Baixa o arquivo inteiro e só troca o destino se ele vier completo e com a assinatura esperada."""
     temporario = destino.with_name(destino.name + '.baixando')
     try:
-        with urllib.request.urlopen(url, timeout=60) as resposta, temporario.open('wb') as saida:
-            shutil.copyfileobj(resposta, saida)
-        with temporario.open('rb') as baixado:
-            if not baixado.read(4).startswith(ASSINATURAS[destino.suffix]):
-                raise ValueError('o conteúdo não é o arquivo esperado')
+        with urllib.request.urlopen(url, timeout=60) as resposta:
+            # read() sem tamanho levanta IncompleteRead se vier menos bytes que o Content-Length (o copyfileobj não)
+            # shortcut: o arquivo todo na memória (a maior fonte tem 2,4 MB); gravar em blocos se alguma crescer muito
+            conteudo = resposta.read()
+        if not conteudo.startswith(ASSINATURAS[destino.suffix]):
+            raise ValueError('o conteúdo não é o arquivo esperado')
+        temporario.write_bytes(conteudo)
         temporario.replace(destino)
         return True
-    except (OSError, ValueError) as erro:  # sem rede, HTTP de erro (URLError é OSError) ou página no lugar do arquivo
+    except (OSError, ValueError, http.client.HTTPException) as erro:  # rede ou HTTP, página no lugar, corpo cortado
         log.warning('falha ao baixar %s (%s): usando a cópia versionada', destino.name, erro)
-        temporario.unlink(missing_ok=True)
         return False
+    finally:
+        temporario.unlink(missing_ok=True)  # nunca deixa o .baixando para trás, nem com Ctrl+C
