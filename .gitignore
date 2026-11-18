@@ -1,0 +1,10 @@
+# segredos e dados locais
+.env
+*.db
+*.db-journal
+node_modules/
+__pycache__/
+.venv/
+
+# ebooks do curso tem marca d agua com nome e RM: nunca versionar
+ebooks/
