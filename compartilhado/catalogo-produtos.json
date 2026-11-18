@@ -1,0 +1,260 @@
+[
+  {
+    "id": "alface",
+    "nome": "Alface",
+    "sinonimos": ["alface crespa", "alface lisa"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "couve",
+    "nome": "Couve",
+    "sinonimos": ["couve-manteiga"],
+    "unidade_padrao": "maço"
+  },
+  {
+    "id": "couve-flor",
+    "nome": "Couve-flor",
+    "sinonimos": ["couve flor"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "repolho",
+    "nome": "Repolho",
+    "sinonimos": ["repolho roxo"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "cenoura",
+    "nome": "Cenoura",
+    "sinonimos": ["cenouras"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "beterraba",
+    "nome": "Beterraba",
+    "sinonimos": ["beterrabas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "chuchu",
+    "nome": "Chuchu",
+    "sinonimos": ["chuchus"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "abobora",
+    "nome": "Abóbora",
+    "sinonimos": ["jerimum", "moranga"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "abobrinha",
+    "nome": "Abobrinha",
+    "sinonimos": ["abobrinhas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "quiabo",
+    "nome": "Quiabo",
+    "sinonimos": ["quiabos"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "pepino",
+    "nome": "Pepino",
+    "sinonimos": ["pepinos"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "pimentao",
+    "nome": "Pimentão",
+    "sinonimos": ["pimentões"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "cebola",
+    "nome": "Cebola",
+    "sinonimos": ["cebolas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "alho",
+    "nome": "Alho",
+    "sinonimos": [],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "batata-inglesa",
+    "nome": "Batata inglesa",
+    "sinonimos": ["batata"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "batata-doce",
+    "nome": "Batata doce",
+    "sinonimos": ["batata-doce"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "mandioca",
+    "nome": "Mandioca",
+    "sinonimos": ["aipim", "macaxeira"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "tomate",
+    "nome": "Tomate",
+    "sinonimos": ["tomates"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "cebolinha",
+    "nome": "Cebolinha",
+    "sinonimos": [],
+    "unidade_padrao": "maço"
+  },
+  {
+    "id": "salsa",
+    "nome": "Salsa",
+    "sinonimos": ["salsinha"],
+    "unidade_padrao": "maço"
+  },
+  {
+    "id": "coentro",
+    "nome": "Coentro",
+    "sinonimos": [],
+    "unidade_padrao": "maço"
+  },
+  {
+    "id": "banana",
+    "nome": "Banana",
+    "sinonimos": ["bananas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "laranja",
+    "nome": "Laranja",
+    "sinonimos": ["laranjas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "mexerica",
+    "nome": "Mexerica",
+    "sinonimos": ["tangerina"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "mamao",
+    "nome": "Mamão",
+    "sinonimos": ["papaia"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "melancia",
+    "nome": "Melancia",
+    "sinonimos": ["melancias"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "abacaxi",
+    "nome": "Abacaxi",
+    "sinonimos": ["abacaxis"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "maracuja",
+    "nome": "Maracujá",
+    "sinonimos": ["maracujás"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "goiaba",
+    "nome": "Goiaba",
+    "sinonimos": ["goiabas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "limao",
+    "nome": "Limão",
+    "sinonimos": ["limões"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "manga",
+    "nome": "Manga",
+    "sinonimos": ["mangas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "feijao",
+    "nome": "Feijão",
+    "sinonimos": ["feijões"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "arroz",
+    "nome": "Arroz",
+    "sinonimos": [],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "milho-verde",
+    "nome": "Milho verde",
+    "sinonimos": ["espiga de milho"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "fuba",
+    "nome": "Fubá",
+    "sinonimos": ["fubá de milho", "farinha de milho"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "farinha-de-mandioca",
+    "nome": "Farinha de mandioca",
+    "sinonimos": [],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "pao-caseiro",
+    "nome": "Pão caseiro",
+    "sinonimos": ["pães caseiros"],
+    "unidade_padrao": "unidade"
+  },
+  {
+    "id": "biscoito-caseiro",
+    "nome": "Biscoito caseiro",
+    "sinonimos": ["biscoitos caseiros"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "mel",
+    "nome": "Mel",
+    "sinonimos": [],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "ovo",
+    "nome": "Ovo",
+    "sinonimos": ["ovos"],
+    "unidade_padrao": "dúzia"
+  },
+  {
+    "id": "leite",
+    "nome": "Leite",
+    "sinonimos": [],
+    "unidade_padrao": "litro"
+  },
+  {
+    "id": "queijo",
+    "nome": "Queijo",
+    "sinonimos": ["queijo minas"],
+    "unidade_padrao": "kg"
+  },
+  {
+    "id": "frango",
+    "nome": "Frango",
+    "sinonimos": ["frangos"],
+    "unidade_padrao": "kg"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "limite_anual_agricultor_reais": 40000,
+  "semanas_padrao": 40,
+  "dias_minimos_chamada": 20,
+  "_fontes": {
+    "limite_anual_agricultor_reais": "Res. CD/FNDE 4/2026, art. 38, redação da Res. 17/2026",
+    "semanas_padrao": "200 dias letivos (LDB, art. 24, I) divididos por 5 dias da semana",
+    "dias_minimos_chamada": "Res. CD/FNDE 4/2026, art. 32"
+  }
+}
