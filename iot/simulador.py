@@ -36,7 +36,8 @@ def gerar_leitura(cenario: str, passo: int, estado: dict) -> dict:
         'temperatura_c': round(temperatura, 1),
         'peso_kg': round(peso, 1),
         'porta_aberta': porta_aberta,
-        'momento': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
+        # UTC: o mesmo momento em qualquer máquina, sem depender do fuso dela
+        'momento': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
     }
 
 

@@ -11,7 +11,17 @@ Simulação da câmara fria de uma cooperativa. Um Arduino Uno, montado no Tinke
 
 1. Monte o circuito seguindo `camara-fria/ligacoes.md` e cole `camara-fria/camara-fria.ino` no editor de código.
 2. Inicie a simulação e abra o Monitor Serial a 9600 baud. A cada 2 segundos aparece uma linha JSON, como `{"dispositivo":"camara-01","temperatura_c":6.4,"peso_kg":182.0,"porta_aberta":false}`.
-3. Para simular a porta aberta, solte o botão da chave. O LED acende e o buzzer toca se a temperatura passar de 10 °C ou se a porta ficar aberta por mais de 120 segundos.
+3. Para simular a porta aberta, leve o cursor da chave deslizante (slide switch) para o lado da perna sem fio. O LED acende e o buzzer toca se a temperatura passar de 10 °C ou se a porta ficar aberta por mais de 120 segundos.
+
+### Primeiro teste no TinkerCad
+
+Ao iniciar, o LED e o buzzer ligam e a linha pode mostrar `"porta_aberta":true`: o TMP36 começa em cerca de 25 °C, acima do limite de 10 °C, e a chave pode estar na posição de porta aberta. Para chegar ao estado normal:
+
+1. Clique no TMP36 e ajuste a temperatura para um valor entre 4 e 7 °C.
+2. Gire o potenciômetro para escolher o peso (de 0 a 500 kg).
+3. Leve a chave deslizante para a posição de porta fechada (cursor do lado da perna ligada ao GND).
+
+O LED e o buzzer desligam, e a linha passa a mostrar `"porta_aberta":false`.
 
 ## Simulador
 
@@ -19,9 +29,9 @@ Só biblioteca padrão do Python (3.12 ou mais novo). Rode da raiz do repositór
 
     python3 iot/simulador.py --cenario porta-aberta --seco --quantidade 5
 
-Com `--seco`, o simulador só imprime as leituras. Sem ele, cada leitura é enviada à API e a linha começa com o status: `201` quando a API aceita. A chave vem de `--chave` ou da variável `CHAVE_DISPOSITIVO` (copie o valor do seu `.env`, que não vai ao Git):
+Com `--seco`, o simulador só imprime as leituras. Sem ele, cada leitura é enviada à API e a linha começa com o status: `201` quando a API aceita. A chave vem de `--chave` ou da variável `CHAVE_DISPOSITIVO`, que já está no `.env` da raiz (o arquivo não vai ao Git). Da raiz do repositório, carregue o `.env` e rode:
 
-    export CHAVE_DISPOSITIVO=...
+    set -a; . ./.env; set +a
     python3 iot/simulador.py --cenario entrega
 
 Cenários (`--cenario`):

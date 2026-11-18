@@ -19,6 +19,10 @@ class TestGerarLeitura(unittest.TestCase):
         self.assertEqual(leitura['dispositivo'], 'camara-01')
         self.assertIsInstance(datetime.datetime.fromisoformat(leitura['momento']), datetime.datetime)
 
+    def test_momento_em_utc_com_offset_00_00(self):
+        momento = gerar_leitura('normal', 0, {})['momento']
+        self.assertTrue(momento.endswith('+00:00'), momento)  # o mesmo em qualquer máquina, sem depender do fuso
+
     def test_porta_aberta_temperatura_sobe_de_5_ate_18(self):
         inicio = gerar_leitura('porta-aberta', 0, {})
         self.assertTrue(inicio['porta_aberta'])
@@ -26,14 +30,19 @@ class TestGerarLeitura(unittest.TestCase):
         self.assertGreater(gerar_leitura('porta-aberta', 10, {})['temperatura_c'], inicio['temperatura_c'])
         self.assertEqual(gerar_leitura('porta-aberta', 100, {})['temperatura_c'], 18.0)
 
-    def test_entrega_peso_cai_ate_20_kg(self):
-        primeiro = gerar_leitura('entrega', 0, {})['peso_kg']
-        self.assertLess(gerar_leitura('entrega', 1, {})['peso_kg'], primeiro)
+    def test_porta_aberta_cruza_o_limite_de_10_graus_no_passo_13(self):
+        # 10,0 °C é o limite do alarme do Arduino: a demonstração passa dele no passo 13 (10,2 °C)
+        self.assertLessEqual(gerar_leitura('porta-aberta', 12, {})['temperatura_c'], 10.0)
+        self.assertGreater(gerar_leitura('porta-aberta', 13, {})['temperatura_c'], 10.0)
+
+    def test_entrega_peso_cai_15_kg_por_passo_ate_20_kg(self):
+        pesos = [gerar_leitura('entrega', passo, {})['peso_kg'] for passo in range(5)]
+        self.assertEqual([depois - antes for antes, depois in zip(pesos, pesos[1:])], [-15.0] * 4)
         self.assertEqual(gerar_leitura('entrega', 100, {})['peso_kg'], 20.0)
 
-    def test_colheita_peso_sobe_ate_480_kg(self):
-        primeiro = gerar_leitura('colheita', 0, {})['peso_kg']
-        self.assertGreater(gerar_leitura('colheita', 1, {})['peso_kg'], primeiro)
+    def test_colheita_peso_sobe_20_kg_por_passo_ate_480_kg(self):
+        pesos = [gerar_leitura('colheita', passo, {})['peso_kg'] for passo in range(5)]
+        self.assertEqual([depois - antes for antes, depois in zip(pesos, pesos[1:])], [20.0] * 4)
         self.assertEqual(gerar_leitura('colheita', 100, {})['peso_kg'], 480.0)
 
     def test_normal_fica_entre_4_e_7_graus_com_180_kg_e_porta_fechada(self):
@@ -83,7 +92,9 @@ class TestPrincipal(unittest.TestCase):
         return codigo, saida.getvalue().splitlines(), erro.getvalue()
 
     def test_modo_seco_imprime_as_leituras_sem_enviar(self):
-        codigo, linhas, _ = self.rodar('--cenario', 'porta-aberta', '--seco', '--quantidade', '5', '--intervalo', '0')
+        with mock.patch('iot.simulador.enviar') as enviar_falso:
+            codigo, linhas, _ = self.rodar('--cenario', 'porta-aberta', '--seco', '--quantidade', '5', '--intervalo', '0')
+        enviar_falso.assert_not_called()
         self.assertEqual(codigo, 0)
         self.assertEqual([json.loads(linha)['temperatura_c'] for linha in linhas], [5.0, 5.4, 5.8, 6.2, 6.6])
         self.assertTrue(linhas[0].startswith('{"dispositivo":"camara-01","temperatura_c":5.0,'))
