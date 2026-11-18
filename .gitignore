@@ -6,5 +6,11 @@ node_modules/
 __pycache__/
 .venv/
 
+# camadas geradas pelo pipeline de dados: só raw/publicos vai para o Git
+dados/datalake/raw/app/
+dados/datalake/raw/simulado/
+dados/datalake/trusted/
+dados/datalake/refined/
+
 # ebooks do curso tem marca d agua com nome e RM: nunca versionar
 ebooks/

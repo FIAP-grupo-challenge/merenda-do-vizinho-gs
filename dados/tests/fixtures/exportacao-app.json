@@ -1,0 +1,55 @@
+{
+  "gerado_em": "2026-07-15T14:00:00.000Z",
+  "agricultores": [
+    {"pseudonimo": "3a7f9c1e5b2d", "municipio": "Catalão", "uf": "GO", "organico": true, "ja_vendeu_pnae": false},
+    {"pseudonimo": "8e4b6d0a2c9f", "municipio": "Catalão", "uf": "GO", "organico": false, "ja_vendeu_pnae": true}
+  ],
+  "chamadas": [
+    {
+      "id": 1,
+      "prefeitura_id": 1,
+      "dados": {
+        "numero": "01/2026",
+        "orgao": "Fundo Municipal de Educação de Catalão",
+        "municipio": "Catalão",
+        "uf": "GO",
+        "data_publicacao": "2026-07-09",
+        "prazo_envio": "2026-07-30",
+        "contato": null,
+        "itens": [
+          {"produto": "Alface crespa", "produto_id": "alface", "quantidade": 200, "unidade": "Pç", "preco_unitario": 2.5},
+          {"produto": "Mandioca descascada", "produto_id": "mandioca", "quantidade": 300, "unidade": "Kg", "preco_unitario": 6.9}
+        ]
+      },
+      "status": "publicada",
+      "origem": "cache",
+      "criada_em": "2026-07-10T12:00:00.000Z",
+      "publicada_em": "2026-07-10T12:05:00.000Z"
+    }
+  ],
+  "propostas": [
+    {
+      "id": 1,
+      "chamada_id": 1,
+      "cooperativa_id": 2,
+      "itens": [
+        {"produto_id": "alface", "produto": "Alface crespa", "quantidade": 200, "unidade": "Pç", "preco_unitario": 2.5,
+         "alocacoes": [{"pseudonimo": "3a7f9c1e5b2d", "quantidade": 200}]},
+        {"produto_id": "mandioca", "produto": "Mandioca descascada", "quantidade": 300, "unidade": "Kg", "preco_unitario": 6.9,
+         "alocacoes": [{"pseudonimo": "3a7f9c1e5b2d", "quantidade": 150}, {"pseudonimo": "8e4b6d0a2c9f", "quantidade": 150}]}
+      ],
+      "status": "enviada",
+      "criada_em": "2026-07-12T12:00:00.000Z"
+    }
+  ],
+  "entregas": [
+    {"id": 1, "proposta_id": 1, "produto_id": "alface", "quantidade": 50, "valor": 125.0, "data": "2026-07-14", "no_prazo": true},
+    {"id": 2, "proposta_id": 1, "produto_id": "mandioca", "quantidade": 80, "valor": 552.0, "data": "2026-07-15", "no_prazo": false}
+  ],
+  "leituras": [
+    {"id": 1, "dispositivo": "camara-01", "momento": "2026-07-15T13:00:00.000Z", "temperatura_c": 6.0, "peso_kg": 180.0, "porta_aberta": false},
+    {"id": 2, "dispositivo": "camara-01", "momento": "2026-07-15T13:00:02.000Z", "temperatura_c": 10.4, "peso_kg": 180.0, "porta_aberta": true},
+    {"id": 3, "dispositivo": "camara-01", "momento": "2026-07-15T13:00:04.000Z", "temperatura_c": 10.8, "peso_kg": 180.0, "porta_aberta": true},
+    {"id": 4, "dispositivo": "camara-01", "momento": "2026-07-15T13:00:06.000Z", "temperatura_c": 6.5, "peso_kg": 180.0, "porta_aberta": false}
+  ]
+}
