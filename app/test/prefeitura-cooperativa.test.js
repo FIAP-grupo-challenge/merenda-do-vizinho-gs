@@ -501,14 +501,14 @@ test('alocação acima do teto, ou total do agricultor acima do limite restante,
   );
   marcarInteresse(app, 'davi@demo.br', id, 'abobora', 1000); // 25 × 40 = 1000
   marcarInteresse(app, 'ana@demo.br', id, 'alface', 1000); // 25 × 40 = 1000
-  marcarInteresse(app, 'fabio@demo.br', id, 'alface', 600); // restam R$ 2.000 do limite: 284,49 pés a R$ 7,03
+  marcarInteresse(app, 'fabio@demo.br', id, 'alface', 600); // restam R$ 2.000 do limite: 284 pés a R$ 7,03 (284,49 não: alface é pç)
   marcarInteresse(app, 'carla@demo.br', id, 'couve', 800);
   const proposta = (await app.pedir('POST', `/api/cooperativa/chamadas/${id}/proposta`, { token })).corpo;
   const ana = idDe(app, 'ana@demo.br');
   const carla = idDe(app, 'carla@demo.br');
   const davi = idDe(app, 'davi@demo.br');
   const fabio = idDe(app, 'fabio@demo.br');
-  assert.deepEqual(proposta.itens.map((it) => it.alocacoes.map((a) => a.quantidade)), [[390], [610], [1000, 284.49], [100]]);
+  assert.deepEqual(proposta.itens.map((it) => it.alocacoes.map((a) => a.quantidade)), [[390], [610], [1000, 284], [100]]);
 
   // a divisão como a tela manda: todos os itens, cada um com as suas alocações
   const divisao = (abobora1, abobora2, anaAlface, fabioAlface, carlaCouve) => ({
@@ -521,37 +521,117 @@ test('alocação acima do teto, ou total do agricultor acima do limite restante,
   });
   const editar = (corpo) => app.pedir('PUT', `/api/cooperativa/propostas/${proposta.id}`, { token, corpo });
   const recusas = {
-    'acima do teto (capacidade de 1000)': divisao(390, 610, 1000.01, 284.49, 100),
+    'acima do teto (capacidade de 1000)': divisao(390, 610, 1001, 284, 100),
     'Fábio acima do limite restante (R$ 2.109,00 de R$ 2.000,00)': divisao(390, 610, 1000, 300, 100),
-    'abóbora: cada item cabe, mas a soma passa dos 1000 do Davi': divisao(390, 700, 1000, 284.49, 100),
-    'soma acima do pedido de couve': divisao(390, 610, 1000, 284.49, 100.01),
-    'quantidade negativa': divisao(390, 610, -1, 284.49, 100),
-    'quantidade que não é número': divisao(390, 610, '1000', 284.49, 100),
-    'faltou um item': { itens: divisao(390, 610, 1000, 284.49, 100).itens.slice(0, 3) },
+    'abóbora: cada item cabe, mas a soma passa dos 1000 do Davi': divisao(390, 700, 1000, 284, 100),
+    'soma acima do pedido de couve': divisao(390, 610, 1000, 284, 101),
+    'quantidade negativa': divisao(390, 610, -1, 284, 100),
+    'quantidade que não é número': divisao(390, 610, '1000', 284, 100),
+    'faltou um item': { itens: divisao(390, 610, 1000, 284, 100).itens.slice(0, 3) },
   };
   for (const [caso, corpo] of Object.entries(recusas)) {
     const resposta = await editar(corpo);
     assert.equal(resposta.status, 400, caso);
     assert.ok(resposta.corpo.erro, caso);
   }
-  const deFora = divisao(390, 610, 1000, 284.49, 100);
+  const deFora = divisao(390, 610, 1000, 284, 100);
   deFora.itens[3].alocacoes[0].agricultor_id = idDe(app, 'prefeitura@demo.br');
   assert.equal((await editar(deFora)).status, 400, 'quem não é cooperado não entra');
-  const repetido = divisao(390, 610, 500, 284.49, 100);
+  const repetido = divisao(390, 610, 500, 284, 100);
   repetido.itens[2].alocacoes.push({ agricultor_id: ana, quantidade: 500 });
   assert.equal((await editar(repetido)).status, 400, 'o mesmo agricultor duas vezes no item');
   const guardada = JSON.parse(app.db.prepare('SELECT itens FROM propostas WHERE id = ?').get(proposta.id).itens);
-  assert.deepEqual(guardada.map((it) => it.alocacoes.map((a) => a.quantidade)), [[390], [610], [1000, 284.49], [100]], 'nada mudou');
+  assert.deepEqual(guardada.map((it) => it.alocacoes.map((a) => a.quantidade)), [[390], [610], [1000, 284], [100]], 'nada mudou');
 
   // controle: a mesma divisão dentro dos limites passa, e a proposta é recalculada
-  const certa = await editar(divisao(300, 700, 900, 284.49, 60));
+  const certa = await editar(divisao(300, 700, 900, 284, 60));
   assert.equal(certa.status, 200);
-  assert.deepEqual(certa.corpo.itens.map((it) => [it.quantidade, it.falta]), [[300, 90], [700, 940], [1184.49, 815.51], [60, 40]]);
-  assert.equal(certa.corpo.itens[2].valor, arredondar(arredondar(900 * 7.03) + arredondar(284.49 * 7.03)));
+  assert.deepEqual(certa.corpo.itens.map((it) => [it.quantidade, it.falta]), [[300, 90], [700, 940], [1184, 816], [60, 40]]);
+  assert.equal(certa.corpo.itens[2].valor, arredondar(arredondar(900 * 7.03) + arredondar(284 * 7.03)));
   assert.equal(certa.corpo.total, somar(certa.corpo.itens, 'valor'));
   assert.deepEqual(JSON.parse(app.db.prepare('SELECT itens FROM propostas WHERE id = ?').get(proposta.id).itens)[0].alocacoes, [
     { agricultor_id: davi, quantidade: 300 },
   ]);
+});
+
+// Catalão pede alface em pç, abóbora Cabotiá em unidade, cheiro verde em fx, couve-flor em un e milho em atilho: nada disso se
+// divide. Pé, maço e atilho não têm centésimos; só o kg (mandioca, abóbora verde, pepino, tomate) os tem.
+test('Catalão: os itens contados em unidade saem da divisão em números inteiros, e o kg segue com centésimos', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  const token = await app.entrar('cooperativa@demo.br');
+  const { id: chamadaId } = chamadaSemeada(app);
+  const resposta = await app.pedir('POST', `/api/cooperativa/chamadas/${chamadaId}/proposta`, { token });
+  assert.equal(resposta.status, 201);
+  const proposta = resposta.corpo;
+  const quantidades = (produto) =>
+    Object.fromEntries(proposta.itens.find((it) => it.produto === produto).alocacoes.map((a) => [a.nome.split(' ')[0], a.quantidade]));
+
+  // a alface era 855,51 (Ana), 570, 570 e 284,49 (Fábio, que só tem R$ 2.000 do limite): agora são pés inteiros
+  assert.deepEqual(quantidades('Alface'), { Ana: 856, Carla: 570, Elisa: 570, Fábio: 284 });
+  assert.deepEqual(quantidades('Abóbora Cabotiá'), { Davi: 390 });
+  const itensInteiros = proposta.itens.filter((it) => it.unidade !== 'kg');
+  assert.deepEqual([...new Set(itensInteiros.map((it) => it.unidade))].sort(), ['atilho', 'fx', 'pç', 'un', 'unidade']);
+  for (const it of itensInteiros) {
+    for (const a of it.alocacoes) assert.ok(Number.isInteger(a.quantidade), `${it.produto} (${it.unidade}): ${a.nome} ${a.quantidade}`);
+    assert.ok([it.quantidade, it.falta].every(Number.isInteger), `${it.produto}: oferta e falta`);
+  }
+  const alface = proposta.itens.find((it) => it.produto === 'Alface');
+  assert.deepEqual([alface.quantidade, alface.falta, alface.valor], [2280, 0, 16028.4]);
+  // o que o Fábio recebe de cada item é o limite dele em reais: R$ 1.996,52 de alface e o resto, R$ 3,48, em kg (0,29 de mandioca)
+  assert.deepEqual(quantidades('Mandioca'), { Ana: 1200, Davi: 1000, Fábio: 0.29 });
+
+  // o projeto de venda mostra os mesmos números inteiros
+  const projeto = (await app.pedir('GET', `/api/cooperativa/propostas/${proposta.id}/projeto-venda`, { token })).corpo;
+  const fabio = projeto.fornecedores.find((f) => f.nome === 'Fábio Alves');
+  assert.deepEqual(fabio.itens.map((l) => [l.produto, l.unidade, l.quantidade, l.valor]), [
+    ['Alface', 'pç', 284, 1996.52],
+    ['Mandioca', 'kg', 0.29, 3.4],
+  ]);
+  assert.ok(fabio.valor_total <= 2000, 'o Fábio só tinha R$ 2.000 de limite');
+  assert.equal(projeto.valor_total, proposta.total);
+});
+
+test('alocação fracionada num item contado em unidade inteira devolve 400 em português; no kg os centésimos passam', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  const token = await app.entrar('cooperativa@demo.br');
+  const { id: chamadaId } = chamadaSemeada(app);
+  const proposta = (await app.pedir('POST', `/api/cooperativa/chamadas/${chamadaId}/proposta`, { token })).corpo;
+  const guardada = () => app.db.prepare('SELECT itens FROM propostas WHERE id = ?').get(proposta.id).itens;
+  const antes = guardada();
+  // a divisão como está, com uma alocação trocada (o item pelo produto, o cooperado pelo primeiro nome)
+  const trocar = (produto, nome, quantidade) => ({
+    itens: proposta.itens.map((it) => ({
+      alocacoes: it.alocacoes.map((a) => ({
+        agricultor_id: a.agricultor_id,
+        quantidade: it.produto === produto && a.nome.startsWith(nome) ? quantidade : a.quantidade,
+      })),
+    })),
+  });
+  const editar = (corpo) => app.pedir('PUT', `/api/cooperativa/propostas/${proposta.id}`, { token, corpo });
+
+  const recusas = [
+    ['Alface', 'Ana', 855.5, 'Alface é contada em pç: use número inteiro.'],
+    ['Abóbora Cabotiá', 'Davi', 389.5, 'Abóbora Cabotiá é contada em unidade: use número inteiro.'],
+    ['Cheiro verde', 'Carla', 1199.99, 'Cheiro verde é contada em fx: use número inteiro.'],
+    ['Couve-flor', 'Elisa', 299.5, 'Couve-flor é contada em un: use número inteiro.'],
+    ['Milho', 'Davi', 599.01, 'Milho é contada em atilho: use número inteiro.'],
+    ['Alface', 'Fábio', 0.5, 'Alface é contada em pç: use número inteiro.'], // até meio pé
+    ['Alface', 'Carla', 570.004, 'Alface é contada em pç: use número inteiro.'], // nem o que o arredondamento a 2 casas apagaria
+  ];
+  for (const [produto, nome, quantidade, erro] of recusas) {
+    const resposta = await editar(trocar(produto, nome, quantidade));
+    assert.equal(resposta.status, 400, `${produto} ${quantidade}`);
+    assert.equal(resposta.corpo.erro, erro);
+  }
+  assert.equal(guardada(), antes, 'nada mudou');
+
+  // controles: número inteiro em pç passa, e o kg continua aceitando centésimos
+  assert.equal((await editar(trocar('Alface', 'Ana', 850))).status, 200);
+  const kg = await editar(trocar('Mandioca', 'Ana', 1199.55));
+  assert.equal(kg.status, 200);
+  assert.equal(kg.corpo.itens.find((it) => it.produto === 'Mandioca').alocacoes.find((a) => a.nome.startsWith('Ana')).quantidade, 1199.55);
 });
 
 test('projeto de venda tem totais certos', async (t) => {
@@ -587,12 +667,13 @@ test('projeto de venda tem totais certos', async (t) => {
   assert.equal(projeto.valor_total, somar(projeto.fornecedores, 'valor_total'));
   assert.equal(projeto.valor_total, somar(projeto.totais_por_produto, 'valor'));
   assert.equal(projeto.valor_total, proposta.total, 'o projeto de venda e a proposta têm o mesmo total');
-  // os números da demonstração (semente da T6 com a chamada de Catalão)
-  assert.equal(projeto.valor_total, 99243.1);
+  // os números da demonstração (semente da T6 com a chamada de Catalão): a alface em pç sai em pés inteiros, e os R$ 3,48 que
+  // o limite do Fábio ainda tem depois dela compram 0,29 kg de mandioca
+  assert.equal(projeto.valor_total, 99246.5);
   const fabio = projeto.fornecedores.find((f) => f.nome === 'Fábio Alves');
-  assert.deepEqual(fabio.itens.map((linha) => [linha.produto, linha.quantidade]), [['Alface', 284.49]]);
+  assert.deepEqual(fabio.itens.map((linha) => [linha.produto, linha.quantidade]), [['Alface', 284], ['Mandioca', 0.29]]);
   assert.ok(fabio.valor_total <= 2000, 'o Fábio só tinha R$ 2.000 de limite');
-  assert.deepEqual(projeto.totais_por_produto.find((linha) => linha.produto === 'Mandioca').quantidade, 2200);
+  assert.deepEqual(projeto.totais_por_produto.find((linha) => linha.produto === 'Mandioca').quantidade, 2200.29);
   // CPF e CAF com máscara; quem não preencheu fica em branco (null)
   const ana = projeto.fornecedores.find((f) => f.nome === 'Ana Souza');
   assert.deepEqual([ana.cpf, ana.caf], ['***.982.247-**', '****5CAF']);

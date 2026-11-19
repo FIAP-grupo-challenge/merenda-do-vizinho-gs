@@ -4,7 +4,7 @@ const { montarPropostaConjunta } = require('../agrupamento');
 const { produtosDoCatalogo } = require('../catalogo');
 const { ErroHttp, responderJson } = require('../http-util');
 const { participante, totalDaProposta } = require('../proposta');
-const { arredondar } = require('../regras-pnae');
+const { arredondar, unidadeInteira } = require('../regras-pnae');
 
 // para as mensagens de erro, que a tela mostra como vieram
 const NOMES = new Map(produtosDoCatalogo().map((produto) => [produto.id, produto.nome]));
@@ -121,7 +121,8 @@ function registrar(roteador, { db }) {
   // A divisão editada na tela: { itens: [{ alocacoes: [{ agricultor_id, quantidade }] }] }, um por item, na ordem da proposta.
   // Vale se a soma de cada item não passa do pedido, se o que cada cooperado leva de um produto (somando os itens dele,
   // como as duas abóboras de Catalão) cabe na capacidade dele, e se o valor dele em todos os itens cabe no limite do ano.
-  // Assim nenhuma alocação passa do teto: o menor valor entre a capacidade e o limite ÷ preço.
+  // Assim nenhuma alocação passa do teto: o menor valor entre a capacidade e o limite ÷ preço. Item contado em pç, maço,
+  // dúzia etc. (unidadeInteira) só aceita número inteiro, como a divisão automática.
   roteador.put('/api/cooperativa/propostas/:id', ...soCooperativa, async (req, res, ctx) => {
     const cooperativa = cooperativaDe(ctx);
     const proposta = propostaDa(ctx);
@@ -141,6 +142,9 @@ function registrar(roteador, { db }) {
         if (!membro) throw new ErroHttp(400, `${item.produto}: só entram cooperados desta cooperativa.`);
         if (typeof a.quantidade !== 'number' || !Number.isFinite(a.quantidade) || a.quantidade < 0) {
           throw new ErroHttp(400, `${item.produto}: a quantidade de ${membro.nome} precisa ser um número, zero ou mais.`);
+        }
+        if (unidadeInteira(item.unidade) && !Number.isInteger(a.quantidade)) {
+          throw new ErroHttp(400, `${item.produto} é contada em ${item.unidade}: use número inteiro.`);
         }
         const quantidade = arredondar(a.quantidade);
         membro.reais = arredondar(membro.reais + arredondar(quantidade * item.preco_unitario));
