@@ -1,6 +1,6 @@
 # Fontes, licenças e créditos
 
-Este documento lista de onde vêm os dados, as regras e as ferramentas do projeto. Os números do white paper e do painel têm a fonte indicada aqui.
+Este documento lista de onde vêm os dados, as regras e as ferramentas do projeto. Os números do README, do PDF de evidências e do painel têm a fonte indicada aqui.
 
 ## 1. Chamadas públicas reais (conjunto de teste)
 
@@ -60,9 +60,9 @@ O repositório guarda só cópias sem alteração das planilhas (`dados/datalake
 | Arduino Uno e TinkerCad | sketch em `iot/camara-fria/camara-fria.ino` | câmara fria simulada |
 | Claude (Anthropic) | Claude Haiku 5.5 no produto | leitura da chamada e assistente do agricultor |
 
-## 5. Referências do white paper
+## 5. Referências
 
-Lista completa das fontes citadas no white paper (`planejamento/white-paper/white-paper.md`), na ordem em que aparecem nele:
+Lista completa das fontes em que o projeto se apoia (leis, normas, dados abertos, tutoriais, documentos de órgãos e notícias):
 
 1. Lei nº 11.947/2009, art. 14 (texto compilado). Planalto. <https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/lei/l11947.htm>
 2. Lei nº 15.226/2025, de 30/09/2025, publicada no DOU de 01/10/2025. Planalto. <https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15226.htm>

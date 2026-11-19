@@ -41,7 +41,7 @@ O diagrama, os contratos entre os módulos e o caminho de produção estão em [
 
 **Caminho de produção (Kafka, NiFi e Spark): não implementado.** Está desenhado no diagrama, tracejado, para mostrar onde a ingestão entraria em escala. No MVP, o pipeline em Python faz esse caminho.
 
-**Conexão com o curso.** O edital pede o conteúdo do curso até a fase 7. O Claude é conteúdo do curso: aparece na F4C07 (seção 4.6) e na F1C08. A chamada à IA segue o padrão da F7C07, em que um cliente de LLM em Python manda o pedido e recebe a resposta. No projeto, esse cliente é o SDK da Anthropic, no lugar do da OpenAI que o curso usa, e o curso não ensina o SDK da Anthropic. Por isso o modo de regras, em Python com `pypdf`, funciona sem o Claude. **Svelte 5 e Vite nas telas** são a exceção declarada do grupo: escolha do grupo, fora do conteúdo do curso. O mapa de cada tecnologia para um capítulo está na seção "Conexão com o curso" do white paper.
+**Conexão com o curso.** O edital pede o conteúdo do curso até a fase 7. O Claude é conteúdo do curso: aparece na F4C07 (seção 4.6) e na F1C08. A chamada à IA segue o padrão da F7C07, em que um cliente de LLM em Python manda o pedido e recebe a resposta. No projeto, esse cliente é o SDK da Anthropic, no lugar do da OpenAI que o curso usa, e o curso não ensina o SDK da Anthropic. Por isso o modo de regras, em Python com `pypdf`, funciona sem o Claude. **Svelte 5 e Vite nas telas** são a exceção declarada do grupo: escolha do grupo, fora do conteúdo do curso. O mapa de cada tecnologia para um capítulo do curso está em [docs/conexao-com-o-curso.md](docs/conexao-com-o-curso.md).
 
 ### Privacidade
 
@@ -496,7 +496,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `.dockerignore` | o que fica de fora das imagens: `.env`, `.git`, bancos e dados gerados |
 | `devops/smoke.sh` | o teste de fumaça do Compose, com `SMOKE OK` no fim (`devops/evidencias/smoke.txt` tem uma execução completa) |
 | `Jenkinsfile`, `devops/jenkins/`, `devops/plano-de-testes.md`, `devops/seguranca.md` | a integração contínua no Jenkins (como subir: `devops/jenkins/README.md`), o plano de testes (15 casos) e o documento de segurança |
-| `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, o roteiro do pitch e as fontes |
+| `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, a conexão com o curso, o roteiro do pitch e as fontes |
 
 ## Testes
 
@@ -557,6 +557,7 @@ _(preencher: o link do vídeo de até 3 minutos, publicado no Drive ou no YouTub
 - [docs/arquitetura.md](docs/arquitetura.md): o diagrama em Mermaid e em imagem, os módulos, os contratos e o caminho de produção.
 - [docs/prompts.md](docs/prompts.md): os prompts da IA na íntegra e as regras de casamento e de agrupamento.
 - [docs/canvas.md](docs/canvas.md): o Business Model Canvas do projeto.
+- [docs/conexao-com-o-curso.md](docs/conexao-com-o-curso.md): de qual capítulo do curso vem cada tecnologia do projeto.
 - [docs/roteiro-do-pitch.md](docs/roteiro-do-pitch.md): o roteiro do vídeo de pitch.
 - [docs/fontes.md](docs/fontes.md): as chamadas públicas usadas, os dados abertos com a licença, a legislação, as bibliotecas e as referências.
 - [entrega/](entrega/): o PDF de evidências das quatro áreas, o `grupo.txt`, os prints e os scripts que geram o PDF (`gerar-pdf.sh`) e o `.zip` (`empacotar.sh`).

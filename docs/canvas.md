@@ -1,6 +1,6 @@
 # Business Model Canvas
 
-Canvas do Merenda do Vizinho, igual ao do white paper. Todos os blocos são hipóteses do grupo, a testar no piloto.
+Canvas do Merenda do Vizinho. Todos os blocos são hipóteses do grupo, a testar no piloto.
 
 ## Parcerias principais
 
@@ -60,6 +60,6 @@ Canvas do Merenda do Vizinho, igual ao do white paper. Todos os blocos são hip�
 
 - Assinatura mensal da prefeitura, conforme o porte
 - Taxa pequena sobre cada venda fechada pela cooperativa com o projeto de venda do app
-- Valores nas seções 9.1 e 9.3 do white paper, todos como hipótese
+- Os valores da assinatura e da taxa ainda não estão definidos: são hipóteses, a fechar no piloto
 
-*Todos os blocos são hipóteses do grupo, para validar no piloto (seção 12 do white paper).*
+*Todos os blocos são hipóteses do grupo, para validar no piloto.*
