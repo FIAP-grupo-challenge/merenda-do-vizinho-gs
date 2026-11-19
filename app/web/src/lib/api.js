@@ -1,7 +1,7 @@
 // Comum a todas as telas: chamar a API do app com o token da sessão.
-// Uso: const dados = await api('POST', '/api/login', { email, senha });
+// Uso: import { api, sair } from '../lib/api.js'; const dados = await api('POST', '/api/login', { email, senha });
 // Se a resposta for um erro, lança Error com a mensagem do servidor (o campo "erro").
-async function api(metodo, caminho, corpo) {
+export async function api(metodo, caminho, corpo) {
   const token = localStorage.getItem('token');
   const cabecalhos = {};
   if (corpo !== undefined) cabecalhos['Content-Type'] = 'application/json';
@@ -24,7 +24,7 @@ async function api(metodo, caminho, corpo) {
   return dados;
 }
 
-function sair() {
+export function sair() {
   localStorage.removeItem('token');
   location.href = '/';
 }

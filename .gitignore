@@ -6,6 +6,9 @@ node_modules/
 __pycache__/
 .venv/
 
+# telas geradas pelo vite build a partir de app/web/
+app/public/
+
 # download em andamento do baixar-fontes: se o processo morrer no meio, o temporário não vai para o Git
 *.baixando
 
