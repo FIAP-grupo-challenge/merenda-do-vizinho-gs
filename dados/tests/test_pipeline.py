@@ -22,7 +22,8 @@ from dados import pipeline
 from dados.etapas.baixar_fontes import ASSINATURAS, COPIA_VERSIONADA, FONTES, baixar, baixar_fontes
 from dados.etapas.gerar_simulado import gerar_simulado
 from dados.etapas.ingerir_app import ingerir_app
-from dados.etapas.tratar import esfera_pelo_nome, numero_br
+from dados.etapas.refinar import fato_entregas
+from dados.etapas.tratar import esfera_pelo_nome, numero_br, tratar_app_e_simulado
 from dados.regras import faixa, gap_reais, minimo_do_ano
 
 FIXTURES = Path(__file__).resolve().parent / 'fixtures'
@@ -355,3 +356,59 @@ class TestPipelineTudo(unittest.TestCase):
         self.assertAlmostEqual(app['minutos_fora_faixa'].iloc[0], 4 / 60)  # 10,4 °C e 10,8 °C por 2 s cada
         self.assertAlmostEqual(app['temperatura_media_c'].iloc[0], (6.0 + 10.4 + 10.8 + 6.5) / 4)
         self.assertTrue(app['porta_aberta'].iloc[0])
+
+
+class TestUnidadeDaEntrega(unittest.TestCase):
+    """A unidade de uma entrega do app é a do item da proposta a que ela se refere, achado pela posição (`item`). O
+    edital de Catalão tem duas abóboras, uma por unidade e outra por kg: só o produto_id não diz de qual é a entrega."""
+
+    ITENS = [
+        {'produto_id': 'abobora', 'produto': 'Abóbora Cabotiá', 'quantidade': 390, 'unidade': 'unidade',
+         'preco_unitario': 7.0, 'alocacoes': []},
+        {'produto_id': 'abobora', 'produto': 'Abóbora verde', 'quantidade': 1640, 'unidade': 'kg',
+         'preco_unitario': 6.87, 'alocacoes': []},
+        {'produto_id': 'alface', 'produto': 'Alface', 'quantidade': 2280, 'unidade': 'pç',
+         'preco_unitario': 7.03, 'alocacoes': []},
+    ]
+
+    def entrega(self, dia: int, produto_id: str, quantidade: float, **item) -> dict:
+        """Uma entrega da proposta 7, no dia dado de agosto; `item=` é a posição, e sem ela a chave não vai (como numa
+        exportação de antes da coluna)."""
+        return {'id': dia, 'proposta_id': 7, 'produto_id': produto_id, **item, 'quantidade': quantidade,
+                'valor': quantidade, 'data': f'2026-08-{dia:02d}', 'no_prazo': True}
+
+    def fato_entregas_do_app(self, entregas: list[dict]) -> pd.DataFrame:
+        """As linhas do app em fato_entregas (a tabela do painel), a partir de uma exportação com a proposta 7."""
+        exportacao = {'agricultores': [], 'chamadas': [], 'leituras': [], 'entregas': entregas,
+                      'propostas': [{'id': 7, 'chamada_id': 1, 'cooperativa_id': 2, 'itens': self.ITENS}]}
+        with tempfile.TemporaryDirectory() as pasta:
+            raw = Path(pasta)
+            gerar_simulado(raw)
+            (raw / 'app').mkdir()
+            (raw / 'app' / 'exportacao-20260819T000000Z.json').write_text(json.dumps(exportacao), encoding='utf-8')
+            tabelas = tratar_app_e_simulado(raw)
+        fato = fato_entregas(tabelas['entregas'], tabelas['agricultores'])
+        return fato[fato['origem'] == 'app'].reset_index(drop=True)
+
+    def test_a_abobora_de_cada_item_fica_na_sua_unidade(self):
+        app = self.fato_entregas_do_app([
+            self.entrega(5, 'abobora', 10, item=0),     # Cabotiá, por unidade
+            self.entrega(12, 'abobora', 25.5, item=1),  # verde, por kg
+            self.entrega(19, 'alface', 100, item=2)])
+        self.assertEqual(app['unidade'].tolist(), ['unidade', 'kg', 'pç'])
+        self.assertEqual(app['quantidade'].tolist(), [10, 25.5, 100])
+        self.assertTrue(pd.isna(app.loc[0, 'kg']))  # 10 unidades não são 10 kg
+        self.assertEqual(app.loc[1, 'kg'], 25.5)
+        self.assertTrue(pd.isna(app.loc[2, 'kg']))
+
+    def test_entrega_de_antes_da_coluna_item_acha_a_unidade_pelo_produto(self):
+        for caso, sem_posicao in {'item vazio': {'item': None}, 'sem a chave item': {}}.items():
+            with self.subTest(caso):
+                app = self.fato_entregas_do_app([self.entrega(5, 'alface', 100, **sem_posicao)])
+                self.assertEqual(app['unidade'].tolist(), ['pç'])
+
+    def test_posicao_que_a_proposta_nao_tem_deixa_a_unidade_e_o_kg_vazios(self):
+        for posicao in (3, -1):  # além do fim da lista, e uma que o Python leria do fim
+            with self.subTest(posicao):
+                app = self.fato_entregas_do_app([self.entrega(5, 'abobora', 10, item=posicao)])
+                self.assertTrue(pd.isna(app.loc[0, 'unidade']) and pd.isna(app.loc[0, 'kg']))

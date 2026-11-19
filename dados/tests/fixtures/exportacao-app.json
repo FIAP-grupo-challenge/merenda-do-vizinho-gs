@@ -43,8 +43,8 @@
     }
   ],
   "entregas": [
-    {"id": 1, "proposta_id": 1, "produto_id": "alface", "quantidade": 50, "valor": 125.0, "data": "2026-07-14", "no_prazo": true},
-    {"id": 2, "proposta_id": 1, "produto_id": "mandioca", "quantidade": 80, "valor": 552.0, "data": "2026-07-15", "no_prazo": false}
+    {"id": 1, "proposta_id": 1, "produto_id": "alface", "item": 0, "quantidade": 50, "valor": 125.0, "data": "2026-07-14", "no_prazo": true},
+    {"id": 2, "proposta_id": 1, "produto_id": "mandioca", "item": 1, "quantidade": 80, "valor": 552.0, "data": "2026-07-15", "no_prazo": false}
   ],
   "leituras": [
     {"id": 1, "dispositivo": "camara-01", "momento": "2026-07-15T13:00:00.000Z", "temperatura_c": 6.0, "peso_kg": 180.0, "porta_aberta": false},

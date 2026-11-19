@@ -62,7 +62,9 @@ function exportar(db, { desde, segredo }) {
     }),
   );
 
-  const entregas = noPeriodo('SELECT id, proposta_id, produto_id, quantidade, valor, data, no_prazo FROM entregas', 'data').map(
+  // item é a posição do item na lista de itens da proposta exportada: o mesmo produto pode ter dois itens, com unidades e preços
+  // diferentes (a abóbora de Catalão), e é por ela que o pipeline acha a unidade da entrega. Null na entrega de antes da coluna.
+  const entregas = noPeriodo('SELECT id, proposta_id, produto_id, item, quantidade, valor, data, no_prazo FROM entregas', 'data').map(
     (linha) => ({ ...linha, no_prazo: Boolean(linha.no_prazo) }),
   );
 

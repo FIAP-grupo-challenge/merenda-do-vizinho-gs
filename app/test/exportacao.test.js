@@ -110,8 +110,10 @@ function semearSafra(app) {
 
   for (const e of FIXTURE.entregas) {
     app.db
-      .prepare('INSERT INTO entregas (id, proposta_id, produto_id, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?, ?)')
-      .run(e.id, e.proposta_id, e.produto_id, e.quantidade, e.valor, e.data, e.no_prazo ? 1 : 0);
+      .prepare(
+        'INSERT INTO entregas (id, proposta_id, produto_id, item, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      )
+      .run(e.id, e.proposta_id, e.produto_id, e.item, e.quantidade, e.valor, e.data, e.no_prazo ? 1 : 0);
   }
   for (const l of FIXTURE.leituras) {
     app.db
@@ -266,6 +268,41 @@ test('um item de proposta sem alocacoes não derruba a exportação, e a alocaç
   assert.deepEqual(semAlocacoes.alocacoes, []);
   // só a alocação da Ana sai: a sem agricultor_id não vira o pseudônimo de "undefined" nem de "null"
   assert.deepEqual(comAlocacoes.alocacoes, [{ pseudonimo: pseudonimo(ana, ENV_TESTE.JWT_SEGREDO), quantidade: 3 }]);
+});
+
+test('a entrega sai com o item, a posição do item na proposta; a entrega de antes da coluna sai com item nulo', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  semearSafra(app);
+  // o edital de Catalão tem duas abóboras, uma por unidade e outra por kg: só o produto_id não diz de qual é a entrega
+  const abobora = { produto_id: 'abobora', quantidade: 100, preco_unitario: 7 };
+  inserirProposta(app, {
+    id: 2,
+    chamada_id: 2,
+    itens: [{ ...abobora, produto: 'Abóbora Cabotiá', unidade: 'unidade' }, { ...abobora, produto: 'Abóbora verde', unidade: 'kg' }],
+  });
+  const inserir = app.db.prepare(
+    'INSERT INTO entregas (id, proposta_id, produto_id, item, quantidade, valor, data, no_prazo) VALUES (?, 2, ?, ?, ?, ?, ?, 1)',
+  );
+  inserir.run(10, 'abobora', 0, 10, 70, '2026-08-05');
+  inserir.run(11, 'abobora', 1, 25.5, 175.19, '2026-08-12');
+  inserir.run(12, 'abobora', null, 5, 35, '2026-08-13'); // uma linha gravada antes de existir a coluna item
+
+  const { status, corpo } = await pedirExportacao(app);
+  assert.equal(status, 200);
+  todasTemAs(corpo.entregas, chaves(FIXTURE.entregas), 'entregas');
+  const itemDa = (id) => corpo.entregas.find((entrega) => entrega.id === id).item;
+  const ids = [...FIXTURE.entregas.map((entrega) => entrega.id), 10, 11, 12];
+  assert.deepEqual(ids.map(itemDa), [...FIXTURE.entregas.map((entrega) => entrega.item), 0, 1, null]);
+  // o item é a posição na lista de itens da proposta exportada (é por ela que o pipeline acha a unidade): aponta para o mesmo produto
+  for (const exportacao of [corpo, FIXTURE]) {
+    for (const entrega of exportacao.entregas.filter((e) => e.item !== null)) {
+      const { itens } = exportacao.propostas.find((proposta) => proposta.id === entrega.proposta_id);
+      assert.equal(itens[entrega.item].produto_id, entrega.produto_id, `entrega ${entrega.id}`);
+    }
+  }
+  const [cabotia, verde] = corpo.propostas.find((proposta) => proposta.id === 2).itens;
+  assert.deepEqual([cabotia.unidade, verde.unidade], ['unidade', 'kg']);
 });
 
 test('desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400', async (t) => {

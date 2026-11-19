@@ -153,10 +153,9 @@ def tratar_app_e_simulado(raw: Path) -> dict[str, pd.DataFrame]:
     exportacao = max((raw / 'app').glob('exportacao-*.json'), default=None)
     if exportacao:
         app = json.loads(exportacao.read_text(encoding='utf-8'))
-        unidades = {(proposta.get('id'), item.get('produto_id')): item.get('unidade')
-                    for proposta in app['propostas'] for item in proposta.get('itens') or []}
+        itens = {proposta.get('id'): proposta.get('itens') or [] for proposta in app['propostas']}
         for entrega in app['entregas']:  # a unidade é a do edital, guardada no item da proposta
-            entrega['unidade'] = unidades.get((entrega.get('proposta_id'), entrega.get('produto_id')))
+            entrega['unidade'] = unidade_da_entrega(entrega, itens.get(entrega.get('proposta_id'), []))
         fontes['app'] = app
     agricultores = juntar(fontes, 'agricultores', COLUNAS_AGRICULTOR)
     entregas = juntar(fontes, 'entregas', COLUNAS_ENTREGA)
@@ -177,6 +176,18 @@ def tratar_app_e_simulado(raw: Path) -> dict[str, pd.DataFrame]:
             porta_aberta=booleano(leituras['porta_aberta']),
         ).dropna(subset=['momento', 'temperatura_c']).drop_duplicates(['origem', 'dispositivo', 'momento']),
     }
+
+
+def unidade_da_entrega(entrega: dict, itens: list[dict]) -> str | None:
+    """A unidade do item da proposta a que a entrega se refere. `item` é a posição dele na lista: o mesmo produto pode
+    ter dois itens, em unidades diferentes (a abóbora de Catalão), e só o produto_id não diz qual. Sem posição (entrega
+    de antes da coluna `item`), vale o produto. Posição que a proposta não tem: sem unidade, e o kg fica vazio.
+    shortcut: o produto em dois itens, numa entrega sem posição, fica com a unidade do último item (como era antes da
+    coluna); só afeta linhas de um banco antigo, e para elas não há como saber qual item foi."""
+    posicao, produto = entrega.get('item'), entrega.get('produto_id')
+    if posicao is None:
+        return next((item.get('unidade') for item in reversed(itens) if item.get('produto_id') == produto), None)
+    return itens[posicao].get('unidade') if 0 <= posicao < len(itens) else None
 
 
 def juntar(fontes: dict, colecao: str, colunas: list[str]) -> pd.DataFrame:

@@ -72,7 +72,7 @@ Ficam de fora:
 
 - Do app, entra só a última exportação, que é a foto completa.
 - Cada tabela passa por uma lista fechada de colunas. Dos agricultores, só passam `pseudonimo`, `municipio`, `uf`, `organico` e `ja_vendeu_pnae`. Nome, CPF, CAF, e-mail ou o id do agricultor, se viessem, ficam no raw e não chegam ao trusted. O teste confere isso com uma exportação de controle que traz esses dados.
-- Cada entrega do app ganha a `unidade` do item da proposta (a do edital), em minúsculas.
+- Cada entrega do app ganha a `unidade` do item da proposta (a do edital), em minúsculas. O item é achado pela posição (o `item` da entrega, a posição dele na lista de itens da proposta): o mesmo produto pode ter dois itens em unidades diferentes, como a abóbora do edital de Catalão (uma por unidade e outra por kg). A entrega gravada antes da coluna `item` (item vazio) cai para o produto; uma posição que a proposta não tem deixa a unidade vazia, e então o `kg` também.
 - O `momento` das leituras fica em UTC.
 
 ## Tabelas do painel (refined)
@@ -177,4 +177,4 @@ Toda linha simulada tem `origem = simulado` no trusted e no refined.
 
 ## Exportação do app (`raw/app/`)
 
-`ingerir-app` chama `GET <APP_URL>/api/exportar?desde=2000-01-01T00:00:00Z` com o cabeçalho `X-Chave-Servico` e grava a resposta: `{ gerado_em, agricultores, chamadas, propostas, entregas, leituras }`. O formato está em `dados/tests/fixtures/exportacao-app.json`, e a exportação do app (T12) segue as mesmas chaves. Os agricultores vêm só com `pseudonimo`, `municipio`, `uf`, `organico` e `ja_vendeu_pnae`.
+`ingerir-app` chama `GET <APP_URL>/api/exportar?desde=2000-01-01T00:00:00Z` com o cabeçalho `X-Chave-Servico` e grava a resposta: `{ gerado_em, agricultores, chamadas, propostas, entregas, leituras }`. O formato está em `dados/tests/fixtures/exportacao-app.json`, e a exportação do app (T12) segue as mesmas chaves (a entrega leva o `item`, a posição do item na proposta). Os agricultores vêm só com `pseudonimo`, `municipio`, `uf`, `organico` e `ja_vendeu_pnae`.
