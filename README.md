@@ -2,22 +2,539 @@
 
 MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos para a merenda escolar (PNAE).
 
+- **Curso:** Global Solution 2026/2, CitizenTech (FIAP)
+- **Integrantes:** _(preencher)_
+
 ## O que é, para quem e qual problema resolve
+
+O PNAE compra a merenda das escolas públicas. Desde 1º de janeiro de 2026, pelo menos 45% da verba do programa tem de ser comprada da agricultura familiar (Lei 15.226/2025). Até 2025 eram 30%. Mesmo assim, muitas prefeituras não chegam ao mínimo: em 2022, 1.531 delas ficaram abaixo dos 30% da época, e faltaram R$ 97,1 milhões para chegarem lá (contas do grupo sobre as planilhas do FNDE, com dados preliminares).
+
+A **Merenda do Vizinho** é um serviço web para a cidade:
+
+- a **prefeitura** envia o PDF da chamada pública, e a IA (Claude) lê os itens, as quantidades, os preços e os prazos;
+- o **agricultor** vê as chamadas que pode atender e quanto pode ganhar, e um assistente explica o edital em linguagem simples, com botão "Ouvir";
+- a **cooperativa** junta os vizinhos para fechar o volume pedido e gera o projeto de venda no modelo do FNDE;
+- uma **câmara fria simulada** (Arduino no TinkerCad e simulador em Python) avisa quando a temperatura ou a porta saem do normal;
+- um **painel no Power BI** mostra, com dados reais do FNDE até 2022, quais prefeituras ficaram abaixo do mínimo e quanto faltou.
+
+**Para quem:** o agricultor familiar, a cooperativa da cidade, a prefeitura (secretaria de educação, nutricionista e Conselho de Alimentação Escolar).
+
+**O problema:** o agricultor muitas vezes não sabe da chamada, não entende o edital em PDF, não monta o projeto de venda ou produz pouco para o volume pedido. A cooperativa divide o pedido à mão. A prefeitura só descobre se cumpriu o mínimo quando o ano fecha.
+
+**O que não é:** não substitui o Contrata+Brasil, a plataforma federal, nem a decisão da prefeitura. Sem chamada publicada, não há oportunidade. A câmara fria e o histórico de entregas são simulados; as chamadas e os dados do FNDE e do IBGE são reais.
 
 ## Arquitetura
 
+![Os módulos e como eles se ligam](docs/arquitetura.png)
+
+São quatro módulos num repositório só, com contratos simples (HTTP em JSON e arquivos). Cada um roda sozinho, seguindo este README.
+
+| Módulo | Pasta | Tecnologia | Porta |
+|:--|:--|:--|:--|
+| App (API e telas) | `app/` | Node 24, módulo `http` nativo, SQLite, telas em Svelte 5 com Vite | 3000 |
+| IA | `ia/` | Python 3.12 ou mais novo, `http.server`, SDK `anthropic`, `pypdf` | 3001 (não publicada no Docker) |
+| Data lake | `dados/` | Python, pandas e openpyxl | sem porta (tarefa) |
+| Câmara fria | `iot/` | Arduino Uno no TinkerCad e simulador em Python, só biblioteca padrão | sem porta (tarefa) |
+
+O diagrama, os contratos entre os módulos e o caminho de produção estão em [docs/arquitetura.md](docs/arquitetura.md).
+
+**Caminho de produção (Kafka, NiFi e Spark): não implementado.** Está desenhado no diagrama, tracejado, para mostrar onde a ingestão entraria em escala. No MVP, o pipeline em Python faz esse caminho.
+
+**Svelte 5 e Vite nas telas:** é uma escolha do grupo, fora do conteúdo do curso. A stack do resto segue o conteúdo das fases 1 a 7.
+
+### Privacidade
+
+- A IA **nunca** recebe os dados cadastrados do agricultor: nome, CPF, CAF, e-mail, telefone, dados bancários nem os critérios do RITS (mulher, jovem, assentado, indígena, quilombola). Do perfil vão só os produtos e as quantidades, os meses de safra, o município, a UF, se a produção é orgânica e se há prioridade no RITS (sim ou não).
+- No chat do assistente, o serviço recusa (erro 400) CPF, e-mail, telefone e dados bancários que o agricultor digitar. A tela pede para não escrever o nome: um nome digitado não dá para detectar.
+- O data lake recebe os agricultores só com pseudônimo (12 caracteres, HMAC-SHA256 do id). Nome, CPF, CAF e e-mail não chegam à camada trusted; o teste confere isso com uma exportação de controle que traz esses dados.
+- As telas mostram CPF e CAF mascarados. O projeto de venda também mostra os dois com máscara: o agricultor escreve os números completos à mão, porque o modelo do FNDE pede esses dados.
+
 ## Pré-requisitos
+
+- **Git**, para clonar o repositório.
+- **Para rodar com Docker:** Docker com o plugin Compose (testado com Docker 29.9 e Compose 5.7), ou **Podman sem root** com `podman-compose` (testado com Podman 6.2 e podman-compose 1.6).
+- **Para rodar sem Docker:** Node.js 24 ou mais novo (o app pede a versão 24 ou mais nova) e Python 3.12 ou mais novo (testado com 3.12 e 3.14).
+- **Chave da API da Anthropic (opcional):** sem ela, o app roda no **modo de regras**: a leitura do PDF e o assistente funcionam sem IA, com regras fixas. Com a chave, a leitura e o assistente usam o Claude Haiku 5.5.
+- Os comandos abaixo são de bash, em Linux (ou WSL, no Windows). Foram testados em Linux.
 
 ## Como rodar (com Docker e sem Docker)
 
+Clone o repositório e entre na pasta, na branch com a versão final do projeto:
+
+```bash
+git clone git@github.com:FIAP-grupo-challenge/merenda-do-vizinho-gs.git
+cd merenda-do-vizinho-gs
+```
+
+Os dois caminhos começam pelo `.env`.
+
+### 1. Criar o `.env` (os dois caminhos)
+
+O `.env` guarda os segredos. Ele não vai para o Git nem para o `.zip`. Crie-o na raiz do repositório:
+
+```bash
+cat > .env <<EOF
+ANTHROPIC_API_KEY=
+JWT_SEGREDO=$(openssl rand -hex 32)
+CHAVE_SERVICO=$(openssl rand -hex 32)
+CHAVE_DISPOSITIVO=$(openssl rand -hex 32)
+DATA_REFERENCIA=2026-07-15
+EOF
+chmod 600 .env
+```
+
+Rode esse bloco só se ainda não existe `.env`: ele cria o arquivo do zero. Se o arquivo já existe, abra-o num editor e preencha os três segredos com valores aleatórios (`openssl rand -hex 32` gera um).
+
+Para usar a IA com o Claude, cole a chave da API em `ANTHROPIC_API_KEY=`. Sem a chave, tudo funciona no modo de regras.
+
+| Variável | Obrigatória | Para quê | Padrão |
+|:--|:--|:--|:--|
+| `JWT_SEGREDO` | sim | assina o login (JWT) e o pseudônimo do data lake | não tem: o app não sobe sem ele |
+| `CHAVE_SERVICO` | sim | o pipeline de dados lê a exportação do app com ela | não tem |
+| `CHAVE_DISPOSITIVO` | sim | a câmara fria (Arduino ou simulador) envia as leituras com ela | não tem |
+| `ANTHROPIC_API_KEY` | não | chave da API da Anthropic; sem ela, o modo de regras | vazia |
+| `DATA_REFERENCIA` | não, mas a demonstração usa `2026-07-15` | o "hoje" das oportunidades, no formato AAAA-MM-DD | a data de hoje |
+| `SEMANAS_PADRAO` | não | semanas de entrega quando a chamada não diz (vale para o app e para a IA) | 40, de `compartilhado/regras-pnae.json`. Com um valor que não é número maior que zero, o app não sobe; a IA só registra um aviso |
+| `MODELO_CLAUDE` | não | modelo da IA | `claude-haiku-5-5` |
+| `LIMITE_TEMP_C` | não | temperatura que dispara o alerta da câmara fria | 10 |
+| `MINUTOS_PORTA_ABERTA` | não | minutos com a porta aberta que disparam o alerta | 2 |
+
+### 2A. Com Docker
+
+Com o `.env` pronto, na raiz do repositório:
+
+```bash
+docker compose up --build
+```
+
+Deixe esse terminal aberto. Em outro terminal, confira que os dois serviços estão `healthy`:
+
+```bash
+docker compose ps
+```
+
+Abra **http://localhost:3000**. O app sobe junto com a IA, que roda na rede interna do Compose e **não** fica publicada no seu computador. Isso é de propósito: a IA não tem login e gasta a sua chave da API.
+
+Para ver o modo da IA (`regras` ou `ia`) sem publicar a porta:
+
+```bash
+docker compose exec -T ia python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:3001/saude').read().decode())"
+```
+
+Saída esperada: `{"ok": true, "modo": "regras"}`. Com a chave no `.env`, `"modo": "ia"`.
+
+Para parar: `docker compose down` (mantém o banco). Para apagar o banco e recriar a demonstração do zero: `docker compose down -v`.
+
+**Tarefas** (rodam uma vez, com o app no ar; o perfil `tarefas` é o que mantém o simulador e o pipeline fora do `up`):
+
+```bash
+# câmara fria: 15 leituras com a porta aberta, a temperatura sobe e passa de 10 °C na 14ª
+docker compose --profile tarefas run --rm iot python iot/simulador.py --cenario porta-aberta --quantidade 15 --intervalo 1 --url http://app:3000/api/leituras
+
+# data lake: o pipeline com a cópia versionada das fontes públicas e os dados do app
+docker compose --profile tarefas run --rm -e PIPELINE_OFFLINE=1 dados
+```
+
+**Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios e sem chave da API.
+
+```bash
+devops/smoke.sh
+```
+
+**Com Podman sem root**, use o `podman-compose` com a opção que faz o usuário 1000 do contêiner ser você:
+
+```bash
+COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000"
+$COMPOSE up --build
+```
+
+Sem essa opção, o pipeline não grava em `./dados/datalake`. O mesmo vale para o smoke: `COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000" devops/smoke.sh`. O perfil `tarefas` também precisa estar ligado nos comandos `run`, como acima.
+
+**No Linux, com um usuário que não é o uid 1000** (confira com `id -u`): os contêineres gravam como uid 1000. Sem permissão, o pipeline falha com `PermissionError` ao gravar em `./dados/datalake`. Dê a permissão com:
+
+```bash
+sudo chown -R 1000:1000 dados/datalake
+```
+
+### 2B. Sem Docker
+
+Na raiz do repositório, uma vez:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r ia/requirements.txt -r dados/requirements.txt
+(cd app && npm ci)
+```
+
+Cada terminal que roda as partes em Python precisa carregar o `.env` no shell primeiro (o app já lê o `.env` sozinho, mas o simulador e os scripts Python não):
+
+```bash
+set -a; . ./.env; set +a
+```
+
+Abra um terminal para cada parte.
+
+**Terminal 1, o app** (o `npm start` gera as telas com Vite antes de subir, em `app/public/`):
+
+```bash
+set -a; . ./.env; set +a
+cd app
+npm start
+```
+
+Saída esperada: `Merenda do Vizinho em http://localhost:3000`. Abra essa página no navegador.
+
+**Terminal 2, a IA:**
+
+```bash
+set -a; . ./.env; set +a
+.venv/bin/python -m ia.servidor
+```
+
+Saída esperada: `IA na porta 3001, modo regras` (ou `modo ia`, com a chave no `.env`).
+
+**Terminal 3, a câmara fria e o pipeline** (com o app no ar):
+
+```bash
+set -a; . ./.env; set +a
+python3 iot/simulador.py --cenario porta-aberta --quantidade 15 --intervalo 1
+PIPELINE_OFFLINE=1 .venv/bin/python -m dados.pipeline tudo
+```
+
+Para parar, aperte `Ctrl+C` em cada terminal.
+
+**Se algo não sobe:**
+
+- `EADDRINUSE` ou "porta em uso": outro programa usa a porta 3000 ou 3001. Feche esse programa e rode o comando de novo.
+- `falta JWT_SEGREDO no .env` (ou outra chave): o `.env` não tem o segredo, ou não está na raiz. Confira com `cat .env`, sem colar o conteúdo em lugar nenhum.
+- `SEMANAS_PADRAO deve ser um número maior que zero`: a variável tem um valor inválido. Apague a linha ou ponha um número, como `40`.
+- `npm: command not found` ou `engines`: instale o Node.js 24 ou mais novo.
+
 ## Usuários de demonstração e data de referência
+
+A senha de **todos** os usuários de demonstração é `demo1234`. Eles são fictícios e estão todos em Catalão (GO), a cidade da chamada de demonstração:
+
+| Papel | E-mail | Quem é | O que planta |
+|:--|:--|:--|:--|
+| Prefeitura | `prefeitura@demo.br` | Prefeitura Municipal de Catalão | publica a chamada 003/2026 |
+| Cooperativa | `cooperativa@demo.br` | Cooperativa Vizinhos do Campo | junta os cooperados e gera a proposta |
+| Agricultor | `ana@demo.br` | Ana Souza | alface e mandioca (a usuária da demonstração) |
+| Agricultor | `bruno@demo.br` | Bruno Lima | tomate e pepino; já vendeu ao PNAE |
+| Agricultor | `carla@demo.br` | Carla Ferreira | alface, couve e cheiro-verde |
+| Agricultor | `davi@demo.br` | Davi Rocha | mandioca, milho-verde e abóbora |
+| Agricultor | `elisa@demo.br` | Elisa Martins | brócolis, couve-flor e alface |
+| Agricultor | `fabio@demo.br` | Fábio Alves | alface e mandioca; já vendeu R$ 38 mil no ano, perto do limite de R$ 40 mil |
+
+Os seis agricultores são cooperados da cooperativa de demonstração. A cada subida do app, a semente cria os usuários que faltam (os que já existem não são mexidos) e publica a chamada de Catalão, já lida e conferida à mão, com o interesse dos agricultores. Para recomeçar do zero: `docker compose down -v` (com Docker) ou apague `app/merenda.db` (sem Docker).
+
+**Por que `DATA_REFERENCIA=2026-07-15`.** A chamada pública de Catalão (nº 003/2026) recebeu projetos de 09/07 a 30/07/2026 e já fechou. O app mostra como oportunidades só as chamadas com prazo a partir da data de referência, que é o "hoje" dele. Sem essa data, o app usa a data do computador, a chamada aparece como encerrada, e a agricultora de demonstração (Ana) não vê nenhuma oportunidade. Por isso o `.env` do exemplo já traz `DATA_REFERENCIA=2026-07-15`.
 
 ## Como rodar cada área e o que deve aparecer
 
+Os passos abaixo valem com ou sem Docker. Onde o comando muda, a diferença está escrita.
+
+### App: prefeitura, cooperativa e agricultor
+
+Abra http://localhost:3000 e entre com um dos usuários acima (aba "Entrar"; a aba "Criar conta" faz um cadastro novo).
+
+1. **Prefeitura** (`prefeitura@demo.br`), tela **Chamadas**. Em "Suas chamadas" aparece a chamada 003/2026 de Catalão, **publicada**. Para ver a leitura da IA, em "Nova chamada" escolha o PDF `ia/avaliacao/chamadas/04-go-catalao-2026.pdf` e toque em **Ler o PDF**. Aparece a tabela com os 16 itens da chamada e a origem da leitura (`regras` sem chave, `ia` com chave). A leitura vira um rascunho; não é preciso publicar, porque a chamada de Catalão já está publicada.
+
+2. **Agricultora** (`ana@demo.br`), tela **Chamadas abertas para você**. Aparece o cartão da chamada de Catalão, com o selo "Na sua cidade", **"Você pode ganhar até R$ 21.082,00"** e, em cada item que ela planta, o que a prefeitura pede (alface: 2.280 pç; mandioca: 2.800 kg). O cartão diz até quando entregar o projeto de venda (30/07/2026). O aviso "Seleção anterior, sem RITS" aparece porque o edital saiu até 22/10/2026. Toque no cartão: a tela da chamada tem o **assistente**. Escreva, por exemplo, `Posso entregar 50 de alface por semana?` e toque em **Enviar**. A resposta diz quanto dá (2.000 pç em 40 semanas) e lista os documentos. Sem chave, a resposta vem do roteiro (origem `regras`). O botão **Quero participar** grava o interesse dela para a cooperativa.
+
+3. **Cooperativa** (`cooperativa@demo.br`), tela **Cooperativa**. Em "Chamadas abertas no seu estado", toque em **Montar a proposta conjunta** na chamada de Catalão. Aparece a **proposta conjunta**: cada item dividido entre os cooperados que o produzem (por exemplo, a alface entre Ana, Carla, Elisa e Fábio), o que falta em cada item e o total. Itens que nenhum cooperado produz (alho, batata, cebola, pão e biscoito) ficam com o pedido inteiro como falta. Depois, **Salvar a divisão** grava uma edição, e **Gerar projeto de venda** abre o projeto no modelo do FNDE, com **Imprimir**.
+
+4. **Câmara fria** (cooperativa), tela **Câmara fria**. Com o simulador rodando (veja abaixo), aparece a faixa vermelha **"Alerta na câmara fria"** com a mensagem `Temperatura de 10,2 °C em camara-01, acima do limite de 10 °C.`
+
+### IA: a leitura da chamada sem chave
+
+Com a IA no ar, este script manda o PDF de Catalão para `/extrair-chamada` e imprime a chamada extraída. Sem Docker, rode da raiz do repositório:
+
+```bash
+.venv/bin/python - <<'EOF'
+import base64, json, urllib.request
+
+pdf = base64.b64encode(open('ia/avaliacao/chamadas/04-go-catalao-2026.pdf', 'rb').read()).decode()
+pedido = urllib.request.Request('http://localhost:3001/extrair-chamada',
+                                data=json.dumps({'pdf_base64': pdf}).encode(),
+                                headers={'Content-Type': 'application/json'})
+print(json.dumps(json.load(urllib.request.urlopen(pedido, timeout=120)), ensure_ascii=False, indent=2))
+EOF
+```
+
+Com Docker, o mesmo script roda dentro do contêiner da IA, onde a porta 3001 está acessível: troque `.venv/bin/python -` por `docker compose exec -T ia python -`.
+
+O PDF de entrada é o edital real de Catalão, com 15 páginas. Trecho da página 2, com as descrições cortadas (`…`) e os valores exatamente como estão no PDF:
+
+```text
+  1   Abóbora Cabotiá: de boa qualidade, firme e …   Unidade   390     R$ 7,00   R$ 2.730,00
+  2   Abóbora verde: de boa qualidade, firme e …     Kg        1.640   R$ 6,87   R$ 11.266,80
+```
+
+A saída, com a IA desligada (`origem` = `regras`), traz a chamada e os itens. Trecho (o JSON completo tem os 16 itens):
+
+```json
+{
+  "origem": "regras",
+  "modelo": null,
+  "duracao_ms": 364,
+  "chamada": {
+    "numero": "003/2026",
+    "orgao": "Prefeitura Municipal de Catalão",
+    "municipio": "Catalão",
+    "uf": "GO",
+    "data_publicacao": null,
+    "prazo_envio": "2026-07-30",
+    "periodo_fornecimento": null,
+    "semanas_fornecimento": null,
+    "local_entrega": null,
+    "documentos_exigidos": [],
+    "criterios_prioridade": [],
+    "contato": null,
+    "itens": [
+      {"produto": "Abóbora Cabotiá", "produto_id": "abobora", "unidade": "unidade", "quantidade": 390.0, "preco_unitario": 7.0, "valor_total": null},
+      {"produto": "Abóbora verde", "produto_id": "abobora", "unidade": "kg", "quantidade": 1640.0, "preco_unitario": 6.87, "valor_total": null},
+      {"produto": "Alface", "produto_id": "alface", "unidade": "pç", "quantidade": 2280.0, "preco_unitario": 7.03, "valor_total": 16028.4}
+    ]
+  },
+  "avisos": []
+}
+```
+
+O que mostrar com atenção:
+
+- O modo de regras acerta o número, o município, a UF, o prazo e os 16 itens com quantidade e preço. O `produto_id` vem do catálogo (`identificar_produto`).
+- Nesse modo, a data de publicação, o período, o local, os documentos e os critérios saem vazios. Com a chave, o Claude lê esses campos quando o edital os traz.
+- O `valor_total` de duas linhas (as abóboras) sai vazio, embora o edital tenha o valor. É uma falha conhecida da regra de tabela.
+- Com a chave no `.env`, a mesma chamada devolve `"origem": "ia"` e `"modelo": "claude-haiku-5-5"`.
+
+Para o assistente sem IA, veja a tela da agricultora acima: a pergunta sobre alface responde pelo roteiro, com a sugestão e a lista de documentos. Uma mensagem com e-mail, CPF ou telefone é recusada com erro 400.
+
+### Data lake e painel
+
+O pipeline (`dados/`) junta as fontes públicas do FNDE e do IBGE, a exportação do app e um histórico simulado, nas camadas **raw**, **trusted** e **refined**. Com `PIPELINE_OFFLINE=1` ele usa a cópia das fontes que está no repositório. Sem essa variável, ele baixa as planilhas de novo: se a fonte tiver mudado, o arquivo versionado muda, e o `git status` mostra.
+
+A saída do comando termina com o resumo por camada (os números mudam com os dados do app). Trecho do teste de 19/11/2026:
+
+```text
+info: etapa baixar-fontes
+aviso: PIPELINE_OFFLINE=1: usando a cópia versionada das fontes públicas
+...
+Resumo do data lake (linhas por camada):
+raw: 142.816 linhas em 9 arquivos
+trusted: 141.863 linhas em 6 arquivos
+refined: 42.210 linhas em 6 arquivos
+  fato_pnae_af.csv: 26.942
+  fato_camara_fria.csv: 8.761
+  ...
+refined/merenda_do_vizinho.xlsx: abas fato_pnae_af, fato_repasse_uf, fato_entregas, fato_camara_fria, dim_produto, dim_municipio
+```
+
+Os arquivos ficam em `dados/datalake/` (as camadas, fora do Git, exceto as fontes públicas). A planilha `refined/merenda_do_vizinho.xlsx` é a entrada do painel. O passo a passo do painel no Power BI web está em [dados/powerbi/guia-do-painel.md](dados/powerbi/guia-do-painel.md). Os números de conferência de 2022 são 44,5% de compra da agricultura familiar, 1.531 prefeituras abaixo de 30%, R$ 97,1 milhões que faltaram para 30% e R$ 244,8 milhões para 45%.
+
+### Câmara fria (IoT)
+
+O circuito é um Arduino Uno montado no TinkerCad, com um sensor de temperatura (TMP36), um potenciômetro no lugar do sensor de peso e uma chave deslizante como porta. As ligações estão em [iot/camara-fria/ligacoes.md](iot/camara-fria/ligacoes.md), e o sketch em [iot/camara-fria/camara-fria.ino](iot/camara-fria/camara-fria.ino).
+
+- **Link do projeto no TinkerCad:** _(preencher)_
+- Na simulação, o Monitor Serial a 9600 baud mostra uma linha JSON a cada 2 s, como `{"dispositivo":"camara-01","temperatura_c":6.4,"peso_kg":182.0,"porta_aberta":false}`.
+- O alarme (LED e buzzer) liga com a temperatura acima de 10 °C ou com a porta aberta por mais de 2 minutos.
+
+O simulador (`iot/simulador.py`) faz o mesmo sem o TinkerCad, só com a biblioteca padrão do Python. Cenários: `normal`, `porta-aberta` (a temperatura sobe), `entrega` (o peso cai) e `colheita` (o peso sobe). Cada leitura enviada aparece com `201`. Use `--seco` para só imprimir, sem enviar. Os comandos com Docker e sem Docker estão em 2A e 2B, acima; `iot/README.md` traz a lista completa de opções.
+
+### Avaliação da leitura da IA
+
+A avaliação (`ia/avaliacao/`) mede a leitura em 8 chamadas reais do PNAE, nos dois modos. Para conferir os números sem gastar nada, rode da raiz:
+
+```bash
+.venv/bin/python -m ia.avaliacao.rodar --recontar
+```
+
+O `--recontar` não lê PDF, não chama a API e não altera os resultados: refaz as contas dos itens gravados. Deve sair:
+
+| Modo | Itens encontrados | Itens corretos | Quantidade e preço certos | Prazo correto | Tempo médio |
+|:--|--:|--:|--:|--:|--:|
+| regras | 66,7% | 56,1% | 61,4% | 37,5% | 1,4 s |
+| ia | 95,6% | 95,6% | 100,0% | 100,0% | 27,6 s |
+
+São 228 itens, medidos numa única execução (n = 1), em 19/11/2026. Os detalhes estão em [ia/avaliacao/README.md](ia/avaliacao/README.md).
+
+**Cuidado:** rodar `ia.avaliacao.rodar` **sem** `--recontar` lê os PDFs de novo e chama a API uma vez por PDF, com a chave do `.env`: custa cerca de US$ 0,64 pelas 8 chamadas. Sem a chave, o mesmo comando regrava os resultados só com as regras; para voltar aos resultados com IA, use `git checkout -- ia/avaliacao/resultados`.
+
 ## Mapa do código
+
+Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir da raiz do repositório.
+
+### app/ (API em Node, sem Express)
+
+| Arquivo | O que faz |
+|:--|:--|
+| `app/src/index.js` | sobe o app: lê a configuração, migra e semeia o banco, e escuta na porta 3000 |
+| `app/src/config.js` | lê as variáveis de ambiente, com as regras de vazio e de valor inválido |
+| `app/src/servidor.js` | o servidor HTTP: a API em `/api/` e as telas estáticas de `app/public/` |
+| `app/src/roteador.js` | roteador pequeno, com rotas `:parametro` e uma lista de manipuladores por rota |
+| `app/src/http-util.js` | leitura do corpo JSON com limite de tamanho, respostas JSON e arquivos estáticos |
+| `app/src/db.js` | banco SQLite (`node:sqlite`): tabelas, migração e transações |
+| `app/src/semente.js` | cria os usuários de demonstração e publica a chamada de Catalão com o interesse dos agricultores |
+| `app/semente/chamada-demo.json` | a chamada 003/2026 de Catalão, lida do PDF e conferida à mão |
+| `app/src/auth.js` | senhas com scrypt, token JWT (HS256, válido por 8 h) e checagem de papel (401 e 403) |
+| `app/src/validacao.js` | validação de entrada, CPF, CAF, e-mail e as máscaras das telas |
+| `app/src/regras-pnae.js` | as regras do PNAE em um só lugar, com a fonte: mínimo do ano, limite de R$ 40 mil, 20 dias, RITS, prioridade e capacidade |
+| `app/src/casamento.js` | oportunidades: em quais chamadas o agricultor pode vender e quanto ganha em cada uma |
+| `app/src/agrupamento.js` | divide cada item entre os cooperados: teto, partes iguais e sobra por prioridade |
+| `app/src/proposta.js` | monta, a partir do banco, os cooperados e as capacidades que o agrupamento usa |
+| `app/src/projeto-venda.js` | preenche os campos do projeto de venda (modelo do FNDE, Anexo VI) |
+| `app/src/perfil-ia.js` | o perfil que vai para a IA, sem nenhum dado pessoal |
+| `app/src/cliente-ia.js` | cliente HTTP do serviço de IA (`/extrair-chamada` e `/assistente`), com os tempos-limite |
+| `app/src/camara-fria.js` | confere a leitura da câmara fria e diz quais alertas ela pede |
+| `app/src/exportacao.js` | a exportação para o data lake, com pseudônimo no lugar do agricultor |
+| `app/src/catalogo.js` | o catálogo de produtos (cópia de `compartilhado/catalogo-produtos.json`) |
+| `app/src/rotas/*.js` | as rotas da API, uma por área: `auth.js`, `agricultor.js`, `cooperativa.js`, `prefeitura.js`, `projeto-venda.js`, `iot.js`, `exportar.js` e `catalogo.js` |
+| `app/test/*.test.js` | os testes do app (`node --test`): rotas, login, regras e telas |
+
+### app/web/ (telas em Svelte 5, com Vite)
+
+| Arquivo | O que faz |
+|:--|:--|
+| `app/web/*.html` | uma página por tela (7): `index` (entrar), `agricultor`, `chamada`, `cooperativa`, `projeto-venda`, `prefeitura` e `camara-fria`. Cada uma carrega `/css/estilo.css` e um módulo de `src/paginas/` |
+| `app/web/src/paginas/Entrar.svelte` | a tela de entrar e de criar conta |
+| `app/web/src/paginas/Agricultor.svelte` | a tela do agricultor: Chamadas abertas e Meu sítio (o perfil) |
+| `app/web/src/paginas/Chamada.svelte` | uma chamada: o resumo, o assistente, os documentos e o que o agricultor quer vender |
+| `app/web/src/paginas/Cooperativa.svelte` | as chamadas do estado, a proposta conjunta (a divisão, editável) e o projeto de venda |
+| `app/web/src/paginas/ProjetoVenda.svelte` | o projeto de venda para imprimir, com as linhas em branco do que o app não coleta |
+| `app/web/src/paginas/Prefeitura.svelte` | ler o PDF com a IA, conferir, publicar e acompanhar propostas, entregas e a meta do ano |
+| `app/web/src/paginas/CamaraFria.svelte` | a câmara fria ao vivo, os alertas e o registro de entregas |
+| `app/web/src/paginas/*.js` | um módulo por tela, que monta o componente da página correspondente |
+| `app/web/src/lib/api.js` | chamadas à API do app com o token da sessão |
+| `app/web/src/lib/formato.js` | números, dinheiro, datas e nomes no formato brasileiro |
+| `app/web/src/lib/CampoNumero.svelte` e `formato.js` (`lerNumero`) | campo de número que entende "10,5", "1.234,56" e "12.000" |
+| `app/web/src/lib/Ouvir.svelte` e `ouvir.js` | o botão "Ouvir", que lê o texto em voz alta em português (`speechSynthesis`) |
+| `app/web/src/lib/CaixaRolavel.svelte` | a caixa que rola uma tabela larga, sem rolar a página |
+| `app/web/public/css/estilo.css` | o estilo das telas: escrito para o celular primeiro, com `@media (min-width: 768px)` para telas maiores |
+| `app/vite.config.js` | o build das telas: uma entrada por página, com a saída em `app/public/` (gerada, fora do Git) |
+
+### ia/ (IA em Python)
+
+| Arquivo | O que faz |
+|:--|:--|
+| `ia/servidor.py` | o servidor HTTP da IA, porta 3001: `GET /saude`, `POST /extrair-chamada` e `POST /assistente` |
+| `ia/extrair/servico.py` | decide a leitura: o Claude, se houver chave e PDF; senão, ou se a IA falhar, o modo de regras |
+| `ia/extrair/claude.py` | chama o Claude com o PDF, esforço `medium`, saída presa ao esquema; recusa, resposta cortada e erro viram falha tratada |
+| `ia/extrair/esquema.py` | o JSON Schema da chamada, usado na saída estruturada do Claude |
+| `ia/extrair/regras.py` | o modo de regras: acha a tabela de itens no texto e lê quantidade, preço e unidade |
+| `ia/extrair/texto_pdf.py` | extrai o texto de todas as páginas do PDF com `pypdf` |
+| `ia/assistente/servico.py` | o assistente: o Claude conversa com o agricultor; sem chave, responde o roteiro |
+| `ia/assistente/roteiro.py` | o roteiro sem IA: regras "se… então" sobre a chamada e o perfil |
+| `ia/catalogo.py` | acha o `produto_id` pelo nome: sem acento, sem diferença de maiúsculas e por palavra inteira |
+| `ia/numeros.py` | converte número no formato brasileiro (`1.200,50` vira 1200.5) |
+| `ia/privacidade.py` | a checagem que recusa dado pessoal no pedido (por nome de campo e no texto livre do chat) |
+| `ia/cliente_claude.py` | cria o cliente da Anthropic só se houver `ANTHROPIC_API_KEY`; define o erro tratado da IA |
+| `ia/config.py` | o modelo padrão, `claude-haiku-5-5` (troca com `MODELO_CLAUDE`) |
+| `ia/prompts/extrair-chamada.md` e `ia/prompts/assistente.md` | os prompts do produto (íntegra em [docs/prompts.md](docs/prompts.md)) |
+| `ia/avaliacao/` | a avaliação em 8 chamadas reais: `rodar.py`, `metricas.py`, os gabaritos, os PDFs e os resultados |
+| `ia/tests/` | os testes (`unittest`), com servidores falsos: nenhum chama a API |
+
+### dados/ (data lake em Python)
+
+| Arquivo | O que faz |
+|:--|:--|
+| `dados/pipeline.py` | o ponto de entrada: `python -m dados.pipeline {tudo, baixar-fontes, ingerir-app, gerar-simulado, tratar, refinar}`, e o resumo por camada |
+| `dados/etapas/baixar_fontes.py` | baixa as fontes públicas, ou usa a cópia versionada com `PIPELINE_OFFLINE=1` |
+| `dados/etapas/ingerir_app.py` | lê a exportação do app (`GET /api/exportar`) para `raw/app/`; sem o app, avisa e segue |
+| `dados/etapas/gerar_simulado.py` | gera o histórico simulado de uma cooperativa fictícia de Catalão |
+| `dados/etapas/tratar.py` | raw → trusted: colunas por formato, código IBGE conferido com a UF, esfera, percentual recalculado e sem dado pessoal |
+| `dados/etapas/refinar.py` | trusted → refined: as tabelas do painel em CSV e no `.xlsx` |
+| `dados/regras.py` | o mínimo do ano e as faixas de cumprimento, com os rótulos que o painel usa |
+| `dados/powerbi/guia-do-painel.md` e `medidas.dax` | o passo a passo do painel no Power BI web e as medidas DAX |
+| `dados/datalake/README.md` | as camadas, as colunas e as fontes públicas, em detalhe |
+| `dados/tests/` | os testes, incluindo as contas de referência de 2022 e a checagem de privacidade |
+
+### iot/ (câmara fria)
+
+| Arquivo | O que faz |
+|:--|:--|
+| `iot/camara-fria/camara-fria.ino` | o sketch do Arduino: lê a temperatura (A0), o peso (A1) e a porta (D2), aciona o LED (D13) e o buzzer (D8), e manda uma linha JSON a cada 2 s |
+| `iot/camara-fria/ligacoes.md` | os pinos e os fios do circuito no TinkerCad |
+| `iot/simulador.py` | gera as leituras nos cenários `normal`, `porta-aberta`, `entrega` e `colheita`, e as envia à API |
+| `iot/test_simulador.py` | os testes do simulador |
+
+### compartilhado/ e raiz
+
+| Arquivo | O que faz |
+|:--|:--|
+| `compartilhado/catalogo-produtos.json` | os 45 produtos, com sinônimos e unidade padrão; usado pelo app, pela IA e pelo data lake |
+| `compartilhado/regras-pnae.json` | o limite anual (R$ 40 mil), as semanas padrão (40) e os dias mínimos da chamada (20), com as fontes |
+| `docker-compose.yml` | os serviços `app` e `ia`, e os perfis `tarefas` (`dados` e `iot`) |
+| `app/Dockerfile`, `ia/Dockerfile`, `dados/Dockerfile`, `iot/Dockerfile` | as imagens: o app em dois estágios (Node 24), os demais em Python 3.12; todas rodam com o usuário de uid 1000 |
+| `.dockerignore` | o que fica de fora das imagens: `.env`, `.git`, bancos e dados gerados |
+| `devops/smoke.sh` | o teste de fumaça do Compose, com `SMOKE OK` no fim (`devops/evidencias/smoke.txt` tem uma execução completa) |
+| `Jenkinsfile`, `devops/jenkins/`, `devops/plano-de-testes.md`, `devops/seguranca.md` | a integração contínua no Jenkins, o plano de testes (10 casos) e o documento de segurança |
+| `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, o roteiro do pitch e as fontes |
 
 ## Testes
 
+Da raiz do repositório, cada área tem os seus testes. Nenhum usa a chave da Anthropic: a IA é testada com servidores falsos.
+
+```bash
+# app: 119 testes (roda o build das telas antes)
+(cd app && npm test)
+
+# IA: 86 testes
+.venv/bin/python -m unittest discover -s ia/tests -t .
+
+# data lake: 24 testes
+.venv/bin/python -m unittest discover -s dados/tests -t .
+
+# câmara fria: 15 testes
+.venv/bin/python -m unittest discover -s iot -t .
+```
+
+Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK`. O plano de testes, com 10 casos, cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md).
+
 ## Uso de IA generativa
 
+O grupo usou IA generativa em duas frentes: para **construir** o projeto, com o Claude Code, e **dentro do produto**, com a API da Anthropic.
+
+**Na construção**, com o Claude Code em esforço máximo, conforme o tamanho de cada tarefa:
+
+| Onde | Ferramenta e modelo | Para quê |
+|:--|:--|:--|
+| Planejamento | Claude Code com Claude Fable 5.2 | desenho do MVP, plano técnico e plano de ação |
+| Tarefas simples | Claude Code com Claude Haiku 5.5 | esqueleto do repositório, sketch e simulador da câmara fria, exportação, README e pacote de entrega |
+| Tarefas médias e grandes | Claude Code com Claude Opus 5.5 | IA, app, regras do PNAE, pipeline, DAX, Docker, Jenkins e o white paper |
+| Revisões | Claude Code com Claude Sonnet 5.5 | revisar e corrigir cada tarefa |
+
+Cada tarefa foi revisada por um agente separado (o Sonnet), e as correções foram feitas antes de cada entrega. As revisões dos agentes não substituem a revisão do grupo: o grupo define o escopo, aprova os documentos e revisa o código de cada área. O edital não aceita código gerado sem entendimento, e o mapa do código acima existe para isso.
+
+- **Revisado por pessoas:** _(preencher: quem revisou cada área do projeto e o que conferiu)_.
+- **Fontes conferidas:** as regras do PNAE foram conferidas nas fontes oficiais, listadas em [docs/fontes.md](docs/fontes.md).
+
+**Dentro do produto**, o Claude Haiku 5.5 (`claude-haiku-5-5`, o modelo mais barato da Anthropic) é chamado pela API, com o SDK da Anthropic para Python:
+
+- **leitura da chamada:** recebe o PDF do edital e devolve os dados no formato JSON fixo (esforço `medium`). Os prompts estão em [docs/prompts.md](docs/prompts.md);
+- **assistente do agricultor:** responde em frases curtas, sugere quantidades e lista os documentos (esforço `low`).
+
+Sem a chave, ou se a IA falhar, recusar ou demorar, o produto usa o modo de regras, e a resposta sempre informa a origem. Os dados que a IA recebe são os da seção [Privacidade](#privacidade), que é a mesma regra descrita acima. Num teste com 8 chamadas reais, a IA acertou 95,6% dos itens, contra 56,1% do modo de regras; a medida é de uma execução só (n = 1) e está em `ia/avaliacao/resultados/resultados.md`.
+
 ## Pitch, fontes e créditos
+
+### Link do pitch
+
+_(preencher: o link do vídeo de até 3 minutos, publicado no Drive ou no YouTube, sem login)_
+
+### Documentos
+
+- [docs/arquitetura.md](docs/arquitetura.md): o diagrama em Mermaid e em imagem, os módulos, os contratos e o caminho de produção.
+- [docs/prompts.md](docs/prompts.md): os prompts da IA na íntegra e as regras de casamento e de agrupamento.
+- [docs/canvas.md](docs/canvas.md): o Business Model Canvas do projeto.
+- [docs/roteiro-do-pitch.md](docs/roteiro-do-pitch.md): o roteiro do vídeo de pitch.
+- [docs/fontes.md](docs/fontes.md): as chamadas públicas usadas, os dados abertos com a licença, a legislação, as bibliotecas e as referências.
+
+### Fontes e créditos
+
+- **Chamadas públicas do PNAE:** oito editais reais, de cinco estados (Bahia, Goiás, Minas Gerais, Paraná e Rio Grande do Sul), com os links de origem em [docs/fontes.md](docs/fontes.md). Os editais são atos oficiais.
+- **FNDE:** as planilhas de compra da agricultura familiar (2018 a 2022) e os repasses do PNAE (2009 a 2026), com citação ao FNDE. As planilhas têm licença CC BY-ND 3.0 e os repasses, CC-BY.
+- **IBGE:** a lista de municípios, pela API de localidades, com uso livre citando o IBGE.
+- **Legislação:** Lei 11.947/2009, art. 14, na redação da Lei 15.226/2025; Resoluções CD/FNDE nº 4/2026 e nº 17/2026.
+- **Bibliotecas e ferramentas:** Node.js; `jsonwebtoken` (login); Svelte 5 e Vite, com `@sveltejs/vite-plugin-svelte` (telas); Python, com `anthropic` (SDK da Anthropic), `pypdf` (leitura do PDF), `pandas` e `openpyxl` (data lake); Docker, Podman e Compose; Power BI web; Arduino e TinkerCad.
+- **Modelo de IA:** Claude, da Anthropic.
+- **Edital e curso:** FIAP, Global Solution 2026/2, CitizenTech.
