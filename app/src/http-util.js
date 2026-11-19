@@ -62,6 +62,7 @@ const TIPOS = {
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.woff2': 'font/woff2', // a Inter das telas, em public/fonts/
 };
 
 // Serve um arquivo de pastaPublica. Devolve false quando não serve (o servidor responde 404).

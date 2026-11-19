@@ -2,6 +2,7 @@
      "Quero participar" grava o interesse para a proposta da cooperativa; a proposta individual abre /projeto-venda.html. -->
 <script>
   import { api, sair } from '../lib/api.js';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import CampoNumero from '../lib/CampoNumero.svelte';
   import { data, escreverNumero, lerNumero, numero } from '../lib/formato.js';
@@ -135,6 +136,7 @@
 </script>
 
 <header class="topo">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>

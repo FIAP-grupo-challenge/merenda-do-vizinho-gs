@@ -4,6 +4,7 @@
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
   import CampoNumero from '../lib/CampoNumero.svelte';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import { lerNumero, numero, reais } from '../lib/formato.js';
 
@@ -90,6 +91,7 @@
 </script>
 
 <header class="topo">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>
@@ -218,10 +220,10 @@
 
 <style>
   .faixa-alerta {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     padding: 1rem;
-    border-radius: 12px;
-    background: var(--erro); /* branco sobre este vermelho: 6,5:1 */
+    border-radius: 14px;
+    background: var(--erro); /* branco sobre o tomate: 5,4:1 */
     color: #ffffff;
   }
 
@@ -250,23 +252,30 @@
 
   .numeros div {
     padding: 0.75rem 1rem;
-    border: 1px solid var(--linha);
-    border-radius: 12px;
-    background: var(--fundo-suave);
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background: var(--creme);
   }
 
   .numeros dt {
     font-weight: 600;
   }
 
+  /* os números grandes e finos, como os do pitch */
   .numeros dd {
     margin: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 2.75rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* acima do limite, o número fica vermelho, além da faixa */
+  /* acima do limite, o número fica tomate e a caixa ganha a borda, além da faixa */
+  .numeros .fora {
+    border-color: var(--erro);
+  }
+
   .fora dd {
     color: var(--erro);
   }

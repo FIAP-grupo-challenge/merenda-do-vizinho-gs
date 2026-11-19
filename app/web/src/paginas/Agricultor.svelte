@@ -3,6 +3,7 @@
 <script>
   import { api, sair } from '../lib/api.js';
   import CampoNumero from '../lib/CampoNumero.svelte';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import { data, escreverNumero, lerNumero, numero, reais } from '../lib/formato.js';
 
@@ -114,6 +115,7 @@
 </script>
 
 <header class="topo">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>
@@ -312,35 +314,60 @@
     gap: 1rem;
   }
 
+  /* cada chamada é um canteiro creme dentro da caixa de papel */
   .oportunidade {
     padding: 1rem;
-    border: 2px solid var(--linha);
-    border-radius: 12px;
+    border-radius: 10px;
+    background: var(--creme);
   }
 
   .oportunidade h3 {
     margin-top: 0;
   }
 
+  /* verde-escuro sobre o verde-claro: 9:1; o ponto é a semente do pitch */
   .selo {
     display: inline-block;
     margin: 0;
-    padding: 0.1rem 0.75rem;
-    border-radius: 12px;
+    padding: 0.15rem 0.85rem;
+    border-radius: 1rem;
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    font-weight: 650;
+  }
+
+  /* o ponto fica na primeira linha, mesmo quando o selo quebra no celular */
+  .selo::before {
+    content: '';
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
     background: var(--verde);
-    color: #ffffff;
-    font-weight: 700;
+    vertical-align: 0.1em;
   }
 
   .ganho {
-    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
   }
 
-  /* contraste do texto escuro no amarelo-claro: mais de 15:1 */
+  /* o número da chamada: quanto ele pode ganhar, grande e fino, como os números do pitch */
+  .ganho strong {
+    display: block;
+    font-size: 2.25rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* texto em tinta na faixa creme-2: 12,9:1 */
   .aviso {
     padding: 0.5rem 0.75rem;
-    border-left: 6px solid #8a5a00;
-    background: #fff8e1;
+    border-left: 4px solid var(--tinta-3);
+    border-radius: 0 8px 8px 0;
+    background: var(--creme-2);
   }
 
   .acoes {
@@ -353,13 +380,17 @@
     margin-top: 1rem;
     padding: 0 1rem 1rem;
     border: 2px solid var(--linha);
-    border-radius: 8px;
+    border-radius: 10px;
   }
 
   .meses {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     column-gap: 0.5rem;
+  }
+
+  .produto > button {
+    margin-top: 0.75rem;
   }
 
   .adicionar {
@@ -369,7 +400,7 @@
   .termo {
     margin-top: 1rem;
     padding: 0.5rem 1rem 1rem;
-    border-radius: 8px;
+    border-radius: 10px;
     background: var(--fundo-suave);
   }
 

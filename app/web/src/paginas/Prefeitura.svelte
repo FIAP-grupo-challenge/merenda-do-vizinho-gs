@@ -5,6 +5,7 @@
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
   import CampoNumero from '../lib/CampoNumero.svelte';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import { data, escreverNumero, lerNumero, nomeDoItem, numero, plural, reais } from '../lib/formato.js';
 
@@ -214,6 +215,7 @@
 </script>
 
 <header class="topo">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>
@@ -475,10 +477,28 @@
     margin-top: 1rem;
   }
 
+  /* o caminho até a meta é um canteiro que amadurece: a parte feita em laranja (3,2:1 sobre o creme), dentro da borda
+     escura; o número exato está no texto logo acima */
   progress {
+    appearance: none;
     width: 100%;
     height: 1.5rem;
-    accent-color: var(--verde);
+    overflow: hidden;
+    border: 2px solid var(--tinta-3);
+    border-radius: 999px;
+    background: var(--creme);
+  }
+
+  progress::-webkit-progress-bar {
+    background: var(--creme);
+  }
+
+  progress::-webkit-progress-value {
+    background: var(--laranja);
+  }
+
+  progress::-moz-progress-bar {
+    background: var(--laranja);
   }
 
   .avisos li {

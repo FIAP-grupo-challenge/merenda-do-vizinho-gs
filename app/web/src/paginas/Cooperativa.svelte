@@ -5,6 +5,7 @@
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
   import CampoNumero from '../lib/CampoNumero.svelte';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import { data, escreverNumero, lerNumero, numero, plural, reais } from '../lib/formato.js';
 
@@ -134,6 +135,7 @@
 </script>
 
 <header class="topo">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>

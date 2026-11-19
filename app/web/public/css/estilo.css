@@ -1,18 +1,46 @@
-/* Base de todas as telas do Colhe.
+/* Base de todas as telas do Colhe, no estilo do pitch (planejamento/pitch/apresentacao/filosofia-de-design.md):
+   fundo creme, caixas de papel sem sombra, texto em tinta, a Inter e o prato de pontos no topo de cada tela.
    Escrito primeiro para o celular; @media (min-width: 768px) ajusta tablet e computador.
    Regras: fonte de 18 px ou mais, contraste alto, botões e campos com 44 px de altura ou mais,
-   e nada de rolagem horizontal da página (tabela larga rola dentro de .rolavel). */
+   e nada de rolagem horizontal da página (tabela larga rola dentro de .rolavel).
+   A cor nunca diz nada sozinha: o laranja marca o que amadurece (o prato, a aba aberta, a meta do ano), o tomate só o erro
+   e o alarme, e sempre vem junto um texto, uma forma ou uma posição. */
+
+/* Inter 4.1, com a licença OFL em /fonts/OFL.txt. Fica no próprio app, sem CDN: o app roda sem internet no Docker.
+   Só o latim e os recursos que as telas usam, para pesar 90 kB:
+   pyftsubset InterVariable.ttf --unicodes="U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0300-0328,
+   U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+FEFF,U+FFFD" --layout-features+=tnum,case --flavor=woff2 */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/InterVariable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --texto: #1a1a1a;
-  --fundo: #ffffff;
-  --fundo-suave: #f2f6f0;
-  --verde: #1b5e20; /* 7,9:1 sobre o branco */
-  --verde-escuro: #0f3d13;
-  --borda: #5f6b5f; /* 6:1 sobre o branco: a borda do campo aparece */
-  --linha: #c9d3c7;
-  --erro: #b3261e; /* 6,5:1 sobre o branco */
-  --foco: #0b57d0;
+  /* a paleta do pitch; os contrastes são do texto sobre o creme */
+  --creme: #faf3e3; /* o fundo */
+  --creme-2: #f2e6cc; /* faixas: as abas, o cabeçalho das tabelas, a mensagem do assistente */
+  --papel: #fffbf1; /* as caixas, como as do pitch */
+  --tinta: #17251b; /* o texto: 14,4:1 */
+  --tinta-2: #3d4c41;
+  --tinta-3: #56645a; /* dicas e borda dos campos: 5,6:1 */
+  --verde: #2e7a3c; /* botões e links: 4,8:1 (5,1:1 no papel); sobre o creme-2 não passa (4,3:1) */
+  --verde-claro: #cfe2c3;
+  --verde-escuro: #123b24; /* o topo e a capa */
+  --laranja: #e0600f; /* só marca, nunca texto: 3,2:1 */
+  --tomate: #c2362b; /* só erro e alarme: 4,9:1 */
+  --linha: #ddd0b3;
+  --linha-forte: #c9bb9b;
+
+  /* os nomes que os <style> das telas usam */
+  --texto: var(--tinta);
+  --fundo: var(--papel);
+  --fundo-suave: var(--creme-2);
+  --borda: var(--tinta-3); /* 6:1 sobre o papel: a borda do campo aparece */
+  --erro: var(--tomate);
+  --foco: var(--tinta);
 }
 
 *,
@@ -29,10 +57,11 @@ html {
 body {
   margin: 0;
   /* sem system-ui: no Linux ele segue a fonte da área de trabalho, que pode ser monoespaçada */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+  font-optical-sizing: auto;
   line-height: 1.5;
   color: var(--texto);
-  background: var(--fundo-suave);
+  background: var(--creme);
   overflow-wrap: anywhere; /* e-mail ou número comprido quebra a linha em vez de alargar a página */
 }
 
@@ -51,12 +80,34 @@ canvas {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 a {
   color: var(--verde);
+  text-underline-offset: 0.15em;
+}
+
+::selection {
+  background: var(--verde-claro);
+  color: var(--tinta);
 }
 
 :focus-visible {
@@ -64,7 +115,7 @@ a {
   outline-offset: 2px;
 }
 
-/* o azul do foco quase some no verde do topo: ali o anel é branco */
+/* o anel de tinta some no verde-escuro do topo: ali o anel é branco */
 .topo :focus-visible {
   outline-color: #ffffff;
 }
@@ -75,20 +126,71 @@ a {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
+  gap: 0.5rem 0.75rem;
   padding: 0.75rem 1rem;
-  background: var(--verde);
-  color: #ffffff;
+  background: var(--verde-escuro);
+  color: var(--creme);
+}
+
+/* o prato de pontos (Marca.svelte), encostado no nome */
+.topo .marca {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .topo h1 {
-  margin: 0;
-  font-size: 1.4rem;
+  margin: 0 auto 0 0; /* o Sair vai para a direita */
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .topo a {
-  color: #ffffff;
+  color: var(--creme);
+}
+
+/* Sair: contorno claro sobre o verde-escuro */
+.topo .botao-secundario {
+  border-color: var(--creme);
+  background: transparent;
+  color: var(--creme);
+}
+
+.topo .botao-secundario:hover {
+  background: var(--verde);
+  color: var(--creme);
+}
+
+/* tela de entrar: a capa, com o prato grande, como a abertura do pitch */
+.capa {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: 1.5rem 1rem 1.75rem;
+  text-align: center;
+}
+
+/* no celular, a capa cabe com o e-mail ainda na primeira tela */
+.capa .marca {
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: 1rem;
+}
+
+.capa h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 250;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.capa .dica {
+  margin: 0.6rem 0 0;
+  color: var(--creme);
+  font-size: 1.15rem;
+  font-weight: 300;
 }
 
 main {
@@ -97,16 +199,29 @@ main {
   padding: 1rem;
 }
 
+/* cada parte da tela é uma caixa de papel, como as do pitch: borda clara, sem sombra */
 .cartao {
-  background: var(--fundo);
-  border: 1px solid var(--linha);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  background: var(--papel);
+  border: 2px solid var(--linha-forte);
+  border-radius: 14px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.cartao > :first-child {
+/* o título no alto da caixa, mesmo dentro de um form ou div, não soma a margem dele ao recuo */
+.cartao > :first-child,
+.cartao > :first-child > :first-child {
   margin-top: 0;
+}
+
+/* tela de entrar: o que é o app, em texto corrido, antes das abas */
+.abertura {
+  margin-bottom: 1.5rem;
+}
+
+.abertura p {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
 }
 
 /* ---------- Formulários ---------- */
@@ -132,8 +247,21 @@ textarea {
   padding: 0.5rem 0.75rem;
   border: 2px solid var(--borda);
   border-radius: 8px;
-  background: var(--fundo);
+  background: #ffffff;
   color: var(--texto);
+}
+
+/* o botão de escolher o PDF, como os botões secundários */
+::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.25rem 1rem;
+  border: 2px solid var(--verde);
+  border-radius: 999px;
+  background: var(--papel);
+  color: var(--verde-escuro);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
 }
 
 fieldset {
@@ -168,12 +296,15 @@ legend {
   accent-color: var(--verde);
 }
 
+/* a voz das notas do pitch: menor contraste que o texto, mas 5,6:1 ou mais */
 .dica {
   margin: 0.25rem 0 0;
+  color: var(--tinta-3);
 }
 
 /* ---------- Botões ---------- */
 
+/* o canteiro: um retângulo longo e baixo, de pontas redondas */
 button,
 .botao {
   display: inline-flex;
@@ -181,14 +312,15 @@ button,
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.5rem 1.4rem;
   border: 2px solid var(--verde);
-  border-radius: 8px;
+  border-radius: 999px;
   background: var(--verde);
-  color: #ffffff;
-  font-weight: 700;
+  color: var(--papel);
+  font-weight: 650;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color 0.12s, border-color 0.12s, color 0.12s;
 }
 
 button:hover,
@@ -198,12 +330,12 @@ button:hover,
 }
 
 .botao-secundario {
-  background: var(--fundo);
-  color: var(--verde);
+  background: var(--papel);
+  color: var(--verde-escuro);
 }
 
 .botao-secundario:hover {
-  background: var(--fundo-suave);
+  background: var(--creme-2);
   color: var(--verde-escuro);
 }
 
@@ -219,27 +351,50 @@ form button[type='submit'] {
 
 /* ---------- Abas ---------- */
 
+/* as abas numa faixa creme-2; a aberta é de papel, com borda verde, letra mais forte e o traço laranja embaixo
+   (a forma e o peso dizem qual está aberta, não só a cor) */
 .abas {
   display: flex;
-  gap: 0.5rem;
-  border-bottom: 3px solid var(--verde);
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--creme-2);
 }
 
 .abas [role='tab'] {
+  position: relative;
   flex: 1;
-  border-radius: 8px 8px 0 0;
-  background: var(--fundo);
-  color: var(--verde);
+  padding-top: 0.45rem;
+  padding-bottom: 0.65rem;
+  border-color: transparent;
+  background: transparent;
+  color: var(--tinta-2);
+  font-weight: 550;
+}
+
+.abas [role='tab']:hover {
+  border-color: transparent;
+  background: var(--creme);
+  color: var(--tinta);
 }
 
 .abas [role='tab'][aria-selected='true'] {
-  background: var(--verde);
-  color: #ffffff;
+  border-color: var(--verde);
+  background: var(--papel);
+  color: var(--tinta);
+  font-weight: 700;
 }
 
-.painel {
-  border-top: 0;
-  border-radius: 0 0 12px 12px;
+.abas [role='tab'][aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: calc(50% - 0.75rem);
+  width: 1.5rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--laranja);
 }
 
 /* ---------- Mensagens ---------- */
@@ -258,12 +413,27 @@ table {
   border-collapse: collapse;
 }
 
+/* as colunas de número (td.numero, nas telas) ficam com os algarismos alinhados */
+.numero {
+  font-variant-numeric: tabular-nums;
+}
+
 th,
 td {
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--linha);
   text-align: left;
   vertical-align: top;
+}
+
+/* a faixa do cabeçalho vai no thead, inteira: pintada em cada th, ela mostra emendas entre as colunas */
+thead {
+  background: var(--creme-2);
+}
+
+thead th {
+  border-bottom: 2px solid var(--linha-forte);
+  font-weight: 650;
 }
 
 /* tabela larga rola dentro desta caixa, nunca a página.
@@ -279,7 +449,7 @@ td {
 
 @media (min-width: 768px) {
   .topo {
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem;
   }
 
   main {
@@ -287,16 +457,90 @@ td {
   }
 
   .cartao {
-    padding: 1.5rem;
+    padding: 1.75rem 2rem;
   }
 
   form button[type='submit'] {
     width: auto;
   }
 
+  /* duas abas não precisam da largura toda: ficam do tamanho da coluna estreita */
+  .abas {
+    max-width: 34rem;
+  }
+
   /* tela de entrar: coluna estreita no meio */
   .estreita {
     max-width: 34rem;
     margin: 0 auto;
+  }
+
+  .capa {
+    padding: 3rem 2rem;
+  }
+
+  .capa .marca {
+    width: 11rem;
+    height: 11rem;
+  }
+
+  .capa h1 {
+    font-size: 3.75rem;
+  }
+}
+
+/* computador: na tela de entrar, a capa fica à esquerda, de cima a baixo, e o formulário à direita */
+@media (min-width: 1024px) {
+  #app:has(> .capa) {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    min-height: 100vh;
+  }
+
+  /* o verde da coluna da capa vai até o fim da página, mesmo quando o cadastro é mais alto que a tela */
+  #app:has(> .capa)::before {
+    content: '';
+    grid-area: 1 / 1;
+    background: var(--verde-escuro);
+  }
+
+  /* a capa fica parada na tela enquanto o formulário rola */
+  .capa {
+    grid-area: 1 / 1;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+  }
+
+  .capa .marca {
+    width: 16rem;
+    height: 16rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .capa h1 {
+    font-size: 4.5rem;
+  }
+
+  .capa .dica {
+    font-size: 1.45rem;
+  }
+
+  #app:has(> .capa) main {
+    grid-area: 1 / 2;
+    align-self: center;
+    width: 100%;
+  }
+}
+
+/* quem pede menos movimento no sistema não vê nem a troca de cor dos botões */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }

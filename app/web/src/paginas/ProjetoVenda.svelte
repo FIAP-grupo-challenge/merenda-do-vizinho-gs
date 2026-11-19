@@ -4,6 +4,7 @@
 <script>
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
   import { numero, reais } from '../lib/formato.js';
 
@@ -72,6 +73,7 @@
 {/snippet}
 
 <header class="topo so-tela">
+  <Marca />
   <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>

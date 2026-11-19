@@ -1,6 +1,7 @@
 <!-- Tela de entrar e de criar conta (/ e /index.html). -->
 <script>
   import { api } from '../lib/api.js';
+  import Marca from '../lib/Marca.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
 
   // quem abre a tela de entrar começa sem sessão (um token velho não atrapalha o login)
@@ -40,13 +41,15 @@
   }
 </script>
 
-<header class="topo">
+<!-- a capa: o prato grande, como na abertura do pitch -->
+<header class="topo capa">
+  <Marca fileiras={7} />
   <h1>Colhe</h1>
   <p class="dica">da roça para a merenda</p>
 </header>
 
 <main class="estreita">
-  <section class="cartao" aria-label="Sobre o app">
+  <section class="abertura" aria-label="Sobre o app">
     <p id="apresentacao">Aqui, quem planta vende para a merenda das escolas da cidade. A prefeitura mostra o que precisa comprar, o agricultor diz o que tem para vender e a cooperativa junta tudo numa proposta.</p>
     <Ouvir alvo="apresentacao" />
   </section>
