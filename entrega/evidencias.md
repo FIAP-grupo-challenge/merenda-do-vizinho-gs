@@ -106,7 +106,7 @@ A IA resolve duas partes do problema:
 
 Sem a chave da API, ou se a IA falhar, recusar ou demorar, o sistema usa o **modo de regras**, em Python, com `pypdf` e regras "se… então", e a resposta sempre diz a origem (`ia` ou `regras`).
 
-![**Print 2.** A leitura da chamada real de Catalão (GO) pela IA, na tela da prefeitura: "Lida pela IA (claude-haiku-5-5): lido em 19 s". A faixa cinza marca um corte do print: os dois campos de data ficaram de fora. As datas lidas (início em 09/07/2026 e prazo em 30/07/2026) estão na saída da seção 3.3.](prints/02-ia-leitura-dados.png)
+![**Print 2.** A leitura da chamada real de Catalão (GO) pela IA, na tela da prefeitura: "Lida pela IA (claude-haiku-5-5): lido em 17,3 s". A faixa cinza marca um corte do print: os dois campos de data ficaram de fora. As datas lidas (início em 09/07/2026 e prazo em 30/07/2026) estão na saída da seção 3.3.](prints/02-ia-leitura-dados.png)
 
 ![**Print 3.** Os 16 itens lidos pela IA, cada um ligado a um produto do catálogo, prontos para a prefeitura conferir e publicar.](prints/03-ia-leitura-itens.png)
 
@@ -150,10 +150,10 @@ As regras de casamento e de agrupamento, passo a passo, estão em `docs/prompts.
 
 **Saída:** a resposta que o app devolveu à tela da prefeitura na leitura dos prints 2 e 3 (`POST /api/prefeitura/chamadas`), gravada em `entrega/saidas/extracao-ia-catalao.json`, sem o número do rascunho e com a origem no topo. Trecho, com os dados da chamada e os 3 primeiros dos 16 itens:
 
-```{.json incluir="saidas/extracao-ia-catalao.json" linhas="1-65"}
+```{.json incluir="saidas/extracao-ia-catalao.json" linhas="1-66"}
 ```
 
-O que mostrar: `"origem": "ia"` com o modelo `claude-haiku-5-5`; 19 s de leitura (`duracao_ms`); o início do recebimento (09/07/2026) e o prazo (30/07/2026) como datas; os 6 documentos e os 8 critérios do edital; e o valor total de cada item. No modo de regras, sem a chave, a mesma chamada sai com os 16 itens, a quantidade e o preço, mas sem a data de abertura, o período, o local, os documentos e os critérios, e sem o valor total das duas abóboras (veja o README, na seção "IA: a leitura da chamada sem chave").
+O que mostrar: `"origem": "ia"` com o modelo `claude-haiku-5-5`; 17,3 s de leitura (`duracao_ms`); o início do recebimento (09/07/2026) e o prazo (30/07/2026) como datas; os 6 documentos e os 9 critérios do edital (os 5 grupos de localidade, os 3 desempates e o sorteio do item 7.8); e o valor total de cada item. No modo de regras, sem a chave, a mesma chamada sai com os 16 itens, a quantidade e o preço, mas sem a data de abertura, o período, o local, os documentos e os critérios, e sem o valor total das duas abóboras (veja o README, na seção "IA: a leitura da chamada sem chave").
 
 ## Lógica e ganho (1 ponto)
 

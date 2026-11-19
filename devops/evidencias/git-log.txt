@@ -1,4 +1,18 @@
 # git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
+* 8c5a29e docs(repo): roteiro do pitch com o nome Colhe, igual à versão do planejamento
+* bbece46 docs(repo): 133 testes no app e 262 no total, com a saída refeita numa rodada real; o mapa do código mostra o logo e a fonte
+* 25a317c test(app): a Inter vem do próprio app como font/woff2, e o topo de toda tela tem o prato com 45% dos pontos em laranja
+* 96f5e86 feat(app): visual do Colhe, no estilo do pitch: creme e papel, Inter no próprio app, o prato de pontos no topo e a capa na tela de entrar
+* 8b1bf33 docs(repo): o produto passa a se chamar Colhe; o grupo, Equipe Colhe; os nomes técnicos ficam
+* 2bf5d0e feat(app): as telas dizem Colhe, com "da roça para a merenda" na tela de entrar, e um teste trava o nome
+* d653e30 docs(entrega): prints das duas páginas do painel no Power BI, em pt-BR, com a fonte dos dados e o selo de dados simulados
+* ee5bb5f docs(iot): link de compartilhamento do TinkerCad, que abre sem login
+* b57eb10 docs(iot): link público do circuito da câmara fria no TinkerCad
+* e5cf1f9 docs(entrega): prints do circuito da câmara fria no TinkerCad e da simulação com o Monitor Serial
+* c8446cc docs(entrega): integrantes do grupo no grupo.txt e no README
+* 7415f82 docs(repo): canvas com os valores em hipótese do white paper; roteiro diz de onde vêm o 1.604 e o 45,15% do painel do FNDE
+* 5eb1f7f docs(repo): README avisa que o smoke com a chave no .env faz uma chamada pequena ao Claude no assistente
+* 2547ca4 chore(entrega): PDF e git-log refeitos com as correções da revisão final, o print 12 novo, o smoke com o assistente e as contagens de testes
 * d58c399 docs(devops): smoke.txt refeito numa rodada real, com o login da Ana e a pergunta ao assistente (SMOKE OK), e o trecho do PDF com o nome novo do projeto
 * 5835e9c docs(repo): mapa do código do README diz o que o config.js e o api.js passaram a fazer
 * ed7f89e docs(repo): 131 testes no app e 260 no total, com a saída dos testes refeita numa rodada real
