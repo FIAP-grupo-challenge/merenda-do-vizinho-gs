@@ -9,14 +9,14 @@ Jenkins local está em [jenkins/README.md](jenkins/README.md).
 
 ## Como rodar
 
-Da raiz do repositório:
+Da raiz do repositório, depois de preparar o `.venv` e o `npm ci` (seção 2B do README):
 
 ```bash
-(cd app && npm test)                                  # app: node --test (antes, o vite build gera as telas)
-python -m unittest discover -s ia/tests -t . -v       # IA
-python -m unittest discover -s dados/tests -t . -v    # pipeline de dados
-python -m unittest discover -s iot -t . -v            # simulador da câmara fria
-devops/smoke.sh                                       # teste de fumaça com o Docker Compose
+(cd app && npm test)                                            # app: node --test (antes, o vite build gera as telas)
+.venv/bin/python -m unittest discover -s ia/tests -t . -v       # IA
+.venv/bin/python -m unittest discover -s dados/tests -t . -v    # pipeline de dados
+.venv/bin/python -m unittest discover -s iot -t . -v            # simulador da câmara fria
+devops/smoke.sh                                                 # teste de fumaça com o Docker Compose
 ```
 
 A saída completa da execução está em `devops/evidencias/testes.txt`. Os testes nunca chamam a API da Anthropic: o

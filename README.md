@@ -193,6 +193,8 @@ python3 -m venv .venv
 (cd app && npm ci)
 ```
 
+No Ubuntu e no Debian, o `python3 -m venv` precisa do pacote `python3-venv` (`sudo apt install python3-venv`); sem ele, o comando falha com a mensagem `ensurepip is not available`.
+
 Cada terminal que roda as partes em Python precisa carregar o `.env` no shell primeiro (o app já lê o `.env` sozinho, mas o simulador e os scripts Python não):
 
 ```bash
@@ -418,7 +420,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `app/src/cliente-ia.js` | cliente HTTP do serviço de IA (`/extrair-chamada` e `/assistente`), com os tempos-limite |
 | `app/src/camara-fria.js` | confere a leitura da câmara fria e diz quais alertas ela pede |
 | `app/src/exportacao.js` | a exportação para o data lake, com pseudônimo no lugar do agricultor |
-| `app/src/catalogo.js` | o catálogo de produtos (cópia de `compartilhado/catalogo-produtos.json`) |
+| `app/src/catalogo.js` | lê o catálogo de produtos de `compartilhado/catalogo-produtos.json`, o mesmo arquivo que a IA e o data lake usam |
 | `app/src/rotas/*.js` | as rotas da API, uma por área: `auth.js`, `agricultor.js`, `cooperativa.js`, `prefeitura.js`, `projeto-venda.js`, `iot.js`, `exportar.js` e `catalogo.js` |
 | `app/test/*.test.js` | os testes do app (`node --test`): rotas, login, regras e telas |
 
