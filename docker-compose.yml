@@ -12,6 +12,8 @@ services:
       - "3000:3000"
     environment:
       PORT: "3000"
+      # o app tira o "hoje" (a data de referência) da hora local, e a imagem roda em UTC: sem o TZ, o dia mudava às 21h
+      TZ: America/Sao_Paulo
       JWT_SEGREDO: ${JWT_SEGREDO:?copie o .env.example para .env}
       CHAVE_SERVICO: ${CHAVE_SERVICO:?copie o .env.example para .env}
       CHAVE_DISPOSITIVO: ${CHAVE_DISPOSITIVO:?copie o .env.example para .env}
@@ -40,6 +42,8 @@ services:
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       MODELO_CLAUDE: ${MODELO_CLAUDE:-}
+      # as mesmas semanas de entrega do app, para o assistente e o app contarem igual (vazia vale o regras-pnae.json)
+      SEMANAS_PADRAO: ${SEMANAS_PADRAO:-}
     init: true
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/saude')"]
