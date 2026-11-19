@@ -530,10 +530,12 @@ test('prefeitura não acessa rota de agricultor (403)', async (t) => {
   ];
   const prefeitura = await app.entrar('prefeitura@demo.br');
   const cooperativa = await app.entrar('cooperativa@demo.br');
+  const contarInteresses = () => app.db.prepare('SELECT COUNT(*) AS n FROM interesses').get().n;
+  const antes = contarInteresses(); // a semente da T9 já grava os interesses dos seis agricultores: o que vale é não crescer
   for (const [metodo, caminho, corpo] of rotas) {
     assert.equal((await app.pedir(metodo, caminho, { corpo, token: prefeitura })).status, 403, `${metodo} ${caminho}`);
     assert.equal((await app.pedir(metodo, caminho, { corpo, token: cooperativa })).status, 403, `${metodo} ${caminho}`);
     assert.equal((await app.pedir(metodo, caminho, { corpo })).status, 401, `${metodo} ${caminho} sem login`);
   }
-  assert.equal(app.db.prepare('SELECT COUNT(*) AS n FROM interesses').get().n, 0);
+  assert.equal(contarInteresses(), antes, 'nenhuma das rotas recusadas gravou interesse');
 });
