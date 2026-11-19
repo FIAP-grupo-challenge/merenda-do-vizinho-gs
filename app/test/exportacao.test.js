@@ -35,6 +35,8 @@ function semearSafra(app) {
   const fabio = idDe(app, 'fabio@demo.br');
   app.db.prepare('UPDATE agricultores SET cpf = ?, caf = ? WHERE usuario_id = ?').run('529.982.247-25', 'GO052025.01.000012345CAF', ana);
 
+  // a safra da fixture troca a chamada de Catalão da semente (T9), que ocupa o id 1
+  app.db.exec('DELETE FROM interesses; DELETE FROM chamadas');
   const chamada = FIXTURE.chamadas[0];
   app.db
     .prepare('INSERT INTO chamadas (id, prefeitura_id, dados, status, origem, criada_em, publicada_em) VALUES (?, ?, ?, ?, ?, ?, ?)')
