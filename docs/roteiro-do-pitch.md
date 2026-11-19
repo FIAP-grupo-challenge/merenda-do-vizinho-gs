@@ -2,7 +2,7 @@
 
 Global Solution 2026/2 (CitizenTech). Vídeo de até 3 minutos, entrega em 19/11/2026.
 
-**Estado:** rascunho para você aprovar. O valor que a Ana vê na tela (R$ 21.082, chamada de Catalão com DATA_REFERENCIA=2026-07-15) já foi conferido no app integrado (o resultado da avaliação da IA já está na seção 6: 95,6% dos itens contra 56,1% sem IA).
+**Estado:** roteiro aprovado. O valor que a Ana vê na tela (R$ 21.082, chamada de Catalão com DATA_REFERENCIA=2026-07-15) foi conferido no app (o resultado da avaliação da IA está na seção 6: 95,6% dos itens contra 56,1% sem IA).
 
 ## Resumo
 
@@ -48,7 +48,7 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 | 2:40–2:55 | Fechamento | Integrante 1 | O Contrata+Brasil, do governo, só trata chamadas criadas nele. A gente completa, com quatro áreas integradas *e IA medida em 8 chamadas reais*. Merenda do Vizinho: a merenda da escola pode vir do sítio do vizinho. Obrigado! | Volta à janela da Ana, tela "Oportunidades", com o cartão do ganho. Opcional: cartela de fechamento só no "Obrigado!" (2 s). | 39 |
 | **Total** | | | | | **388** |
 
-**Se o Jenkins rodar (T16):** troque o bloco 1:57 por "Tudo isso sobe com um comando no Docker, e o Jenkins testa a cada mudança." (15 palavras, 7 a mais). Sem o Jenkins rodando, não diga isso.
+**Se o Jenkins rodar (`devops/jenkins/README.md`):** troque o bloco 1:57 por "Tudo isso sobe com um comando no Docker, e o Jenkins testa a cada mudança." (15 palavras, 7 a mais). Sem o Jenkins rodando, não diga isso.
 
 **Palavras por parte do edital** (voz a 145 palavras por minuto):
 
@@ -72,12 +72,12 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 
 ### Antes de gravar
 
-1. **Preparar o `.env`:** copiar `.env.example` para `.env` e preencher `ANTHROPIC_API_KEY`, `JWT_SEGREDO`, `CHAVE_SERVICO` e `CHAVE_DISPOSITIVO`. Acrescentar `DATA_REFERENCIA=2026-07-15`.
-   - Essa data é o "hoje" do app nas oportunidades. A chamada de Catalão recebeu projetos de venda de 09/07 a 30/07/2026 e já fechou; sem a data, a Ana não veria nenhuma oportunidade (T6, T8, T9, T15).
-   - O app não mostra aviso de "data de demonstração" no topo da tela. Isso não está no plano.
-2. **Subir o sistema:** na raiz do repositório, `docker compose up --build`. O app fica em `http://localhost:3000`. A IA fica só na rede interna do Docker: a porta 3001 não é aberta no computador, de propósito (T15).
+1. **Preparar o `.env`:** copiar `.env.example` para `.env`, preencher `ANTHROPIC_API_KEY` e trocar os três `troque-este-valor` (`JWT_SEGREDO`, `CHAVE_SERVICO` e `CHAVE_DISPOSITIVO`) por valores aleatórios (o bloco da seção 1 do `README.md` gera os três). O `DATA_REFERENCIA=2026-07-15` já vem no modelo.
+   - Essa data é o "hoje" do app nas oportunidades. A chamada de Catalão recebeu projetos de venda de 09/07 a 30/07/2026 e já fechou; sem a data, a Ana não veria nenhuma oportunidade (`app/src/config.js`).
+   - O app não mostra aviso de "data de demonstração" no topo da tela.
+2. **Subir o sistema:** na raiz do repositório, `docker compose up --build`. O app fica em `http://localhost:3000`. A IA fica só na rede interna do Docker: a porta 3001 não é aberta no computador, de propósito (`docker-compose.yml`).
    - Conferir `docker compose exec app wget -qO- http://ia:3001/saude`. Tem de responder `"modo": "ia"`, sinal de que a chave está no `.env`. Se responder `"regras"`, não grave: a fala do bloco 0:50 diz que o Claude lê o PDF e a etiqueta da tabela mostraria "regras".
-3. **Começar com o banco limpo:** `docker compose down -v` e subir de novo. Isso apaga só o banco de demonstração. A semente (T6 e T9) recria:
+3. **Começar com o banco limpo:** `docker compose down -v` e subir de novo. Isso apaga só o banco de demonstração. A semente (`app/src/semente.js`) recria:
    - a prefeitura, a cooperativa e os seis agricultores, todos em Catalão (GO), os seis como cooperados da `cooperativa@demo.br`;
    - a chamada de Catalão, já publicada, com o interesse de cada um. A Ana planta alface e mandioca, que estão nela.
    - A chamada que a prefeitura envia ao vivo (passo 3 abaixo) entra como rascunho. Por isso não se clica em "Publicar": a lista da Ana não fica com a chamada repetida.
@@ -90,14 +90,14 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
    - `ana@demo.br`: já logada antes de gravar;
    - `cooperativa@demo.br`: já logada antes de gravar, com a tela "Câmara fria" aberta numa segunda aba.
 6. **Janela da Ana em modo celular:** abrir as ferramentas do navegador (F12), ligar a barra de dispositivo e escolher 390 × 844. Nas outras janelas, zoom de 125%.
-7. **PDF à mão:** `ia/avaliacao/chamadas/04-go-catalao-2026.pdf` (T5), a Chamada Pública nº 003/2026 de Catalão (GO). Tem 15 páginas, uma tabela padrão de 16 itens e cita a Res. CD/FNDE 4/2026. É a mesma chamada de `ia/tests/fixtures/chamada-real.pdf`.
+7. **PDF à mão:** `ia/avaliacao/chamadas/04-go-catalao-2026.pdf`, a Chamada Pública nº 003/2026 de Catalão (GO). Tem 15 páginas, uma tabela padrão de 16 itens e cita a Res. CD/FNDE 4/2026. É a mesma chamada de `ia/tests/fixtures/chamada-real.pdf`.
 8. **Nome de pessoa na tela:** o edital de Catalão cita uma servidora pelo nome, como contato. Se a extração trouxer esse nome no campo de contato, troque por "Departamento de Licitação e Contratos" na conferência, ou deixe o campo fora do quadro. Nenhum nome de pessoa aparece no vídeo.
 9. **Terminal:** fonte grande (20 pt ou mais), aberto na raiz do repositório. Antes, carregar a chave do dispositivo com `set -a; source .env; set +a`. O `.env` nunca aparece na tela. Deixar o comando do simulador já digitado, sem rodar.
-10. **TinkerCad:** circuito da câmara fria aberto, com a simulação já iniciada (T10).
+10. **TinkerCad:** circuito da câmara fria aberto, com a simulação já iniciada (`iot/camara-fria/ligacoes.md`).
 11. **Power BI web:**
     - relatório aberto na página 1, filtros limpos;
     - a página 1 tem uma caixa de texto com a fonte ("Fonte: FNDE, dados abertos. Cálculo do grupo.") e mostra "dados preliminares" em 2022;
-    - a página 2 tem uma caixa de texto "Dados simulados" e fica numa segunda aba (T14).
+    - a página 2 tem uma caixa de texto "Dados simulados" e fica numa segunda aba (`dados/powerbi/guia-do-painel.md`).
 12. **Limpar a área de trabalho:** modo "não perturbe", outras abas e programas fechados, barra de favoritos escondida.
 
 ### Conferir antes de gravar
@@ -107,50 +107,51 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
   - "Faltaria com 45% (R$)" tem de mostrar 244,8 milhões;
   - "% AF" mostra 44,5%.
   - Se o seu painel mostrar outro número, acerte o pipeline antes de gravar. Não troque a fala sem conferir.
-- **Por que 1.531 e não 1.604:** o 1.531 conta só prefeituras e deixa de fora as linhas com repasse zero (42) ou valor não numérico. O painel do FNDE conta 1.604. A diferença é de 73. As 42 linhas com repasse zero são uma causa provável, mas 42 é menos que 73, então não explicam tudo (`pesquisa/dados-abertos.md`, seção 6).
-- **Por que 44,5% e não 45,15%:** o 44,5% é o cálculo do grupo e o 45,15% é o que o painel do FNDE mostra. A diferença vem, provavelmente, das mesmas linhas com repasse zero, que o cálculo do grupo deixa de fora (`dados-abertos.md`, seção 6).
+- **Por que 1.531 e não 1.604:** o 1.531 conta só prefeituras e deixa de fora as linhas com repasse zero (42) ou valor não numérico. O painel do FNDE conta 1.604. A diferença é de 73. As 42 linhas com repasse zero são uma causa provável, mas 42 é menos que 73, então não explicam tudo (`dados/datalake/README.md`, "Números de referência de 2022").
+- **Por que 44,5% e não 45,15%:** o 44,5% é o cálculo do grupo e o 45,15% é o que o painel do FNDE mostra. A diferença vem, provavelmente, das mesmas linhas com repasse zero, que o cálculo do grupo deixa de fora (`dados/datalake/README.md`, "Números de referência de 2022").
 - **O que cada número conta:** o 44,5% é o percentual nacional, sobre todas as entidades (prefeituras e secretarias estaduais). O 1.531, o R$ 97,1 milhões e o R$ 244,8 milhões contam só prefeituras.
 - **Ana:** a tela "Oportunidades" mostra o cartão de Catalão e, na tela da chamada, o botão "Quero participar" está ligado (ele fica desligado se o perfil não tem cooperativa).
 
 ### Passo a passo durante a gravação
 
-| Passo | Tempo | Onde | Ação | O que tem de aparecer | Tarefa do plano |
+| Passo | Tempo | Onde | Ação | O que tem de aparecer | Onde está no repositório |
 |---|---|---|---|---|---|
-| 1 | 0:00 | Power BI, página 1 | Filtrar Ano = 2022 | Cartões de % da agricultura familiar e de municípios abaixo do mínimo (1.531) | T13, T14 |
-| 2 | 0:30 | App, perfil da prefeitura | Aba "Entrar": `prefeitura@demo.br` e `demo1234` | Tela da prefeitura (Chamadas), com a chamada de Catalão já publicada | T6, T9 |
-| 3 | 0:50 | App, prefeitura | Enviar `04-go-catalao-2026.pdf`, conferir e editar um campo. Não clicar em "Publicar" | Tabela de itens com a origem "IA"; corte na espera | T3, T9 |
-| 4 | 1:06 | App, perfil da Ana | Abrir "Oportunidades" | Cartão de Catalão com o ganho estimado e o aviso "seleção anterior, sem RITS" | T7, T8 |
-| 5 | 1:20 | App, Ana | Tocar no cartão, digitar quanto entrega por semana, tocar em "Quero participar" | Resposta curta, sugestão e lista de documentos | T4, T8 |
-| 6 | 1:32 | App, perfil da cooperativa | "Proposta conjunta" da chamada de Catalão, depois "Gerar projeto de venda" | Divisão entre os cooperados, o que falta e a página do projeto de venda | T7, T9 |
-| 7 | 1:48 | TinkerCad | Abrir a chave da porta e levar o TMP36 acima de 10 °C | LED e buzzer ligados | T10 |
-| 8 | 1:51 | Terminal | `python3 iot/simulador.py --cenario porta-aberta --quantidade 15 --intervalo 1` | Leituras saindo, uma por segundo, com o status 201 | T10 |
-| 9 | 1:54 | App, cooperativa | Tela "Câmara fria" | Faixa vermelha de alerta de temperatura | T11 |
-| 10 | 1:57 | Terminal | `docker compose ps` | app e ia no ar | T15 |
-| 11 | 2:01 | Power BI, página 1 | Filtrar UF = GO | Ranking por município e faixa de cumprimento | T14 |
-| 12 | 2:10 | Power BI | Limpar o filtro de UF, Ano = 2022, cartão "Faltaria com 45% (R$)"; depois a página 2 | 244,8 mi; renda por agricultor e entregas no prazo, com o selo "dados simulados" | T14 |
-| 13 | 2:40 | App, Ana | Voltar a "Oportunidades" | Cartão com o ganho | T8 |
+| 1 | 0:00 | Power BI, página 1 | Filtrar Ano = 2022 | Cartões de % da agricultura familiar e de municípios abaixo do mínimo (1.531) | `dados/powerbi/guia-do-painel.md` |
+| 2 | 0:30 | App, perfil da prefeitura | Aba "Entrar": `prefeitura@demo.br` e `demo1234` | Tela da prefeitura (Chamadas), com a chamada de Catalão já publicada | `app/web/src/paginas/Entrar.svelte` e `Prefeitura.svelte` |
+| 3 | 0:50 | App, prefeitura | Enviar `04-go-catalao-2026.pdf`, conferir e editar um campo. Não clicar em "Publicar" | Tabela de itens com a origem "IA"; corte na espera | `ia/extrair/` e `app/web/src/paginas/Prefeitura.svelte` |
+| 4 | 1:06 | App, perfil da Ana | Abrir "Oportunidades" | Cartão de Catalão com o ganho estimado e o aviso "seleção anterior, sem RITS" | `app/src/casamento.js` e `app/web/src/paginas/Agricultor.svelte` |
+| 5 | 1:20 | App, Ana | Tocar no cartão, digitar quanto entrega por semana, tocar em "Quero participar" | Resposta curta, sugestão e lista de documentos | `ia/assistente/` e `app/web/src/paginas/Chamada.svelte` |
+| 6 | 1:32 | App, perfil da cooperativa | "Proposta conjunta" da chamada de Catalão, depois "Gerar projeto de venda" | Divisão entre os cooperados, o que falta e a página do projeto de venda | `app/src/agrupamento.js` e `app/web/src/paginas/Cooperativa.svelte` |
+| 7 | 1:48 | TinkerCad | Abrir a chave da porta e levar o TMP36 acima de 10 °C | LED e buzzer ligados | `iot/camara-fria/camara-fria.ino` |
+| 8 | 1:51 | Terminal | `python3 iot/simulador.py --cenario porta-aberta --quantidade 15 --intervalo 1` | Leituras saindo, uma por segundo, com o status 201 | `iot/simulador.py` |
+| 9 | 1:54 | App, cooperativa | Tela "Câmara fria" | Faixa vermelha de alerta de temperatura | `app/web/src/paginas/CamaraFria.svelte` |
+| 10 | 1:57 | Terminal | `docker compose ps` | app e ia no ar | `docker-compose.yml` |
+| 11 | 2:01 | Power BI, página 1 | Filtrar UF = GO | Ranking por município e faixa de cumprimento | `dados/powerbi/guia-do-painel.md` |
+| 12 | 2:10 | Power BI | Limpar o filtro de UF, Ano = 2022, cartão "Faltaria com 45% (R$)"; depois a página 2 | 244,8 mi; renda por agricultor e entregas no prazo, com o selo "dados simulados" | `dados/powerbi/guia-do-painel.md` |
+| 13 | 2:40 | App, Ana | Voltar a "Oportunidades" | Cartão com o ganho | `app/web/src/paginas/Agricultor.svelte` |
 
-### O que a demonstração pede do plano técnico
+### O que a demonstração pede do app
 
-Estes pontos do plano existem por causa do vídeo. Confira cada um quando o app estiver de pé:
+Estes pontos existem por causa do vídeo. Confira cada um quando o app estiver de pé:
 
-| O que o vídeo precisa | Onde está no plano | Como conferir |
+| O que o vídeo precisa | Onde está no repositório | Como conferir |
 |---|---|---|
-| O alerta de temperatura aparece. | T10 e T11 (passo 4): `--quantidade 15 --intervalo 1`. O cenário começa em 5 °C e sobe 0,4 °C por leitura, então a 14ª leitura chega a 10,2 °C, acima do limite de 10 °C. | Rodar uma vez antes e ver a faixa vermelha. O alerta de porta (2 minutos aberta) não aparece nessa demonstração curta. No TinkerCad, o LED também só acende com temperatura acima de 10 °C ou porta aberta por mais de 2 minutos; por isso o roteiro manda subir o TMP36. |
-| A chamada de Catalão aparece como aberta. | `DATA_REFERENCIA` (T6, T8, T9 e T15). | `.env` com `DATA_REFERENCIA=2026-07-15`; a Ana vê o cartão. |
-| Todos os usuários em Catalão, a Ana planta alface e mandioca, a chamada semeada está publicada. | Semente da T6 e da T9. | Entrar como a Ana e como a cooperativa. |
-| O cartão de 244,8 milhões e o de 1.531. | T13 (números de 2022 nos testes) e T14 (`Faltaria com 45% (R$)` e `Municípios abaixo do mínimo`, só da esfera municipal). | Seção "Conferir antes de gravar". |
-| O aviso "seleção anterior, sem RITS". | T7, T8 e T9. O edital de Catalão é anterior a 23/10/2026. | Aparece no cartão e no projeto de venda. É esperado. Não fale de RITS no vídeo. |
+| O alerta de temperatura aparece. | `iot/simulador.py` e `app/src/camara-fria.js`: `--quantidade 15 --intervalo 1`. O cenário começa em 5 °C e sobe 0,4 °C por leitura, então a 14ª leitura chega a 10,2 °C, acima do limite de 10 °C. | Rodar uma vez antes e ver a faixa vermelha. O alerta de porta (2 minutos aberta) não aparece nessa demonstração curta. No TinkerCad, o LED também só acende com temperatura acima de 10 °C ou porta aberta por mais de 2 minutos; por isso o roteiro manda subir o TMP36. |
+| A chamada de Catalão aparece como aberta. | `DATA_REFERENCIA` (`app/src/config.js` e `docker-compose.yml`). | `.env` com `DATA_REFERENCIA=2026-07-15`; a Ana vê o cartão. |
+| Todos os usuários em Catalão, a Ana planta alface e mandioca, a chamada semeada está publicada. | Semente: `app/src/semente.js`. | Entrar como a Ana e como a cooperativa. |
+| O cartão de 244,8 milhões e o de 1.531. | `dados/tests/test_pipeline.py` (números de 2022 nos testes) e `dados/powerbi/medidas.dax` (`Faltaria com 45% (R$)` e `Municípios abaixo do mínimo`, só da esfera municipal). | Seção "Conferir antes de gravar". |
+| O aviso "seleção anterior, sem RITS". | `app/src/regras-pnae.js`, `app/web/src/paginas/Agricultor.svelte` e `app/src/projeto-venda.js`. O edital de Catalão é anterior a 23/10/2026. | Aparece no cartão e no projeto de venda. É esperado. Não fale de RITS no vídeo. |
 
-**O que o plano não entrega, e o roteiro não usa:**
+**O que o app não tem, e o roteiro não usa:**
 - aviso de "data de demonstração" no topo da tela;
-- tempo de leitura da IA na tela da prefeitura. O serviço de IA mede `duracao_ms`, mas a rota e a tela da T9 só trazem a origem e os avisos. Se quiser mostrar "lido em X s", acrescente isso à T9;
-- linha da meta de 45% no ranking do Power BI. Depende do guia da T14; o roteiro usa a faixa de cumprimento;
+- linha da meta de 45% no ranking do Power BI. Depende de como o grupo monta o painel (`dados/powerbi/guia-do-painel.md`); o roteiro usa a faixa de cumprimento;
 - a caixa de fonte na página 1 e o selo "dados simulados" na página 2 do Power BI: são caixas de texto que você põe no relatório.
+
+**O tempo de leitura da IA aparece na tela.** Logo depois de ler o PDF, a tela da prefeitura mostra a origem, o modelo e o tempo, como em "Lida pela IA (claude-haiku-5-5): lido em 19 s" (`app/web/src/paginas/Prefeitura.svelte`; o print 2 do PDF de evidências mostra isso). A frase só aparece na leitura feita naquela hora, não numa chamada que já estava publicada. Ao cortar a espera na edição, deixe essa linha visível.
 
 ## 3. Números usados
 
-Os números de 2022 saem de `planejamento/pesquisa/dados-abertos.md`, seção 6. Os outros saem de `planejamento/pesquisa/fatos-pnae.md`.
+Os números de 2022 são o cálculo do grupo sobre os dados abertos do FNDE (`dados/datalake/README.md`, "Números de referência de 2022"). Os outros saem das fontes oficiais listadas em `docs/fontes.md`.
 
 | Número | O que é | Ano | Fonte | Onde aparece |
 |---|---|---|---|---|
@@ -160,19 +161,19 @@ Os números de 2022 saem de `planejamento/pesquisa/dados-abertos.md`, seção 6.
 | 44,5% | Percentual nacional da verba do PNAE gasto com a agricultura familiar, sobre todas as entidades (prefeituras e secretarias estaduais) | 2022 | Cálculo do grupo com dados abertos do FNDE, 2022, dados preliminares (o painel do FNDE mostra 45,15%) | Power BI; slide 2 |
 | R$ 244,8 milhões | Quanto faltaria para as prefeituras abaixo de 45% chegarem lá, se a regra nova valesse em 2022 (simulação; só prefeituras) | 2022 | Cálculo do grupo com dados abertos do FNDE, 2022, dados preliminares | Fala 2:10; Power BI; slide 8 |
 | R$ 97,1 milhões | Quanto faltou para as prefeituras chegarem a 30% (só prefeituras) | 2022 | Cálculo do grupo com dados abertos do FNDE, 2022, dados preliminares | Só no Power BI ("Faltou para o mínimo (R$)") |
-| Sul 69,4%, Norte 51,0%, Sudeste 41,4%, Centro-Oeste 39,0%, Nordeste 38,6% | Parte da verba gasta com a agricultura familiar, por região. São os valores do painel (69,43%, 51,04%, 41,39%, 38,96% e 38,64%) com uma casa decimal | 2022 | Painel do FNDE "Aquisição da Agricultura Familiar no PNAE – 2011 a 2022", dados preliminares (`dados-abertos.md`, seção 6, "Outros números do painel") | Slide 8 |
+| Sul 69,4%, Norte 51,0%, Sudeste 41,4%, Centro-Oeste 39,0%, Nordeste 38,6% | Parte da verba gasta com a agricultura familiar, por região. São os valores do painel (69,43%, 51,04%, 41,39%, 38,96% e 38,64%) com uma casa decimal | 2022 | Painel do FNDE "Aquisição da Agricultura Familiar no PNAE – 2011 a 2022", dados preliminares (`docs/fontes.md`, seção 5) | Slide 8 |
 | 76,8% (3.897.408 de 5.073.324) | Estabelecimentos agropecuários da agricultura familiar | 2017 | IBGE, Censo Agropecuário 2017, SIDRA tabela 6778 | Slide 2 |
 | R$ 40 mil | Limite de venda por agricultor, por ano civil, para cada entidade executora | 2026 | Res. CD/FNDE 4/2026, art. 38, redação da Res. 17/2026 | Fala 1:06 (itálico); app |
 | 05/05/2026 | Entrada do PNAE no Contrata+Brasil, com uso opcional | 2026 | Res. CD/FNDE 6/2026; release do MEC reproduzido pela Fenacon | Slide 4 |
 | R$ 6,7 bilhões | Orçamento do PNAE | 2026 | Agência Gov, 19/02/2026, com dados do FNDE | Slide 9 |
 | Cerca de 38 milhões | Alunos atendidos pelo PNAE | 2025 | FNDE, Relatório de Gestão 2025, p. 163 | Slide 9 |
-| 8 chamadas reais, 5 estados, 4 regiões | Conjunto de avaliação da IA | 2025 e 2026 | `ia/avaliacao/chamadas/` (T5); origem de cada chamada em `pesquisa/chamadas/indice.md`. Só vale depois que a avaliação rodar | Fala 2:40 (itálico); slide 7 |
+| 8 chamadas reais, 5 estados, 4 regiões | Conjunto de avaliação da IA | 2025 e 2026 | `ia/avaliacao/chamadas/`; origem de cada chamada em `docs/fontes.md`, seção 1. Só vale depois que a avaliação rodar | Fala 2:40 (itálico); slide 7 |
 
 - **Não usei:**
   - os percentuais de 2019 (36,9% e 37,3% do Ipea), trocados pelos de 2022;
   - o R$ 1,60 bilhão comprado em 2022, para não encher de números;
-  - o R$ 461,3 milhões, que é a falta para 45% somando também as secretarias estaduais em 2022. Está no plano (T13 e T14), conferi por script e não está em `dados-abertos.md`. Se perguntarem, a resposta é que o R$ 244,8 milhões conta só as prefeituras.
-- **Fora desta conta:** valores técnicos do plano, como 10 °C, 2 minutos e as 15 leituras do simulador. Não são fatos do PNAE.
+  - o R$ 461,3 milhões, que é a falta para 45% somando também as secretarias estaduais em 2022. Está em `dados/datalake/README.md`, "Números de referência de 2022". Se perguntarem, a resposta é que o R$ 244,8 milhões conta só as prefeituras.
+- **Fora desta conta:** valores técnicos do projeto, como 10 °C, 2 minutos e as 15 leituras do simulador. Não são fatos do PNAE.
 
 ### ODS de cada parte
 
@@ -216,7 +217,7 @@ Os números de 2022 saem de `planejamento/pesquisa/dados-abertos.md`, seção 6.
 
 **Edição**
 - Corte as esperas: a leitura da IA e as leituras do simulador. Não acelere as telas.
-- Se a tela da prefeitura mostrar o tempo de leitura da IA, deixe visível. O plano só garante a origem e os avisos.
+- A tela da prefeitura mostra o tempo de leitura da IA logo depois da leitura ("lido em X s"): deixe visível.
 - Duração final de até 2:55.
 
 **Cartelas de abertura e fechamento: vale a pena?**
@@ -263,9 +264,9 @@ Eles não somam pontos, mas pesam na escolha do vencedor.
 
 | Diferencial | Como aparece no vídeo | Estado |
 |---|---|---|
-| Áreas integradas | A mesma chamada de Catalão passa pela IA, pela Ana e pela cooperativa; as leituras da câmara fria e as entregas do app vão para o data lake e chegam ao Power BI (T12, T13). | Para o painel mostrar as leituras da gravação de verdade, rode o pipeline depois do simulador e suba o novo `.xlsx` (T15, passo 4). Sem isso, a página 2 é simulada e fica marcada assim. |
-| Pipeline ponta a ponta | "Tudo sobe com um comando no Docker." Com o Jenkins rodando, soma-se "e o Jenkins testa a cada mudança". | O Jenkins é da T16 e entra só se couber no tempo. |
-| IA medida | O trecho em itálico do fechamento: 8 chamadas reais, de 5 estados e 4 regiões (sem o Norte), contra um gabarito conferido com o texto de cada PDF, comparando o Claude com o modo de regras. | Resultado medido (T5, 228 itens): o Claude acerta 95,6% dos itens contra 56,1% no modo de regras, 100% das quantidades e preços (61,4% nas regras) e 100% dos prazos (37,5% nas regras). Fala sugerida: "IA que acerta 95,6% dos itens em 8 chamadas reais". |
+| Áreas integradas | A mesma chamada de Catalão passa pela IA, pela Ana e pela cooperativa; as leituras da câmara fria e as entregas do app vão para o data lake e chegam ao Power BI (`dados/etapas/ingerir_app.py` e `dados/etapas/refinar.py`). | Para o painel mostrar as leituras da gravação de verdade, rode o pipeline depois do simulador e suba o novo `.xlsx` (comandos no README, seções 2A e 2B). Sem isso, a página 2 é simulada e fica marcada assim. |
+| Pipeline ponta a ponta | "Tudo sobe com um comando no Docker." Com o Jenkins rodando, soma-se "e o Jenkins testa a cada mudança". | O Jenkins (`devops/jenkins/README.md`) só entra se estiver rodando na hora de gravar. |
+| IA medida | O trecho em itálico do fechamento: 8 chamadas reais, de 5 estados e 4 regiões (sem o Norte), contra um gabarito conferido com o texto de cada PDF, comparando o Claude com o modo de regras. | Resultado medido (`ia/avaliacao/resultados/resultados.md`, 228 itens): o Claude acerta 95,6% dos itens contra 56,1% no modo de regras, 100% das quantidades e preços (61,4% nas regras) e 100% dos prazos (37,5% nas regras). Fala sugerida: "IA que acerta 95,6% dos itens em 8 chamadas reais". |
 | Validado com gente real | **SÓ SE O GRUPO FIZER DE VERDADE:** "Conversamos com (papel, sem nome) e ouvimos (uma frase)." Entra no fechamento no lugar do trecho da IA medida, com uma frase de tamanho parecido. | Se o grupo não conversar, apague esta linha. Nada aqui pode ser inventado, nem a pessoa nem a frase. |
 
-Por fim, o projeto parte de uma regra nova (45% desde 2026) e se posiciona como complemento do Contrata+Brasil, que é opcional e só trata as chamadas criadas nele. O projeto cobre o que a plataforma federal não faz, pelo que li dos tutoriais e do edital dela (`fatos-pnae.md`, seção 4): ler chamadas em PDF, juntar vizinhos, gerar o projeto de venda no modelo do FNDE, cuidar da câmara fria e mostrar o mínimo legal.
+Por fim, o projeto parte de uma regra nova (45% desde 2026) e se posiciona como complemento do Contrata+Brasil, que é opcional e só trata as chamadas criadas nele. O projeto cobre o que a plataforma federal não faz, pelo que os tutoriais e o edital dela mostram (`docs/fontes.md`, seção 5): ler chamadas em PDF, juntar vizinhos, gerar o projeto de venda no modelo do FNDE, cuidar da câmara fria e mostrar o mínimo legal.
