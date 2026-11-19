@@ -71,7 +71,7 @@ def _perguntar_ao_claude(chamada, perfil, mensagens, cliente, modelo, timeout_s)
     # o texto vem depois do bloco de pensamento: lê pelo tipo do bloco, não pela posição
     dados = json.loads(''.join(bloco.text for bloco in resposta.content if bloco.type == 'text'))
     itens = dados['sugestao']['itens']
-    if not (isinstance(dados['resposta'], str) and isinstance(itens, list) and all(
+    if not (isinstance(dados['resposta'], str) and dados['resposta'].strip() and isinstance(itens, list) and all(
             isinstance(item['produto_id'], str) and type(item['quantidade']) in (int, float) for item in itens)):
         raise ErroIA('resposta fora do esquema')
     return {'resposta': dados['resposta'], 'sugestao': {'itens': itens}}
