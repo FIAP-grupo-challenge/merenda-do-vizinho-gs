@@ -239,6 +239,28 @@ test('prefeitura envia texto, recebe rascunho e publica', async (t) => {
   assert.deepEqual((await app.pedir('GET', '/api/prefeitura/chamadas', { token: deOutra })).corpo, []);
 });
 
+test('semanas de fornecimento: número inteiro de 1 a 53, ou em branco; o resto dá 400 e a chamada não muda', async (t) => {
+  const app = await subirApp({ ia: iaFalsa(chamadaExemplo({ semanas_fornecimento: 20 })) });
+  t.after(app.fechar);
+  const token = await app.entrar('prefeitura@demo.br');
+  const { id } = (await app.pedir('POST', '/api/prefeitura/chamadas', { token, corpo: { texto: 'edital' } })).corpo;
+  const noBanco = () => JSON.parse(app.db.prepare('SELECT dados FROM chamadas WHERE id = ?').get(id).dados).semanas_fornecimento;
+  const salvar = (semanas) => app.pedir('PUT', `/api/prefeitura/chamadas/${id}`, { token, corpo: { semanas_fornecimento: semanas } });
+
+  // 0,5 e 40,5 passavam (a conta era "maior que 0 e até 53"), mas a mensagem diz "de 1 a 53"
+  for (const ruim of [0, 0.5, 0.99, 1.5, 40.5, 53.5, 54, -1, 1e21, '40', true, [40]]) {
+    const resposta = await salvar(ruim);
+    assert.equal(resposta.status, 400, JSON.stringify(ruim));
+    assert.match(resposta.corpo.erro, /número inteiro de 1 a 53/);
+    assert.equal(noBanco(), 20, `${JSON.stringify(ruim)} não pode mudar a chamada`);
+  }
+  // os limites valem, e em branco (null) volta ao padrão de 40 semanas
+  for (const bom of [1, 53, 36, 40.0, null]) {
+    assert.equal((await salvar(bom)).status, 200, JSON.stringify(bom));
+    assert.equal(noBanco(), bom);
+  }
+});
+
 test('prefeitura inclui um item à mão num rascunho sem itens e publica', async (t) => {
   const ia = iaFalsa(chamadaExemplo({ itens: [] }), ['nenhuma tabela de itens encontrada; confira à mão']);
   const app = await subirApp({ ia });

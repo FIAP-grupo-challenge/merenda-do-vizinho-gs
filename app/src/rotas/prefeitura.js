@@ -79,8 +79,8 @@ function lerCampos(corpo) {
   }
   if (veio('semanas_fornecimento')) {
     const semanas = corpo.semanas_fornecimento;
-    if (semanas !== null && !(typeof semanas === 'number' && semanas > 0 && semanas <= 53)) {
-      throw new ErroHttp(400, 'As semanas de fornecimento vão de 1 a 53 (ou fica em branco).');
+    if (semanas !== null && !(Number.isInteger(semanas) && semanas >= 1 && semanas <= 53)) {
+      throw new ErroHttp(400, 'As semanas de fornecimento são um número inteiro de 1 a 53 (ou ficam em branco).');
     }
     campos.semanas_fornecimento = semanas;
   }

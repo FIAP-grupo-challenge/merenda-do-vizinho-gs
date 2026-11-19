@@ -326,7 +326,7 @@
             <div>
               <label for="c-semanas">Semanas de fornecimento</label>
               <CampoNumero id="c-semanas" compacto bind:texto={form.semanas} descricao="dica-semanas" />
-              <p class="dica" id="dica-semanas">Em branco, o app conta 40 semanas (200 dias letivos).</p>
+              <p class="dica" id="dica-semanas">Número inteiro, de 1 a 53. Em branco, o app conta 40 semanas (200 dias letivos).</p>
             </div>
             <div><label for="c-local">Local de entrega</label><input id="c-local" bind:value={form.local_entrega}></div>
             <div><label for="c-contato">Contato (setor, telefone ou e-mail; sem nome de servidor)</label><input id="c-contato" bind:value={form.contato}></div>
