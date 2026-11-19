@@ -80,6 +80,7 @@ const UNIDADES_INTEIRAS = new Set(
   [
     'pç', 'pc', 'peça', 'unidade', 'un', 'unid', 'maço', 'molho', 'fx', 'feixe', 'atilho',
     'dz', 'dúzia', 'duzia', 'bandeja', 'cx', 'caixa', 'pct', 'pacote',
+    'und', 'mlh', 'pact', 'pcte', // abreviações que aparecem nas chamadas reais da avaliação
   ].map(normalizarUnidade),
 );
 

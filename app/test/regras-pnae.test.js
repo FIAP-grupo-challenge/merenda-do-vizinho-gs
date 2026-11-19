@@ -117,6 +117,7 @@ test('unidadeInteira: pé, maço, dúzia e bandeja não se dividem; kg, g, l e m
   const inteiras = [
     'pç', 'pc', 'peça', 'unidade', 'un', 'unid', 'maço', 'molho', 'fx', 'feixe', 'atilho',
     'dz', 'dúzia', 'duzia', 'bandeja', 'cx', 'caixa', 'pct', 'pacote',
+    'und', 'mlh', 'pact', 'pcte', 'UND', 'Und.',
   ];
   for (const unidade of inteiras) assert.equal(unidadeInteira(unidade), true, unidade);
   // sem maiúsculas e sem acento, como a IA lê as unidades do edital; o ponto e o espaço da tabela não contam
