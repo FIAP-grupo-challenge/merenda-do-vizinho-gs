@@ -3,6 +3,9 @@
 // Idempotente: o index.js chama a cada subida, e quem já existe não é mexido.
 const { hashSenha } = require('./auth');
 const { emTransacao } = require('./db');
+const { capacidadeNoPeriodo } = require('./regras-pnae');
+// A chamada pública 003/2026 de Catalão (GO), lida do PDF do edital e conferida à mão (semente/chamada-demo.json)
+const CHAMADA_DEMO = require('../semente/chamada-demo.json');
 
 const SENHA_DEMO = 'demo1234';
 const TODO_ANO = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -63,7 +66,7 @@ function semear(db) {
   };
 
   emTransacao(db, () => {
-    garantir('prefeitura@demo.br', 'prefeitura', 'Prefeitura Municipal de Catalão');
+    const prefeitura = garantir('prefeitura@demo.br', 'prefeitura', 'Prefeitura Municipal de Catalão');
 
     const cooperativa = garantir('cooperativa@demo.br', 'cooperativa', 'Cooperativa Vizinhos do Campo');
     if (cooperativa.novo) {
@@ -85,15 +88,41 @@ function semear(db) {
     const inserirProduto = db.prepare(
       'INSERT INTO produtos_agricultor (agricultor_id, produto_id, quantidade_semana, meses_safra) VALUES (?, ?, ?, ?)',
     );
+    const agricultores = [];
     for (const { email, nome, perfil, produtos } of AGRICULTORES) {
       const agricultor = garantir(email, 'agricultor', nome);
+      agricultores.push(agricultor.id);
       if (!agricultor.novo) continue;
       inserirAgricultor.run({ ...PERFIL_PADRAO, ...perfil, usuario_id: agricultor.id, cooperativa_id: cooperativa.id });
       for (const [produtoId, quantidadeSemana] of produtos) {
         inserirProduto.run(agricultor.id, produtoId, quantidadeSemana, JSON.stringify(TODO_ANO));
       }
     }
+    semearChamada(db, prefeitura.id, agricultores);
   });
+}
+
+// A chamada de Catalão já publicada, com origem 'cache' (a leitura conferida à mão): a demonstração não depende da IA
+// nem de clicar em "Publicar". Vem com o interesse dos seis agricultores: cada um oferece o que produz no período, em
+// cada produto que a chamada pede. Data de publicação: o início do recebimento dos projetos no edital.
+function semearChamada(db, prefeituraId, agricultores) {
+  if (db.prepare("SELECT 1 FROM chamadas WHERE prefeitura_id = ? AND origem = 'cache'").get(prefeituraId)) return;
+  const publicadaEm = `${CHAMADA_DEMO.data_publicacao}T12:00:00.000Z`;
+  const { lastInsertRowid } = db
+    .prepare(
+      `INSERT INTO chamadas (prefeitura_id, dados, status, origem, criada_em, publicada_em)
+       VALUES (?, ?, 'publicada', 'cache', ?, ?)`,
+    )
+    .run(prefeituraId, JSON.stringify(CHAMADA_DEMO), publicadaEm, publicadaEm);
+  const pedidos = new Set(CHAMADA_DEMO.itens.map((item) => item.produto_id));
+  const produtos = db.prepare('SELECT produto_id, quantidade_semana FROM produtos_agricultor WHERE agricultor_id = ?');
+  const inserir = db.prepare('INSERT INTO interesses (agricultor_id, chamada_id, produto_id, quantidade) VALUES (?, ?, ?, ?)');
+  for (const id of agricultores) {
+    for (const { produto_id, quantidade_semana } of produtos.all(id)) {
+      if (!pedidos.has(produto_id)) continue;
+      inserir.run(id, lastInsertRowid, produto_id, capacidadeNoPeriodo(quantidade_semana, CHAMADA_DEMO.semanas_fornecimento));
+    }
+  }
 }
 
 module.exports = { semear };

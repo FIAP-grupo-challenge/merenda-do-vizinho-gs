@@ -1,15 +1,11 @@
 // Exportação para o data lake: GET /api/exportar, com a chave de serviço no cabeçalho X-Chave-Servico (o pipeline de dados/).
-const crypto = require('node:crypto');
+const { chaveConfere } = require('../auth');
 const { exportar } = require('../exportacao');
 const { ErroHttp, responderJson } = require('../http-util');
 
-// Os digests têm sempre 32 bytes: a comparação leva o mesmo tempo, e o tamanho da chave não aparece.
-const digest = (texto) => crypto.createHash('sha256').update(texto).digest();
-
 function registrar(roteador, { db, config }) {
   const exigirChaveServico = async (req, res) => {
-    const recebida = req.headers['x-chave-servico'];
-    if (typeof recebida !== 'string' || !crypto.timingSafeEqual(digest(recebida), digest(config.chaveServico))) {
+    if (!chaveConfere(req.headers['x-chave-servico'], config.chaveServico)) {
       responderJson(res, 401, { erro: 'Chave de serviço inválida.' });
     }
   };
