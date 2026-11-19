@@ -1,0 +1,295 @@
+/* Base de todas as telas do Merenda do Vizinho.
+   Escrito primeiro para o celular; @media (min-width: 768px) ajusta tablet e computador.
+   Regras: fonte de 18 px ou mais, contraste alto, botões e campos com 44 px de altura ou mais,
+   e nada de rolagem horizontal da página (tabela larga rola dentro de .rolavel). */
+
+:root {
+  --texto: #1a1a1a;
+  --fundo: #ffffff;
+  --fundo-suave: #f2f6f0;
+  --verde: #1b5e20; /* 7,9:1 sobre o branco */
+  --verde-escuro: #0f3d13;
+  --borda: #5f6b5f; /* 6:1 sobre o branco: a borda do campo aparece */
+  --linha: #c9d3c7;
+  --erro: #b3261e; /* 6,5:1 sobre o branco */
+  --foco: #0b57d0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 112,5% = 18 px na fonte padrão do navegador, e segue o tamanho que a pessoa escolheu nele */
+html {
+  font-size: 112.5%;
+}
+
+body {
+  margin: 0;
+  /* sem system-ui: no Linux ele segue a fonte da área de trabalho, que pode ser monoespaçada */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fundo-suave);
+  overflow-wrap: anywhere; /* e-mail ou número comprido quebra a linha em vez de alargar a página */
+}
+
+/* o atributo hidden sempre esconde, mesmo em elementos com display próprio */
+[hidden] {
+  display: none !important;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+}
+
+a {
+  color: var(--verde);
+}
+
+:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* ---------- Estrutura ---------- */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--verde);
+  color: #ffffff;
+}
+
+.topo h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.topo a {
+  color: #ffffff;
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.cartao {
+  background: var(--fundo);
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cartao > :first-child {
+  margin-top: 0;
+}
+
+/* ---------- Formulários ---------- */
+
+label {
+  display: block;
+  margin: 1rem 0 0.25rem;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  min-height: 44px;
+}
+
+input:not([type='radio']):not([type='checkbox']),
+select,
+textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--borda);
+  border-radius: 8px;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+fieldset {
+  min-width: 0; /* sem isso, o fieldset não encolhe e alarga a página */
+  margin: 1rem 0 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+/* rótulo com rádio ou caixa de marcar dentro: a linha toda é o alvo do toque */
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  margin: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.opcao input {
+  width: 1.5rem;
+  height: 1.5rem;
+  min-height: 0;
+  margin: 0;
+  flex: none;
+  accent-color: var(--verde);
+}
+
+.dica {
+  margin: 0.25rem 0 0;
+}
+
+/* ---------- Botões ---------- */
+
+button,
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid var(--verde);
+  border-radius: 8px;
+  background: var(--verde);
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:hover,
+.botao:hover {
+  background: var(--verde-escuro);
+  border-color: var(--verde-escuro);
+}
+
+.botao-secundario {
+  background: var(--fundo);
+  color: var(--verde);
+}
+
+.botao-secundario:hover {
+  background: var(--fundo-suave);
+  color: var(--verde-escuro);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+form button[type='submit'] {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* ---------- Abas ---------- */
+
+.abas {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 3px solid var(--verde);
+}
+
+.abas [role='tab'] {
+  flex: 1;
+  border-radius: 8px 8px 0 0;
+  background: var(--fundo);
+  color: var(--verde);
+}
+
+.abas [role='tab'][aria-selected='true'] {
+  background: var(--verde);
+  color: #ffffff;
+}
+
+.painel {
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ---------- Mensagens ---------- */
+
+/* fica na página mesmo vazio: assim o leitor de tela anuncia o erro quando o texto aparece (role="alert") */
+.erro {
+  margin: 0.75rem 0 0;
+  color: var(--erro);
+  font-weight: 600;
+}
+
+/* ---------- Tabelas ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--linha);
+  text-align: left;
+  vertical-align: top;
+}
+
+/* tabela larga rola dentro desta caixa, nunca a página */
+.rolavel {
+  overflow-x: auto;
+  max-width: 100%;
+  overflow-wrap: normal;
+}
+
+/* ---------- Telas maiores ---------- */
+
+@media (min-width: 768px) {
+  .topo {
+    padding: 1rem 2rem;
+  }
+
+  main {
+    padding: 2rem;
+  }
+
+  .cartao {
+    padding: 1.5rem;
+  }
+
+  form button[type='submit'] {
+    width: auto;
+  }
+
+  /* tela de entrar: coluna estreita no meio */
+  .estreita {
+    max-width: 34rem;
+    margin: 0 auto;
+  }
+}
