@@ -1,5 +1,6 @@
 import base64
 import io
+import time
 import unittest
 from pathlib import Path
 
@@ -9,7 +10,7 @@ from ia.extrair.regras import extrair_por_regras
 from ia.extrair.servico import extrair_chamada
 from ia.extrair.texto_pdf import texto_do_pdf
 from ia.numeros import converter_numero_br
-from ia.privacidade import contem_dados_pessoais, tem_cpf_no_texto
+from ia.privacidade import contem_dados_pessoais, dados_pessoais_no_texto, tem_cpf_no_texto
 
 FIXTURES = Path(__file__).parent / 'fixtures'
 FIXTURE = FIXTURES / 'chamada-exemplo.txt'
@@ -73,7 +74,8 @@ class TestRegras(unittest.TestCase):
 
     def test_tem_cpf_no_texto(self):
         self.assertTrue(tem_cpf_no_texto('meu cpf é 529.982.247-25')); self.assertTrue(tem_cpf_no_texto('52998224725'))
-        self.assertFalse(tem_cpf_no_texto('1.200 kg a R$ 5,40'))
+        self.assertTrue(tem_cpf_no_texto('529 982 247 25')); self.assertTrue(tem_cpf_no_texto('529.982.247 25'))
+        self.assertFalse(tem_cpf_no_texto('1.200 kg a R$ 5,40')); self.assertFalse(tem_cpf_no_texto('1200 3000'))
 
     def test_regras_leem_os_16_itens_da_chamada_real_de_catalao(self):
         r = extrair_chamada({'pdf_base64': base64.b64encode(PDF_REAL.read_bytes()).decode()})
@@ -127,3 +129,95 @@ class TestPrivacidade(unittest.TestCase):
         corpo = {'chamada': {'contato': 'Secretaria Municipal de Educação', 'itens': []},
                  'perfil': {'municipio': 'Catalão', 'uf': 'GO', 'prioridade_rits': True}}
         self.assertEqual(contem_dados_pessoais(corpo), [])
+
+
+# Resposta do Haiku 5.5 na chamada real da T4 (o app reenvia as respostas do assistente na conversa)
+RESPOSTA_REAL_DA_IA = (
+    'Com 50 pés de alface por semana e 40 semanas de entrega, você pode oferecer 2.000 pç de alface, dentro do pedido '
+    'de 2.280 pç da chamada. Pelo seu perfil, também dá para oferecer 1.600 kg de mandioca, com 40 kg por semana, bem '
+    'abaixo dos 2.800 kg pedidos. A chamada não informa o período exato de entrega, então não sei em quais meses ela '
+    'deve acontecer. Até 30/07/2026 você precisa enviar o projeto de venda assinado, comprovante de CPF, extrato do '
+    'CAF PF ativo emitido até 60 dias antes da entrega, declaração de que os alimentos são de produção própria e '
+    'documentos higiênico-sanitários. Se quiser outra quantidade por semana, me diga que eu recalculo.\n\n'
+    'Vale o texto da chamada. Confirme com a prefeitura ou com a assistência técnica (Emater).'
+)
+
+# (texto do chat, dados pessoais achados): os casos que passam, com a lista vazia, ficam ao lado dos que são barrados
+CASOS_DO_TEXTO_DO_CHAT = [
+    # e-mail
+    ('Sou o João da Silva, meu e-mail é joao.silva@gmail.com e meu zap é (64) 99999-8888. Consigo 30 kg por semana',
+     ['email', 'telefone']),
+    ('joao_silva+merenda@fazenda.com.br', ['email']),
+    ('JOÃO@GMAIL.COM', ['email']),
+    ('preço @ 5,40 e 30kg@5.40', []),  # arroba de preço não é e-mail: falta o domínio com final em letras
+    # telefone: com e sem DDD, com e sem parênteses, espaço, traço e ponto, de 10 e de 11 dígitos
+    ('(64) 99999-8888', ['telefone']),
+    ('64 99999-8888', ['telefone']),
+    ('99999-8888', ['telefone']),
+    ('99999 8888', ['telefone']),
+    ('(64)999998888', ['telefone']),
+    ('64.99999.8888', ['telefone']),
+    ('64 9 9999-8888', ['telefone']),
+    ('+55 (64) 99999-8888', ['telefone']),
+    ('5564999998888', ['telefone']),
+    ('(64) 3441-5555', ['telefone']),  # fixo, 10 dígitos
+    ('6434415555', ['telefone']),
+    ('64999998888', ['cpf', 'telefone']),  # 11 dígitos seguidos: tanto pode ser um CPF quanto um celular
+    # CPF
+    ('529.982.247-25', ['cpf']),
+    ('52998224725', ['cpf']),
+    ('529 982 247 25', ['cpf']),
+    ('meu cpf é 529.982.247 25', ['cpf']),
+    # dados bancários: a palavra do banco seguida do número
+    ('agência 1234 conta 56789-0', ['banco']),
+    ('AGENCIA: 1234-5', ['banco']),
+    ('Ag. 1234', ['banco']),  # a abreviação sozinha
+    ('CC: 56789-0', ['banco']),
+    ('conta corrente 123456-7', ['banco']),
+    ('minha conta é 56789-0', ['banco']),
+    ('pix 12345678000199', ['banco']),
+    ('minha chave pix é 12345678000199', ['banco']),
+    ('minha chave pix e 12345678000199', ['banco']),  # sem o acento
+    # quantidades, preços, datas e a fala do próprio assistente passam
+    ('1200', []),
+    ('1.200 kg', []),
+    ('30 kg por semana', []),
+    ('R$ 5,40', []),
+    ('1200 3000', []),
+    ('2026', []),
+    ('consigo 30 kg por semana de alface', []),
+    ('1.200,50 kg a R$ 5,40; 12 dz de ovos a 38,16', []),
+    ('1200-3000 kg', []),
+    ('2000-3000 kg e 2500 3000', []),  # parece telefone fixo, mas falta o DDD
+    ('entre 1500 e 2000 kg', []),
+    ('30 40 50 60 70', []),
+    ('até 20/03/2026 ou 20-03-2026', []),
+    ('CEP 75.701-050', []),
+    ('dou conta de 5 kg de mandioca', []),  # 'conta' sem número de conta
+    ('dou conta de 1200 kg de alface', []),
+    ('a conta é 1200 kg; fiz a conta: 1.200 kg', []),
+    ('recebo por pix', []),  # a palavra sozinha não é dado
+    ('assistência técnica (Emater)', []),
+    (RESPOSTA_REAL_DA_IA, []),
+]
+
+
+class TestTextoDoChat(unittest.TestCase):
+    def test_acha_email_telefone_cpf_e_dados_bancarios_e_deixa_passar_quantidade_e_preco(self):
+        for texto, achados in CASOS_DO_TEXTO_DO_CHAT:
+            with self.subTest(texto=texto[:60]):
+                self.assertEqual(dados_pessoais_no_texto(texto), achados)
+
+    def test_a_chamada_real_so_tem_o_telefone_e_o_email_da_prefeitura(self):
+        # um edital cheio de quantidades, preços, CEP e datas: nada além do contato do órgão (que é público) é achado
+        linhas = texto_do_pdf(PDF_REAL.read_bytes()).splitlines()
+        achados = {campo for i in range(len(linhas)) for campo in dados_pessoais_no_texto(' '.join(linhas[i:i + 3]))}
+        self.assertEqual(achados, {'email', 'telefone'})
+
+    def test_texto_grande_e_lido_em_tempo_linear(self):
+        # o texto vem de fora: um prefixo sem limite antes do '@' levaria minutos num texto de 256 KB
+        for texto in ('a' * 100_000, '1' * 100_000, 'a.' * 50_000, 'conta ' * 20_000, '64 ' * 30_000, 'a@' * 50_000):
+            with self.subTest(texto=texto[:8]):
+                inicio = time.perf_counter()
+                dados_pessoais_no_texto(texto)
+                self.assertLess(time.perf_counter() - inicio, 1)

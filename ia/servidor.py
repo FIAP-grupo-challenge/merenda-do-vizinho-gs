@@ -1,5 +1,6 @@
 """Servidor HTTP da IA (porta 3001). Subir com: python -m ia.servidor"""
 import json
+import math
 import os
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -8,7 +9,7 @@ from ia.assistente.servico import responder_assistente
 from ia.cliente_claude import criar_cliente_claude
 from ia.config import MODELO_PADRAO
 from ia.extrair.servico import PdfIlegivel, extrair_chamada
-from ia.privacidade import contem_dados_pessoais, tem_cpf_no_texto
+from ia.privacidade import contem_dados_pessoais, dados_pessoais_no_texto
 
 LIMITE_CORPO = 10 * 1024 * 1024  # 10 MB
 
@@ -31,17 +32,46 @@ def extrair(servidor, corpo):
 
 def assistente(servidor, corpo):
     chamada, perfil, mensagens = corpo.get('chamada'), corpo.get('perfil'), corpo.get('mensagens')
-    if not (isinstance(chamada, dict) and isinstance(chamada.get('itens'), list)
-            and isinstance(perfil, dict) and isinstance(perfil.get('produtos'), list)
+    if not (_chamada_ok(chamada) and _perfil_ok(perfil)
             and isinstance(mensagens, list) and all(_mensagem_ok(mensagem) for mensagem in mensagens)
             and (not mensagens or mensagens[-1]['papel'] == 'agricultor')):  # a IA responde ao agricultor
         return 400, {'erro': 'envie chamada, perfil e mensagens; a última mensagem é do agricultor'}
     campos = set(contem_dados_pessoais(corpo))  # com dado pessoal, nada chega à IA
-    if any(tem_cpf_no_texto(mensagem['texto']) for mensagem in mensagens):
-        campos.add('cpf')
+    for mensagem in mensagens:
+        campos.update(dados_pessoais_no_texto(mensagem['texto']))
     if campos:
         return 400, {'erro': 'dados pessoais não são aceitos', 'campos': sorted(campos)}
     return 200, responder_assistente(chamada, perfil, mensagens, servidor.cliente, servidor.modelo)
+
+
+# Formato do que o assistente lê da chamada e do perfil: valor de outro tipo é 400 (antes ia até uma conta ou um texto
+# e dava 500). Nulo vale: a chamada pode não trazer o campo.
+def _texto_ou_nulo(valor):
+    return valor is None or isinstance(valor, str)
+
+
+def _numero_ou_nulo(valor):  # em JSON, true não é número, e NaN e Infinity não são números de verdade
+    return valor is None or (type(valor) in (int, float) and math.isfinite(valor))
+
+
+def _item_ok(item):
+    return (isinstance(item, dict) and _numero_ou_nulo(item.get('quantidade'))
+            and all(_texto_ou_nulo(item.get(campo)) for campo in ('produto', 'produto_id', 'unidade')))
+
+
+def _chamada_ok(chamada):
+    if not (isinstance(chamada, dict) and isinstance(chamada.get('itens'), list)):
+        return False
+    documentos = chamada.get('documentos_exigidos')
+    return (_texto_ou_nulo(chamada.get('prazo_envio')) and _numero_ou_nulo(chamada.get('semanas_fornecimento'))
+            and (documentos is None or (isinstance(documentos, list) and all(isinstance(d, str) for d in documentos)))
+            and all(_item_ok(item) for item in chamada['itens']))
+
+
+def _perfil_ok(perfil):
+    return (isinstance(perfil, dict) and isinstance(perfil.get('produtos'), list)
+            and all(isinstance(produto, dict) and _texto_ou_nulo(produto.get('produto_id'))
+                    for produto in perfil['produtos']))
 
 
 def _mensagem_ok(mensagem):

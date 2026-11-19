@@ -1,13 +1,35 @@
 """Roteiro do assistente sem IA: regras se-então sobre a chamada já extraída. É também a queda quando a IA falha."""
 import json
+import logging
+import math
+import os
 from pathlib import Path
 
 from ia.catalogo import identificar_produto
 from ia.numeros import converter_numero_br
 
+log = logging.getLogger(__name__)
+
 REGRAS_PNAE = Path(__file__).resolve().parents[2] / 'compartilhado' / 'regras-pnae.json'
+
+
+def _semanas_padrao(texto: str | None):
+    """A variável de ambiente SEMANAS_PADRAO troca o padrão, como no app (regras-pnae.js), para o app e o assistente
+    contarem as mesmas semanas. Vazia vale como ausente. Valor que não é número maior que zero é ignorado, com aviso
+    no stderr (o app nem sobe com ele), e vale o regras-pnae.json."""
+    if texto:
+        try:
+            semanas = float(texto)
+        except ValueError:
+            semanas = 0  # texto que não é número cai na mesma conferência de zero
+        if 0 < semanas < math.inf:  # NaN, infinito, zero e negativo ficam de fora
+            return int(semanas) if semanas.is_integer() else semanas
+        log.warning('SEMANAS_PADRAO inválida (%r): deve ser um número maior que zero; vale o regras-pnae.json', texto)
+    return json.loads(REGRAS_PNAE.read_text(encoding='utf-8'))['semanas_padrao']
+
+
 # 200 dias letivos ÷ 5 dias da semana (LDB, art. 24, I): o mesmo padrão das contas do app (T7)
-SEMANAS_PADRAO = json.loads(REGRAS_PNAE.read_text(encoding='utf-8'))['semanas_padrao']
+SEMANAS_PADRAO = _semanas_padrao(os.getenv('SEMANAS_PADRAO'))
 
 # Habilitação do fornecedor individual (CAF PF, fora de grupo): Res. CD/FNDE 4/2026, art. 35, redação da
 # Res. 17/2026 (fatos-pnae.md, seção 2c). A prefeitura só pode exigir estes; valem quando a chamada não traz a lista.
@@ -32,7 +54,9 @@ def checklist(chamada: dict) -> list[str]:
 def itens_compativeis(chamada: dict, perfil: dict) -> list[dict]:
     """Itens da chamada que o agricultor produz e que têm quantidade pedida, na ordem do edital (como na T7)."""
     meus = {produto.get('produto_id') for produto in perfil['produtos']} - {None}
-    return [item for item in chamada['itens'] if item.get('produto_id') in meus and item.get('quantidade')]
+    # sem o nome ou a unidade (a chamada da T2 sempre traz os dois), vale o id do catálogo e a unidade em branco
+    return [{**item, 'produto': item.get('produto') or item['produto_id'], 'unidade': item.get('unidade') or ''}
+            for item in chamada['itens'] if item.get('produto_id') in meus and item.get('quantidade')]
 
 
 def responder_por_roteiro(chamada: dict, perfil: dict, mensagens: list[dict]) -> dict:
