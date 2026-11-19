@@ -1,0 +1,45 @@
+# Jenkins local que roda o Jenkinsfile da raiz a cada commit. Passo a passo no README.md desta pasta:
+#   mkdir -p /tmp/merenda-jenkins
+#   export DOCKER_GID=$(stat -c %g /var/run/docker.sock)   # todo comando deste arquivo precisa dela, até o down
+#   docker compose -f devops/jenkins/docker-compose.yml up -d --build
+# nome próprio: o projeto do Compose do smoke no pipeline é outro (merenda-ci)
+name: merenda-jenkins
+services:
+  jenkins:
+    build: .
+    # só neste computador: quem usa o Jenkins manda no Docker do host
+    ports:
+      - "127.0.0.1:8080:8080"
+    # o grupo dono do socket do Docker no host, para o usuário jenkins (uid 1000) falar com o Docker
+    group_add:
+      - "${DOCKER_GID:?defina DOCKER_GID com o grupo do socket do Docker: stat -c %g /var/run/docker.sock}"
+    environment:
+      # o ramo que o job roda (main na entrega; durante o desenvolvimento, RAMO=desenvolvimento)
+      RAMO: ${RAMO:-main}
+      # Sem o assistente de instalação (os plugins vêm na imagem e o admin.groovy cria o login); o Git aceita o
+      # repositório local (/repo); o workspace fica no mesmo caminho dentro e fora do contêiner, porque quem monta as
+      # pastas do workspace nos contêineres do pipeline (docker run -v e o Compose do smoke) é o Docker do host.
+      JAVA_OPTS: >-
+        -Djenkins.install.runSetupWizard=false
+        -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+        -Djenkins.model.Jenkins.workspacesDir=${PASTA_TRABALHO:-/tmp/merenda-jenkins}/$${ITEM_FULL_NAME}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      # só o .git, somente leitura: o Jenkins clona daqui, e o .env da sua pasta não entra no contêiner;
+      # precisa de um clone com a pasta .git: sem ela, o Compose para em vez de criar uma pasta do root
+      - type: bind
+        source: ../../.git
+        target: /repo
+        read_only: true
+        bind:
+          create_host_path: false
+      # a pasta tem de existir e ser sua: sem ela, o Docker criaria uma pasta do root, onde o Jenkins não grava
+      - type: bind
+        source: ${PASTA_TRABALHO:-/tmp/merenda-jenkins}
+        target: ${PASTA_TRABALHO:-/tmp/merenda-jenkins}
+        bind:
+          create_host_path: false
+
+volumes:
+  jenkins_home:

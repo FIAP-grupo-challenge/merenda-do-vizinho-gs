@@ -1,0 +1,328 @@
+# Testes automatizados do Merenda do Vizinho, rodados em 2026-11-19T05:42:36-03:00 na raiz do repositório, sem ANTHROPIC_API_KEY.
+# Node 24.13.1 no app e Python 3.14.10 (o .venv do projeto) na IA, nos dados e no simulador.
+# No Jenkins, os mesmos testes rodam a cada commit no Node 24 (node:24-alpine) e no Python 3.12 (python:3.12-slim).
+
+$ cd app && npm test
+
+> merenda-do-vizinho-app@1.0.0 pretest
+> npm run build
+
+
+> merenda-do-vizinho-app@1.0.0 build
+> vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 141 modules transformed.
+rendering chunks...
+computing gzip size...
+public/index.html                            0.52 kB │ gzip:  0.32 kB
+public/chamada.html                          0.83 kB │ gzip:  0.39 kB
+public/agricultor.html                       0.84 kB │ gzip:  0.39 kB
+public/projeto-venda.html                    0.85 kB │ gzip:  0.40 kB
+public/prefeitura.html                       1.00 kB │ gzip:  0.42 kB
+public/cooperativa.html                      1.00 kB │ gzip:  0.42 kB
+public/camara-fria.html                      1.00 kB │ gzip:  0.43 kB
+public/assets/CampoNumero-DIWwqcsA.css       0.04 kB │ gzip:  0.06 kB
+public/assets/CaixaRolavel-BkCk-CpE.css      0.04 kB │ gzip:  0.06 kB
+public/assets/chamada-BT06BBaL.css           0.53 kB │ gzip:  0.30 kB
+public/assets/camara-fria-BqoirZfP.css       1.08 kB │ gzip:  0.41 kB
+public/assets/cooperativa-CheLR6Vp.css       1.09 kB │ gzip:  0.44 kB
+public/assets/projeto-venda-DhlLwqvV.css     1.10 kB │ gzip:  0.45 kB
+public/assets/agricultor-ISK4klkl.css        1.15 kB │ gzip:  0.46 kB
+public/assets/prefeitura-DNlHOFn6.css        1.48 kB │ gzip:  0.53 kB
+public/assets/rolldown-runtime-B8xr6ykz.js   0.18 kB │ gzip:  0.14 kB
+public/assets/CaixaRolavel-Cdpq6ikx.js       0.39 kB │ gzip:  0.29 kB
+public/assets/formato-DTf2Ygg2.js            1.02 kB │ gzip:  0.62 kB
+public/assets/CampoNumero-B6mlf7w6.js        1.29 kB │ gzip:  0.74 kB
+public/assets/index-0b5qeU-j.js              5.37 kB │ gzip:  2.19 kB
+public/assets/camara-fria-C7iNdX01.js        8.28 kB │ gzip:  3.51 kB
+public/assets/chamada-u3ptNiLP.js            9.10 kB │ gzip:  3.94 kB
+public/assets/cooperativa-C2uK3JtW.js        9.13 kB │ gzip:  3.71 kB
+public/assets/projeto-venda-BYGJhXs3.js     10.03 kB │ gzip:  3.76 kB
+public/assets/agricultor-Dlc0Ciga.js        14.05 kB │ gzip:  5.70 kB
+public/assets/prefeitura-BVUco72O.js        18.82 kB │ gzip:  6.75 kB
+public/assets/Ouvir-CVfdKE30.js             56.82 kB │ gzip: 21.99 kB
+
+✓ built in 242ms
+
+> merenda-do-vizinho-app@1.0.0 test
+> node --disable-warning=ExperimentalWarning --test "test/**/*.test.js"
+
+✔ perfil com CPF inválido ou sem aceite devolve 400 (145.533284ms)
+✔ PUT perfil valida UF, catálogo, meses, quantidade, vendido e grupos, e grava produtos e critérios (87.341393ms)
+✔ GET perfil devolve CPF e CAF mascarados; cooperativa inexistente devolve 400 (85.367779ms)
+✔ oportunidades mostra chamada publicada da mesma UF com alface (70.138574ms)
+✔ vendido_no_ano_reais de 39000 limita o ganho a R$ 1000 (67.307968ms)
+✔ com DATA_REFERENCIA=2026-07-15, a chamada de Catalão aparece para a agricultora de demonstração (120.534184ms)
+✔ perfilParaIa: só município, UF, produtos, orgânico e se há prioridade, sem dado pessoal nem critério do RITS (0.296927ms)
+✔ assistente não envia dados pessoais para a IA (59.511208ms)
+✔ assistente: CPF ou e-mail no texto e mensagens fora do formato dão 400 sem chamar a IA; chamada não publicada 404 (72.890743ms)
+✔ assistente com a IA fora do ar devolve 502 com mensagem em português (82.469134ms)
+✔ assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo (110.252814ms)
+✔ a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404 (90.572698ms)
+✔ interesse grava, substitui o anterior e recusa item fora da chamada (140.88069ms)
+✔ prefeitura não acessa rota de agricultor (403) (120.370255ms)
+✔ divide igualmente e respeita capacidade (2.4238ms)
+✔ respeita limite em reais (0.569001ms)
+✔ a sobra vai primeiro para quem tem mais prioridade (0.493749ms)
+✔ informa falta quando ninguém tem capacidade (1.47629ms)
+✔ nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios) (8.214452ms)
+✔ o limite anual vale para a soma dos itens (1.567658ms)
+✔ o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo) (0.300041ms)
+✔ o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º (0.205251ms)
+✔ a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º (0.239266ms)
+✔ a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item (2.672269ms)
+✔ hash de senha confere e rejeita senha errada (224.205079ms)
+✔ cadastro com e-mail inválido devolve 400; login errado 401; /api/eu sem token 401 e com token 200 (219.391035ms)
+✔ cadastro: 201 com token e a linha do papel; e-mail repetido 409; senha curta, papel ou CNPJ inválido 400 (126.743459ms)
+✔ exigirPapel responde 403 para outro papel e a lista de manipuladores para ali (0.704347ms)
+✔ token vencido e token de outro algoritmo recebem 401; o certo recebe 200 (59.994332ms)
+✔ exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar (0.800012ms)
+✔ GET /api/catalogo exige login e devolve o catálogo (60.396958ms)
+✔ semear: rodar duas vezes não duplica nada e os usuários de demonstração entram com demo1234 (276.331012ms)
+✔ chamada de outra UF, vencida ou só com itens que ele não produz não aparece (2.920227ms)
+✔ mesma cidade primeiro e ganho = min(capacidade, pedido) × preço (0.68821ms)
+✔ ganho respeita limite restante (0.365958ms)
+✔ a capacidade vale para a soma dos itens do mesmo produto (0.568794ms)
+✔ o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante (1.624591ms)
+✔ a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2) (0.297727ms)
+✔ sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN (0.682813ms)
+✔ emTransacao desfaz tudo quando lança, confirma quando dá certo e recusa corpo async (2.806391ms)
+✔ migrar acrescenta entregas.item a um banco antigo, guarda as entregas e pode rodar de novo (2.796637ms)
+✔ pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e por segredo (1.952918ms)
+✔ GET /api/exportar: 401 sem a chave ou com outra (igual, mais curta, mais longa ou vazia); com a certa, 200 (125.36335ms)
+✔ a exportação não traz nome, CPF, CAF, e-mail, telefone, grupo prioritário nem id de agricultor (62.385223ms)
+✔ as chaves de cada coleção são as da fixture, e os pseudônimos batem com o HMAC do id (52.604042ms)
+✔ chamadas.dados sai com as 8 chaves da fixture e itens de 5, o contato nulo e o que falta nulo, mesmo com as 13 chaves da IA (52.372526ms)
+✔ uma proposta no formato da T7 (quantidade_pedida, total e falta) sai com as seis chaves do contrato (52.702578ms)
+✔ um item de proposta sem alocacoes não derruba a exportação, e a alocação sem agricultor_id é pulada (49.027403ms)
+✔ desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400 (61.584487ms)
+✔ validarLeitura confere cada campo, nos limites de cada faixa (3.291988ms)
+✔ avaliarLeitura: temperatura acima do limite e porta aberta há mais dos minutos da config; porta fechada zera a conta (11.940075ms)
+✔ chave errada devolve 401 (122.069439ms)
+✔ leitura absurda devolve 400 e não alerta (57.562243ms)
+✔ momento gravado em UTC: com fuso vira UTC; sem momento, vale a hora do servidor (48.970844ms)
+✔ temperatura acima de 10 °C gera alerta de temperatura (34.05562ms)
+✔ porta aberta por mais de 2 minutos gera alerta de porta (64.171459ms)
+✔ porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam (34.86646ms)
+✔ depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve (47.734923ms)
+✔ alerta não se repete a cada leitura e é resolvido quando volta ao normal (58.668521ms)
+✔ porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve quando o seu volta ao normal (55.168819ms)
+✔ os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET (97.954477ms)
+✔ GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos (179.422946ms)
+✔ entrega com quantidade negativa devolve 400 (98.218414ms)
+✔ entrega registra o item da proposta pela posição: as duas abóboras de Catalão têm preços diferentes (122.009917ms)
+✔ entrega: só a cooperativa dona da proposta registra (110.367544ms)
+✔ o build gera a tela da câmara fria (0.241398ms)
+✔ agricultor não acessa rota de prefeitura (403) (267.50437ms)
+✔ prefeitura envia texto, recebe rascunho e publica (220.073987ms)
+✔ prefeitura inclui um item à mão num rascunho sem itens e publica (124.532921ms)
+✔ IA fora do ar devolve 502 com erro legível (154.193822ms)
+✔ prazo menor que 20 dias gera aviso no rascunho (86.279124ms)
+✔ prefeitura vê as propostas e as entregas da chamada (86.762032ms)
+✔ proposta conjunta nunca passa do pedido (90.757611ms)
+✔ alocação acima do teto, ou total do agricultor acima do limite restante, devolve 400 (76.186011ms)
+✔ projeto de venda tem totais certos (83.267384ms)
+✔ agricultor gera o projeto de venda individual a partir do interesse (53.713534ms)
+✔ a chamada semeada de Catalão está publicada e aparece em oportunidades() de ana@demo.br com hoje 2026-07-15 (53.733084ms)
+✔ resumo da meta do ano e PUT /api/prefeitura/repasse (106.884279ms)
+✔ o build gera as telas da prefeitura, da cooperativa e do projeto de venda (0.161768ms)
+✔ projeto de venda soma quantidade × preço (2.395539ms)
+✔ projeto de venda avisa quando a família não tem mulher titular (0.648278ms)
+✔ cada linha sai em centavos e os totais somam as linhas arredondadas (0.426707ms)
+✔ a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20) (0.267061ms)
+✔ minimoDoAno: 30% até 2025 e 45% a partir de 2026 (1.335268ms)
+✔ minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio (0.640133ms)
+✔ constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos (0.980355ms)
+✔ limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN (0.307953ms)
+✔ SEMANAS_PADRAO vem do JSON e a variável de ambiente troca (137.471893ms)
+✔ prazo mínimo de 20 dias (0.252495ms)
+✔ lerGruposPrioritarios aceita o texto JSON do SQLite ou uma lista e ignora o que não conhece (0.294005ms)
+✔ pontos RITS e prioridade (0.27864ms)
+✔ versaoRegra pela data do edital (0.208633ms)
+✔ roteador casa parâmetros e para quando a resposta termina (2.645912ms)
+✔ estático nega ../ (84.22063ms)
+✔ corpo acima do limite devolve 413 e JSON quebrado devolve 400 (160.242492ms)
+✔ Content-Length declarado acima do limite devolve 413 na hora, sem ler o corpo, e a conexão fecha (52.538944ms)
+✔ corpo em pedaços acima do limite: 413, o servidor para de ler e fecha a conexão (48.088049ms)
+✔ corpo: 256 KB por padrão, e só POST /api/prefeitura/chamadas aceita até 10 MB (199.09609ms)
+✔ cliente que desiste no meio do envio não vira erro no log (47.305754ms)
+✔ erro inesperado vira 500 sem pilha para o cliente e fica no log (46.162966ms)
+✔ erros dos manipuladores: sempre no log; resposta já enviada chega inteira; a pela metade é cortada; a muda vira 500 (111.973456ms)
+✔ rota cuja lista não responde lança erro em vez de deixar a requisição pendurada (0.664248ms)
+✔ cliente da IA devolve o JSON, repassa o 4xx da IA e troca o resto por 502 (7.06283ms)
+✔ o build gerou cada página de web/, e toda página gerada tem a meta viewport e carrega /css/estilo.css (3.370789ms)
+✔ estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e a classe .rolavel (7.350989ms)
+✔ api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status (5.410484ms)
+✔ nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src (2.173019ms)
+✔ lerNumero entende o número do jeito brasileiro e recusa o que não é número, com a mensagem em português (21.356223ms)
+✔ nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero (1.892272ms)
+✔ os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes (2.122289ms)
+✔ o termo de uso diz que o CPF e o CAF aparecem só em parte no projeto de venda e que o número completo se escreve à mão (0.264123ms)
+✔ o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão (0.376184ms)
+✔ a tela diz o que vai para a IA: município, UF, produtos, orgânico e se tem prioridade (sim ou não), e não escrever dado pessoal no chat (0.489313ms)
+✔ perto do limite anual o cartão só mostra o que a prefeitura pede, nunca a capacidade como se coubesse no limite (0.209671ms)
+✔ os botões que enviam não ficam disabled enquanto enviam (o foco se perderia): um guarda ignora o segundo toque (0.404747ms)
+✔ validarCpf (1.320393ms)
+✔ validarCaf, validarEmail e as máscaras (0.480195ms)
+✔ config sem JWT_SEGREDO lança erro (1.05739ms)
+✔ config usa DATA_REFERENCIA e, vazia, usa hoje (1.271334ms)
+ℹ tests 119
+ℹ suites 0
+ℹ pass 119
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1517.551077
+(código de saída: 0)
+
+$ python -m unittest discover -s ia/tests -t . -v
+test_claude_falso_devolve_origem_ia_e_erro_cai_para_regras (ia.tests.test_assistente.TestComClaude.test_claude_falso_devolve_origem_ia_e_erro_cai_para_regras) ... ok
+test_falha_da_api_ou_resposta_inutil_cai_para_o_roteiro (ia.tests.test_assistente.TestComClaude.test_falha_da_api_ou_resposta_inutil_cai_para_o_roteiro) ... ok
+test_mesmo_produto_em_dois_itens_soma_os_pedidos (ia.tests.test_assistente.TestComClaude.test_mesmo_produto_em_dois_itens_soma_os_pedidos) ... ok
+test_pedido_leva_esforco_baixo_a_conversa_e_so_o_perfil_minimo (ia.tests.test_assistente.TestComClaude.test_pedido_leva_esforco_baixo_a_conversa_e_so_o_perfil_minimo) ... ok
+test_recusa_do_modelo_vira_resposta_do_roteiro_com_aviso (ia.tests.test_assistente.TestComClaude.test_recusa_do_modelo_vira_resposta_do_roteiro_com_aviso) ... ok
+test_resposta_da_ia_e_limitada_ao_pedido_e_leva_o_aviso (ia.tests.test_assistente.TestComClaude.test_resposta_da_ia_e_limitada_ao_pedido_e_leva_o_aviso) ... ok
+test_o_pedido_que_o_sdk_manda_e_o_que_a_api_espera (ia.tests.test_assistente.TestComOSdkDeVerdade.test_o_pedido_que_o_sdk_manda_e_o_que_a_api_espera) ... ok
+test_checklist_vem_da_chamada_quando_ela_traz_a_lista (ia.tests.test_assistente.TestRoteiro.test_checklist_vem_da_chamada_quando_ela_traz_a_lista) ... ok
+test_item_sem_nome_ou_sem_unidade_nao_quebra_o_roteiro (ia.tests.test_assistente.TestRoteiro.test_item_sem_nome_ou_sem_unidade_nao_quebra_o_roteiro) ... ok
+test_item_sem_quantidade_fica_de_fora (ia.tests.test_assistente.TestRoteiro.test_item_sem_quantidade_fica_de_fora) ... ok
+test_le_a_ultima_mensagem_do_agricultor (ia.tests.test_assistente.TestRoteiro.test_le_a_ultima_mensagem_do_agricultor) ... ok
+test_resposta_do_roteiro_volta_na_conversa_sem_ser_barrada (ia.tests.test_assistente.TestRoteiro.test_resposta_do_roteiro_volta_na_conversa_sem_ser_barrada) ... ok
+test_roteiro_le_quantidade_semanal_e_sugere_total (ia.tests.test_assistente.TestRoteiro.test_roteiro_le_quantidade_semanal_e_sugere_total) ... ok
+test_roteiro_primeira_resposta_cita_prazo_e_itens (ia.tests.test_assistente.TestRoteiro.test_roteiro_primeira_resposta_cita_prazo_e_itens) ... ok
+test_sem_numero_pergunta_de_novo_e_sem_item_compativel_avisa (ia.tests.test_assistente.TestRoteiro.test_sem_numero_pergunta_de_novo_e_sem_item_compativel_avisa) ... ok
+test_sugestao_e_numero_vezes_semanas_sem_passar_do_pedido (ia.tests.test_assistente.TestRoteiro.test_sugestao_e_numero_vezes_semanas_sem_passar_do_pedido) ... ok
+test_vale_o_item_citado_na_mensagem_e_sem_nome_o_primeiro (ia.tests.test_assistente.TestRoteiro.test_vale_o_item_citado_na_mensagem_e_sem_nome_o_primeiro) ... ok
+test_a_variavel_troca_o_padrao_e_a_conta_do_roteiro (ia.tests.test_assistente.TestSemanasPadrao.test_a_variavel_troca_o_padrao_e_a_conta_do_roteiro) ... ok
+test_sem_variavel_ou_vazia_vale_o_json (ia.tests.test_assistente.TestSemanasPadrao.test_sem_variavel_ou_vazia_vale_o_json) ... ok
+test_valor_que_nao_e_numero_maior_que_zero_e_ignorado_com_aviso_no_stderr (ia.tests.test_assistente.TestSemanasPadrao.test_valor_que_nao_e_numero_maior_que_zero_e_ignorado_com_aviso_no_stderr) ... ok
+test_campos_nulos_ou_ausentes_da_chamada_valem_e_nao_dao_500 (ia.tests.test_assistente.TestServidorAssistente.test_campos_nulos_ou_ausentes_da_chamada_valem_e_nao_dao_500) ... ok
+test_corpo_fora_do_formato_devolve_400_sem_chamar_o_claude (ia.tests.test_assistente.TestServidorAssistente.test_corpo_fora_do_formato_devolve_400_sem_chamar_o_claude) ... ok
+test_post_assistente_com_cpf_devolve_400 (ia.tests.test_assistente.TestServidorAssistente.test_post_assistente_com_cpf_devolve_400) ... ok
+test_post_assistente_com_dado_pessoal_no_texto_devolve_400_e_quantidade_ou_preco_passa (ia.tests.test_assistente.TestServidorAssistente.test_post_assistente_com_dado_pessoal_no_texto_devolve_400_e_quantidade_ou_preco_passa) ... ok
+test_sem_chave_o_servidor_responde_pelo_roteiro (ia.tests.test_assistente.TestServidorAssistente.test_sem_chave_o_servidor_responde_pelo_roteiro) ... ok
+test_catalogo_integro (ia.tests.test_catalogo.TestCatalogo.test_catalogo_integro) ... ok
+test_catalogo_tem_ids_obrigatorios_e_sinonimos (ia.tests.test_catalogo.TestCatalogo.test_catalogo_tem_ids_obrigatorios_e_sinonimos) ... ok
+test_hifen_vale_espaco (ia.tests.test_catalogo.TestCatalogo.test_hifen_vale_espaco) ... ok
+test_identifica_nomes_compostos (ia.tests.test_catalogo.TestCatalogo.test_identifica_nomes_compostos) ... ok
+test_identifica_os_itens_do_edital_de_catalao (ia.tests.test_catalogo.TestCatalogo.test_identifica_os_itens_do_edital_de_catalao) ... ok
+test_identifica_produto_por_sinonimo_e_sem_acento (ia.tests.test_catalogo.TestCatalogo.test_identifica_produto_por_sinonimo_e_sem_acento) ... ok
+test_normaliza_acentos_e_espacos (ia.tests.test_catalogo.TestCatalogo.test_normaliza_acentos_e_espacos) ... ok
+test_o_pedido_que_o_sdk_manda_e_o_que_a_api_espera (ia.tests.test_extrair_claude.TestComOSdkDeVerdade.test_o_pedido_que_o_sdk_manda_e_o_que_a_api_espera) ... ok
+test_resposta_estranha_da_api_cai_para_regras_em_vez_de_dar_500 (ia.tests.test_extrair_claude.TestComOSdkDeVerdade.test_resposta_estranha_da_api_cai_para_regras_em_vez_de_dar_500) ... ok
+test_a_causa_da_queda_vai_para_o_log (ia.tests.test_extrair_claude.TestExtrairComClaude.test_a_causa_da_queda_vai_para_o_log) ... ok
+test_com_cliente_origem_e_ia (ia.tests.test_extrair_claude.TestExtrairComClaude.test_com_cliente_origem_e_ia) ... ok
+test_esquema_tem_os_campos_da_chamada_e_cabe_no_limite_da_api (ia.tests.test_extrair_claude.TestExtrairComClaude.test_esquema_tem_os_campos_da_chamada_e_cabe_no_limite_da_api) ... ok
+test_falha_da_ia_cai_para_regras (ia.tests.test_extrair_claude.TestExtrairComClaude.test_falha_da_ia_cai_para_regras) ... ok
+test_pedido_leva_so_o_pdf_e_o_prompt_no_esquema_com_esforco_medio (ia.tests.test_extrair_claude.TestExtrairComClaude.test_pedido_leva_so_o_pdf_e_o_prompt_no_esquema_com_esforco_medio) ... ok
+test_produto_id_vem_sempre_do_catalogo (ia.tests.test_extrair_claude.TestExtrairComClaude.test_produto_id_vem_sempre_do_catalogo) ... ok
+test_prompt_e_esquema_dizem_o_mesmo (ia.tests.test_extrair_claude.TestExtrairComClaude.test_prompt_e_esquema_dizem_o_mesmo) ... ok
+test_recusa_do_modelo_cai_para_regras (ia.tests.test_extrair_claude.TestExtrairComClaude.test_recusa_do_modelo_cai_para_regras) ... ok
+test_resposta_inutil_cai_para_regras_com_o_motivo (ia.tests.test_extrair_claude.TestExtrairComClaude.test_resposta_inutil_cai_para_regras_com_o_motivo) ... ok
+test_servidor_com_ia_que_falha_devolve_200_regras (ia.tests.test_extrair_claude.TestServidorComIa.test_servidor_com_ia_que_falha_devolve_200_regras) ... ok
+test_cada_extraido_casa_uma_vez_e_o_item_certo_casa_primeiro (ia.tests.test_metricas.TestMetricas.test_cada_extraido_casa_uma_vez_e_o_item_certo_casa_primeiro) ... ok
+test_cliente_que_mede_repassa_o_pedido_e_guarda_os_tokens (ia.tests.test_metricas.TestMetricas.test_cliente_que_mede_repassa_o_pedido_e_guarda_os_tokens) ... ok
+test_comparar_itens_conta_encontrados_e_corretos (ia.tests.test_metricas.TestMetricas.test_comparar_itens_conta_encontrados_e_corretos) ... ok
+test_custo_segue_a_tabela_do_haiku_pelo_tamanho_do_prompt (ia.tests.test_metricas.TestMetricas.test_custo_segue_a_tabela_do_haiku_pelo_tamanho_do_prompt) ... ok
+test_preco_a_dois_centavos_do_gabarito_e_encontrado_mas_nao_correto (ia.tests.test_metricas.TestMetricas.test_preco_a_dois_centavos_do_gabarito_e_encontrado_mas_nao_correto) ... ok
+test_resumir_conta_so_a_ia_que_respondeu_e_lista_as_quedas (ia.tests.test_metricas.TestMetricas.test_resumir_conta_so_a_ia_que_respondeu_e_lista_as_quedas) ... ok
+test_valores_certos_casa_cada_item_lido_uma_vez (ia.tests.test_metricas.TestMetricas.test_valores_certos_casa_cada_item_lido_uma_vez) ... ok
+test_valores_certos_ignora_o_nome_mas_nao_a_quantidade_nem_o_preco (ia.tests.test_metricas.TestMetricas.test_valores_certos_ignora_o_nome_mas_nao_a_quantidade_nem_o_preco) ... ok
+test_a_opcao_recontar_nao_cria_cliente_e_opcao_desconhecida_nao_roda_nada (ia.tests.test_metricas.TestRecontar.test_a_opcao_recontar_nao_cria_cliente_e_opcao_desconhecida_nao_roda_nada) ... ok
+test_recontar_refaz_as_metricas_dos_itens_guardados_sem_chamar_a_api (ia.tests.test_metricas.TestRecontar.test_recontar_refaz_as_metricas_dos_itens_guardados_sem_chamar_a_api) ... ok
+test_avaliar_monta_a_linha_do_resultado (ia.tests.test_metricas.TestRodar.test_avaliar_monta_a_linha_do_resultado) ... ok
+test_markdown_traz_a_legenda_as_duas_tabelas_e_os_numeros_em_portugues (ia.tests.test_metricas.TestRodar.test_markdown_traz_a_legenda_as_duas_tabelas_e_os_numeros_em_portugues) ... ok
+test_municipio_e_uf_precisam_bater_os_dois (ia.tests.test_metricas.TestRodar.test_municipio_e_uf_precisam_bater_os_dois) ... ok
+test_prazo_correto_so_com_a_mesma_data_do_gabarito (ia.tests.test_metricas.TestRodar.test_prazo_correto_so_com_a_mesma_data_do_gabarito) ... ok
+test_tokens_usa_o_uso_da_ultima_resposta_e_calcula_o_custo (ia.tests.test_metricas.TestRodar.test_tokens_usa_o_uso_da_ultima_resposta_e_calcula_o_custo) ... ok
+test_acha_criterios_do_rits (ia.tests.test_regras.TestPrivacidade.test_acha_criterios_do_rits) ... ok
+test_acha_dados_bancarios (ia.tests.test_regras.TestPrivacidade.test_acha_dados_bancarios) ... ok
+test_acha_dados_de_contato (ia.tests.test_regras.TestPrivacidade.test_acha_dados_de_contato) ... ok
+test_acha_dados_de_identificacao (ia.tests.test_regras.TestPrivacidade.test_acha_dados_de_identificacao) ... ok
+test_contato_da_chamada_nao_e_conta (ia.tests.test_regras.TestPrivacidade.test_contato_da_chamada_nao_e_conta) ... ok
+test_acentos_decompostos_nao_derrubam_itens (ia.tests.test_regras.TestRegras.test_acentos_decompostos_nao_derrubam_itens) ... ok
+test_chamada_real_nao_tem_cpf_nem_falso_positivo (ia.tests.test_regras.TestRegras.test_chamada_real_nao_tem_cpf_nem_falso_positivo) ... ok
+test_contem_dados_pessoais_acha_chaves_em_qualquer_nivel (ia.tests.test_regras.TestRegras.test_contem_dados_pessoais_acha_chaves_em_qualquer_nivel) ... ok
+test_converter_numero_br (ia.tests.test_regras.TestRegras.test_converter_numero_br) ... ok
+test_pdf_sem_texto_avisa_que_talvez_seja_escaneado (ia.tests.test_regras.TestRegras.test_pdf_sem_texto_avisa_que_talvez_seja_escaneado) ... ok
+test_regras_extraem_itens_da_chamada_de_exemplo (ia.tests.test_regras.TestRegras.test_regras_extraem_itens_da_chamada_de_exemplo) ... ok
+test_regras_leem_os_16_itens_da_chamada_real_de_catalao (ia.tests.test_regras.TestRegras.test_regras_leem_os_16_itens_da_chamada_real_de_catalao) ... ok
+test_tem_cpf_no_texto (ia.tests.test_regras.TestRegras.test_tem_cpf_no_texto) ... ok
+test_texto_do_pdf_le_chamada_real (ia.tests.test_regras.TestRegras.test_texto_do_pdf_le_chamada_real) ... ok
+test_texto_sem_tabela_devolve_itens_vazios_e_aviso (ia.tests.test_regras.TestRegras.test_texto_sem_tabela_devolve_itens_vazios_e_aviso) ... ok
+test_a_chamada_real_so_tem_o_telefone_e_o_email_da_prefeitura (ia.tests.test_regras.TestTextoDoChat.test_a_chamada_real_so_tem_o_telefone_e_o_email_da_prefeitura) ... ok
+test_acha_email_telefone_cpf_e_dados_bancarios_e_deixa_passar_quantidade_e_preco (ia.tests.test_regras.TestTextoDoChat.test_acha_email_telefone_cpf_e_dados_bancarios_e_deixa_passar_quantidade_e_preco) ... ok
+test_texto_grande_e_lido_em_tempo_linear (ia.tests.test_regras.TestTextoDoChat.test_texto_grande_e_lido_em_tempo_linear) ... ok
+test_sem_chave_nao_ha_cliente (ia.tests.test_servidor.TestClienteClaude.test_sem_chave_nao_ha_cliente) ... ok
+test_base64_quebrado_devolve_400 (ia.tests.test_servidor.TestServidor.test_base64_quebrado_devolve_400) ... ok
+test_corpo_de_mais_de_10_mb_devolve_413 (ia.tests.test_servidor.TestServidor.test_corpo_de_mais_de_10_mb_devolve_413) ... ok
+test_erro_inesperado_vira_500_em_json (ia.tests.test_servidor.TestServidor.test_erro_inesperado_vira_500_em_json) ... ok
+test_extrair_chamada_por_texto (ia.tests.test_servidor.TestServidor.test_extrair_chamada_por_texto) ... ok
+test_extrair_chamada_recusa_corpo_invalido_com_400 (ia.tests.test_servidor.TestServidor.test_extrair_chamada_recusa_corpo_invalido_com_400) ... ok
+test_pdf_corrompido_devolve_400 (ia.tests.test_servidor.TestServidor.test_pdf_corrompido_devolve_400) ... ok
+test_saude_no_modo_de_regras (ia.tests.test_servidor.TestServidor.test_saude_no_modo_de_regras) ... ok
+test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400 (ia.tests.test_servidor.TestServidor.test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400) ... ok
+
+----------------------------------------------------------------------
+Ran 86 tests in 11.827s
+
+OK
+(código de saída: 0)
+
+$ python -m unittest discover -s dados/tests -t . -v
+test_download_completo_troca_o_arquivo_sem_deixar_temporario (dados.tests.test_pipeline.TestBaixarFontes.test_download_completo_troca_o_arquivo_sem_deixar_temporario) ... ok
+test_download_cortado_ou_em_html_deixa_o_arquivo_como_estava (dados.tests.test_pipeline.TestBaixarFontes.test_download_cortado_ou_em_html_deixa_o_arquivo_como_estava) ... ok
+test_falha_no_download_usa_a_copia_versionada_com_aviso_e_sem_arquivo_temporario (dados.tests.test_pipeline.TestBaixarFontes.test_falha_no_download_usa_a_copia_versionada_com_aviso_e_sem_arquivo_temporario) ... ok
+test_interrupcao_antes_da_troca_nao_deixa_o_arquivo_temporario (dados.tests.test_pipeline.TestBaixarFontes.test_interrupcao_antes_da_troca_nao_deixa_o_arquivo_temporario) ... ok
+test_app_fora_do_ar_devolve_none_com_aviso (dados.tests.test_pipeline.TestIngerirApp.test_app_fora_do_ar_devolve_none_com_aviso) ... ok
+test_chave_recusada_401_vira_aviso_e_o_pipeline_segue_sem_o_app (dados.tests.test_pipeline.TestIngerirApp.test_chave_recusada_401_vira_aviso_e_o_pipeline_segue_sem_o_app) ... ok
+test_grava_no_raw_a_exportacao_pedida_com_a_chave_de_servico (dados.tests.test_pipeline.TestIngerirApp.test_grava_no_raw_a_exportacao_pedida_com_a_chave_de_servico) ... ok
+test_resposta_cortada_no_meio_devolve_none_com_aviso (dados.tests.test_pipeline.TestIngerirApp.test_resposta_cortada_no_meio_devolve_none_com_aviso) ... ok
+test_esfera_pelo_nome_da_entidade (dados.tests.test_pipeline.TestLimpeza.test_esfera_pelo_nome_da_entidade) ... ok
+test_numero_br_gravado_como_texto (dados.tests.test_pipeline.TestLimpeza.test_numero_br_gravado_como_texto) ... ok
+test_af_com_chave_unica_codigo_ibge_conferido_e_preliminar_de_2020_a_2022 (dados.tests.test_pipeline.TestPipelineTudo.test_af_com_chave_unica_codigo_ibge_conferido_e_preliminar_de_2020_a_2022) ... ok
+test_camara_fria_por_hora_de_brasilia_com_minutos_acima_de_10_graus (dados.tests.test_pipeline.TestPipelineTudo.test_camara_fria_por_hora_de_brasilia_com_minutos_acima_de_10_graus) ... ok
+test_entregas_do_app_com_unidade_kg_so_em_kg_e_sem_agricultor (dados.tests.test_pipeline.TestPipelineTudo.test_entregas_do_app_com_unidade_kg_so_em_kg_e_sem_agricultor) ... ok
+test_numeros_de_referencia_de_2022 (dados.tests.test_pipeline.TestPipelineTudo.test_numeros_de_referencia_de_2022) ... ok
+test_secretarias_estaduais_ficam_sem_cod_ibge_e_municipio_mas_com_uf_e_regiao (dados.tests.test_pipeline.TestPipelineTudo.test_secretarias_estaduais_ficam_sem_cod_ibge_e_municipio_mas_com_uf_e_regiao) ... ok
+test_simulado_bate_com_os_numeros_da_pagina_2_do_guia_do_painel (dados.tests.test_pipeline.TestPipelineTudo.test_simulado_bate_com_os_numeros_da_pagina_2_do_guia_do_painel) ... ok
+test_simulado_com_25_agricultores_12_escolas_12_meses_e_leitura_horaria (dados.tests.test_pipeline.TestPipelineTudo.test_simulado_com_25_agricultores_12_escolas_12_meses_e_leitura_horaria) ... ok
+test_trusted_sem_cpf_caf_nome (dados.tests.test_pipeline.TestPipelineTudo.test_trusted_sem_cpf_caf_nome) ... ok
+test_tudo_offline_cria_as_tres_camadas_e_o_xlsx_com_as_seis_abas (dados.tests.test_pipeline.TestPipelineTudo.test_tudo_offline_cria_as_tres_camadas_e_o_xlsx_com_as_seis_abas) ... ok
+test_xlsx_com_celula_vazia_de_verdade_e_nao_texto_vazio (dados.tests.test_pipeline.TestPipelineTudo.test_xlsx_com_celula_vazia_de_verdade_e_nao_texto_vazio) ... ok
+test_faixas_de_cumprimento (dados.tests.test_pipeline.TestRegras.test_faixas_de_cumprimento) ... ok
+test_gap_e_o_que_falta_para_o_minimo_e_nunca_negativo (dados.tests.test_pipeline.TestRegras.test_gap_e_o_que_falta_para_o_minimo_e_nunca_negativo) ... ok
+test_minimo_de_30_ate_2025_e_de_45_a_partir_de_2026 (dados.tests.test_pipeline.TestRegras.test_minimo_de_30_ate_2025_e_de_45_a_partir_de_2026) ... ok
+test_resumo_ignora_arquivo_que_nao_e_dado (dados.tests.test_pipeline.TestResumo.test_resumo_ignora_arquivo_que_nao_e_dado) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 9.753s
+
+OK
+(código de saída: 0)
+
+$ python -m unittest discover -s iot -t . -v
+test_devolve_o_status_de_erro_http (iot.test_simulador.TestEnviar.test_devolve_o_status_de_erro_http) ... ok
+test_faz_post_com_a_chave_e_devolve_o_status (iot.test_simulador.TestEnviar.test_faz_post_com_a_chave_e_devolve_o_status) ... ok
+test_cenario_desconhecido_levanta_erro (iot.test_simulador.TestGerarLeitura.test_cenario_desconhecido_levanta_erro) ... ok
+test_colheita_peso_sobe_20_kg_por_passo_ate_480_kg (iot.test_simulador.TestGerarLeitura.test_colheita_peso_sobe_20_kg_por_passo_ate_480_kg) ... ok
+test_entrega_peso_cai_15_kg_por_passo_ate_20_kg (iot.test_simulador.TestGerarLeitura.test_entrega_peso_cai_15_kg_por_passo_ate_20_kg) ... ok
+test_leitura_tem_os_campos_do_arduino_e_momento_iso (iot.test_simulador.TestGerarLeitura.test_leitura_tem_os_campos_do_arduino_e_momento_iso) ... ok
+test_momento_em_utc_com_offset_00_00 (iot.test_simulador.TestGerarLeitura.test_momento_em_utc_com_offset_00_00) ... ok
+test_normal_fica_entre_4_e_7_graus_com_180_kg_e_porta_fechada (iot.test_simulador.TestGerarLeitura.test_normal_fica_entre_4_e_7_graus_com_180_kg_e_porta_fechada) ... ok
+test_porta_aberta_cruza_o_limite_de_10_graus_no_passo_13 (iot.test_simulador.TestGerarLeitura.test_porta_aberta_cruza_o_limite_de_10_graus_no_passo_13) ... ok
+test_porta_aberta_temperatura_sobe_de_5_ate_18 (iot.test_simulador.TestGerarLeitura.test_porta_aberta_temperatura_sobe_de_5_ate_18) ... ok
+test_todos_os_cenarios_ficam_nas_faixas_fisicas (iot.test_simulador.TestGerarLeitura.test_todos_os_cenarios_ficam_nas_faixas_fisicas) ... ok
+test_modo_seco_imprime_as_leituras_sem_enviar (iot.test_simulador.TestPrincipal.test_modo_seco_imprime_as_leituras_sem_enviar) ... ok
+test_sai_com_0_quando_todas_as_respostas_forem_201 (iot.test_simulador.TestPrincipal.test_sai_com_0_quando_todas_as_respostas_forem_201) ... ok
+test_sai_com_1_se_algum_status_nao_for_201 (iot.test_simulador.TestPrincipal.test_sai_com_1_se_algum_status_nao_for_201) ... ok
+test_sem_conexao_sai_com_1_e_avisa_no_erro (iot.test_simulador.TestPrincipal.test_sem_conexao_sai_com_1_e_avisa_no_erro) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.005s
+
+OK
+(código de saída: 0)

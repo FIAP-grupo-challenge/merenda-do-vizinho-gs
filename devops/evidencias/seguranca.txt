@@ -1,0 +1,82 @@
+# Saída dos comandos de devops/seguranca.md, rodados em 2026-11-19T05:44:47-03:00 na raiz do repositório.
+# App local (node src/index.js) com banco novo, a semente de demonstração e segredos de teste gerados na hora;
+# APP=http://localhost:3517. Os segredos e o token só aparecem como variáveis ($CHAVE_SERVICO, $TOKEN), nunca o valor.
+
+# 1.1 senha errada: 401
+$ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/login -H 'Content-Type: application/json' \
+  -d '{"email":"ana@demo.br","senha":"senha-errada"}'
+{"erro":"E-mail ou senha não conferem."} -> HTTP 401
+# 1.2 rota protegida sem token: 401
+$ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/eu
+{"erro":"Entre na sua conta para continuar."} -> HTTP 401
+# 1.3 token forjado, sem assinatura (alg "none"): 401
+$ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/eu \
+  -H 'Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpZCI6MywicGFwZWwiOiJhZ3JpY3VsdG9yIn0.'
+{"erro":"Entre na sua conta para continuar."} -> HTTP 401
+# 1.4 login certo da agricultora de demonstração (o token fica na variável e não aparece aqui): 200
+$ TOKEN=$(curl -s -X POST $APP/api/login -H 'Content-Type: application/json' \
+  -d '{"email":"ana@demo.br","senha":"demo1234"}' | sed -E 's/.*"token":"([^"]+)".*/\1/')
+$ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/eu -H "Authorization: Bearer $TOKEN"
+{"id":3,"papel":"agricultor","nome":"Ana Souza","email":"ana@demo.br"} -> HTTP 200
+# 1.5 papel errado, a agricultora numa rota da prefeitura: 403
+$ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/prefeitura/chamadas -H "Authorization: Bearer $TOKEN"
+{"erro":"Esta parte do app não é para o seu tipo de conta."} -> HTTP 403
+# 2.1 CPF com os dígitos verificadores errados: 400
+$ curl -s -w ' -> HTTP %{http_code}\n' -X PUT $APP/api/agricultor/perfil -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"municipio":"Catalão","uf":"GO","cpf":"123.456.789-00","vendido_no_ano_reais":0,"produtos":[],'\
+'"aceite_termo":true}'
+{"erro":"Confira o CPF: os números não conferem."} -> HTTP 400
+# 2.2 JSON quebrado: 400
+$ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/login -H 'Content-Type: application/json' -d '{"email":'
+{"erro":"JSON inválido"} -> HTTP 400
+# 2.3 envio de 300 KB, acima do limite de 256 KB: 413
+$ head -c 300000 /dev/zero | tr '\0' 'a' \
+  | curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/login -H 'Content-Type: application/json' --data-binary @-
+{"erro":"O envio passa do limite de 256 KB. Mande um arquivo ou um texto menor."} -> HTTP 413
+# 2.4 leitura da câmara fria sem a chave do dispositivo: 401
+$ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/leituras -H 'Content-Type: application/json' \
+  -d '{"dispositivo":"camara-01","temperatura_c":5,"peso_kg":180,"porta_aberta":false}'
+{"erro":"Chave do dispositivo inválida."} -> HTTP 401
+# 2.5 leitura absurda, com a chave certa: 400
+$ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/leituras -H "X-Chave-Dispositivo: $CHAVE_DISPOSITIVO" \
+  -H 'Content-Type: application/json' \
+  -d '{"dispositivo":"camara-01","temperatura_c":999,"peso_kg":-5,"porta_aberta":"sim"}'
+{"erro":"A temperatura deve ser um número de -30 a 60 °C. O peso deve ser um número de 0 a 5000 kg. porta_aberta deve ser true (aberta) ou false (fechada)."} -> HTTP 400
+# 3.1 a agricultora salva CPF e CAF (números de exemplo): a tela recebe os dois mascarados
+$ curl -s -o /dev/null -w 'perfil salvo: HTTP %{http_code}\n' -X PUT $APP/api/agricultor/perfil \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"municipio":"Catalão","uf":"GO","cpf":"123.456.789-09","caf":"GO052025.01.000012345CAF",'\
+'"vendido_no_ano_reais":0,"aceite_termo":true,'\
+'"produtos":[{"produto_id":"alface","quantidade_semana":25,"meses_safra":[1,2,3,4,5,6,7,8,9,10,11,12]}]}'
+perfil salvo: HTTP 200
+$ curl -s $APP/api/agricultor/perfil -H "Authorization: Bearer $TOKEN" | grep -o -E '"(cpf|caf)":"[^"]*"'
+"cpf":"***.456.789-**"
+"caf":"****5CAF"
+# 3.2 CPF escrito no chat do assistente: o app barra antes de chamar a IA: 400
+$ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/agricultor/chamadas/1/assistente \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"mensagens":[{"papel":"agricultor","texto":"Meu CPF é 123.456.789-09. Posso vender alface?"}]}'
+{"erro":"Para a sua segurança, não escreva CPF, CAF nem e-mail no chat. O assistente não precisa deles."} -> HTTP 400
+# 3.3 exportação para o data lake sem a chave de serviço: 401
+$ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/exportar
+{"erro":"Chave de serviço inválida."} -> HTTP 401
+# 3.4 com a chave: os agricultores saem como pseudônimo, sem nome, e-mail, CPF nem CAF (0 ocorrências), embora o app
+#     tenha o nome e o e-mail da Ana (2 ocorrências no /api/eu)
+$ curl -s $APP/api/exportar -H "X-Chave-Servico: $CHAVE_SERVICO" | grep -o -E '"agricultores":\[\{[^}]*\}'
+"agricultores":[{"pseudonimo":"b13b745c8700","municipio":"Catalão","uf":"GO","organico":false,"ja_vendeu_pnae":false}
+$ curl -s $APP/api/exportar -H "X-Chave-Servico: $CHAVE_SERVICO" \
+  | grep -o -E 'Ana Souza|ana@demo\.br|12345678909|000012345CAF|"(nome|email|cpf|caf)"' | wc -l
+0
+$ curl -s $APP/api/eu -H "Authorization: Bearer $TOKEN" | grep -o -E 'Ana Souza|ana@demo\.br' | wc -l
+2
+# 3.5 o .env fica fora do Git (ignorado, fora do índice e em nenhum commit) e fora das imagens do Docker
+$ git check-ignore -v .env
+.gitignore:2:.env	.env
+$ git ls-files --error-unmatch .env
+error: pathspec '.env' did not match any file(s) known to git
+Did you forget to 'git add'?
+$ git log --all --oneline -- .env | wc -l
+0
+$ grep -n -x '\*\*/\.env' .dockerignore
+4:**/.env
