@@ -388,7 +388,7 @@ A saída dos comandos, em `devops/evidencias/seguranca.txt`:
 | CT14 | teste de fumaça com o Docker Compose | passou |
 | CT15 | pipeline de ponta a ponta no Jenkins | passou |
 
-**A execução:** 260 testes automatizados, todos passando: 131 no app (`node --test`), 87 na IA, 27 nos dados e 15 no simulador (`unittest`). Nenhum chama a API da Anthropic. Resumo de `devops/evidencias/testes.txt`, que traz a saída completa, teste a teste:
+**A execução:** 262 testes automatizados, todos passando: 133 no app (`node --test`), 87 na IA, 27 nos dados e 15 no simulador (`unittest`). Nenhum chama a API da Anthropic. Resumo de `devops/evidencias/testes.txt`, que traz a saída completa, teste a teste:
 
 ```{.text incluir="../devops/evidencias/testes.txt" comeca="# ;$ ;ℹ tests;ℹ pass;ℹ fail;Ran ;OK;FAILED;(código de saída"}
 ```

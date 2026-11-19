@@ -1,4 +1,4 @@
-# Testes automatizados do Merenda do Vizinho, rodados em 2026-11-19T08:44:36-03:00 na raiz do repositório, sem ANTHROPIC_API_KEY.
+# Testes automatizados do Colhe, rodados em 2026-11-19T17:22:22-03:00 na raiz do repositório, sem ANTHROPIC_API_KEY.
 # Node 24.13.1 no app e Python 3.14.10 (o .venv do projeto) na IA, nos dados e no simulador.
 # No Jenkins, os mesmos testes rodam a cada commit no Node 24 (node:24-alpine) e no Python 3.12 (python:3.12-slim).
 
@@ -13,181 +13,183 @@ $ cd app && npm test
 
 vite v8.3.8 building client environment for production...
 transforming...
-✓ 141 modules transformed.
+✓ 143 modules transformed.
 rendering chunks...
 computing gzip size...
-public/index.html                            0.52 kB │ gzip:  0.32 kB
-public/chamada.html                          0.83 kB │ gzip:  0.39 kB
-public/agricultor.html                       0.84 kB │ gzip:  0.39 kB
-public/projeto-venda.html                    0.85 kB │ gzip:  0.40 kB
-public/prefeitura.html                       1.00 kB │ gzip:  0.42 kB
-public/cooperativa.html                      1.00 kB │ gzip:  0.42 kB
-public/camara-fria.html                      1.00 kB │ gzip:  0.43 kB
+public/index.html                            0.51 kB │ gzip:  0.31 kB
+public/chamada.html                          0.82 kB │ gzip:  0.38 kB
+public/agricultor.html                       0.83 kB │ gzip:  0.38 kB
+public/projeto-venda.html                    0.84 kB │ gzip:  0.39 kB
+public/prefeitura.html                       0.99 kB │ gzip:  0.41 kB
+public/cooperativa.html                      0.99 kB │ gzip:  0.41 kB
+public/camara-fria.html                      0.99 kB │ gzip:  0.42 kB
 public/assets/CampoNumero-DIWwqcsA.css       0.04 kB │ gzip:  0.06 kB
 public/assets/CaixaRolavel-BkCk-CpE.css      0.04 kB │ gzip:  0.06 kB
 public/assets/chamada-BT06BBaL.css           0.53 kB │ gzip:  0.30 kB
-public/assets/camara-fria-BqoirZfP.css       1.08 kB │ gzip:  0.41 kB
 public/assets/cooperativa-CheLR6Vp.css       1.09 kB │ gzip:  0.44 kB
 public/assets/projeto-venda-DhlLwqvV.css     1.10 kB │ gzip:  0.45 kB
-public/assets/agricultor-ISK4klkl.css        1.15 kB │ gzip:  0.46 kB
-public/assets/prefeitura-DNlHOFn6.css        1.48 kB │ gzip:  0.53 kB
+public/assets/camara-fria-BVXUphH7.css       1.20 kB │ gzip:  0.45 kB
+public/assets/agricultor-Cko_MOiZ.css        1.62 kB │ gzip:  0.62 kB
+public/assets/prefeitura-CHdatN-w.css        1.77 kB │ gzip:  0.62 kB
 public/assets/rolldown-runtime-B8xr6ykz.js   0.18 kB │ gzip:  0.14 kB
-public/assets/CaixaRolavel-Dg2LG99E.js       0.39 kB │ gzip:  0.29 kB
+public/assets/CaixaRolavel-J3-e5rB2.js       0.39 kB │ gzip:  0.29 kB
 public/assets/formato-DTf2Ygg2.js            1.02 kB │ gzip:  0.62 kB
-public/assets/CampoNumero-Cf35CWaZ.js        1.29 kB │ gzip:  0.74 kB
-public/assets/index-BBz8k58-.js              5.37 kB │ gzip:  2.19 kB
-public/assets/camara-fria-bhBzVvNH.js        8.28 kB │ gzip:  3.51 kB
-public/assets/cooperativa-BZvgYJsL.js        9.13 kB │ gzip:  3.71 kB
-public/assets/chamada-Jcuerbzh.js            9.13 kB │ gzip:  3.95 kB
-public/assets/projeto-venda-BRXnbQ4J.js     10.03 kB │ gzip:  3.76 kB
-public/assets/agricultor-I-IJkdm_.js        14.02 kB │ gzip:  5.70 kB
-public/assets/prefeitura-BzKpRhxn.js        18.90 kB │ gzip:  6.78 kB
-public/assets/Ouvir-CgsXz90V.js             56.83 kB │ gzip: 22.00 kB
+public/assets/CampoNumero-C08SaeVD.js        1.29 kB │ gzip:  0.74 kB
+public/assets/index-BsWDoN-n.js              5.48 kB │ gzip:  2.25 kB
+public/assets/camara-fria-B2x07qy_.js        8.31 kB │ gzip:  3.53 kB
+public/assets/chamada-_liVPV1x.js            9.16 kB │ gzip:  3.98 kB
+public/assets/cooperativa-Cm1OSkMe.js        9.16 kB │ gzip:  3.74 kB
+public/assets/projeto-venda-C-8--4jO.js     10.06 kB │ gzip:  3.79 kB
+public/assets/agricultor-B1HMGlST.js        14.08 kB │ gzip:  5.75 kB
+public/assets/prefeitura-DZV72xhS.js        18.95 kB │ gzip:  6.83 kB
+public/assets/Ouvir-BELjNKUH.js             58.15 kB │ gzip: 22.67 kB
 
-✓ built in 230ms
+✓ built in 258ms
 
 > merenda-do-vizinho-app@1.0.0 test
 > node --disable-warning=ExperimentalWarning --require ./test/isolar-ambiente.js --test "test/**/*.test.js"
 
-✔ perfil com CPF inválido ou sem aceite devolve 400 (183.596075ms)
-✔ PUT perfil valida UF, catálogo, meses, quantidade, vendido e grupos, e grava produtos e critérios (124.67839ms)
-✔ GET perfil devolve CPF e CAF mascarados; cooperativa inexistente devolve 400 (61.392783ms)
-✔ oportunidades mostra chamada publicada da mesma UF com alface (58.768341ms)
-✔ vendido_no_ano_reais de 39000 limita o ganho a R$ 1000 (62.293968ms)
-✔ com DATA_REFERENCIA=2026-07-15, a chamada de Catalão aparece para a agricultora de demonstração (141.595788ms)
-✔ perfilParaIa: só município, UF, produtos, orgânico e se há prioridade, sem dado pessoal nem critério do RITS (0.439269ms)
-✔ assistente não envia dados pessoais para a IA (70.421539ms)
-✔ assistente: CPF ou e-mail no texto e mensagens fora do formato dão 400 sem chamar a IA; chamada não publicada 404 (65.776791ms)
-✔ assistente com a IA fora do ar devolve 502 com mensagem em português (53.52011ms)
-✔ assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo (71.763472ms)
-✔ a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404 (51.980677ms)
-✔ interesse grava, substitui o anterior e recusa item fora da chamada (85.302525ms)
-✔ prefeitura não acessa rota de agricultor (403) (84.501743ms)
-✔ divide igualmente e respeita capacidade (2.669506ms)
-✔ respeita limite em reais (0.640755ms)
-✔ a sobra vai primeiro para quem tem mais prioridade (0.397719ms)
-✔ Catalão: a alface em pç sai em números inteiros entre os cooperados da semente, e em kg seguiria com centésimos (0.748851ms)
-✔ em unidade inteira a sobra também é repartida em inteiros, por prioridade, e o pedido fracionado deixa o resto como falta (0.807502ms)
-✔ informa falta quando ninguém tem capacidade (0.31459ms)
-✔ nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios) (18.950139ms)
-✔ o limite anual vale para a soma dos itens (0.383868ms)
-✔ o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo) (0.379437ms)
-✔ o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º (0.977095ms)
-✔ a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º (0.412048ms)
-✔ a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item (0.318766ms)
-✔ hash de senha confere e rejeita senha errada (212.295871ms)
-✔ cadastro com e-mail inválido devolve 400; login errado 401; /api/eu sem token 401 e com token 200 (213.228301ms)
-✔ cadastro: 201 com token e a linha do papel; e-mail repetido 409; senha curta, papel ou CNPJ inválido 400 (183.625099ms)
-✔ exigirPapel responde 403 para outro papel e a lista de manipuladores para ali (1.267481ms)
-✔ token vencido e token de outro algoritmo recebem 401; o certo recebe 200 (90.967412ms)
-✔ exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar (1.24951ms)
-✔ GET /api/catalogo exige login e devolve o catálogo (85.378507ms)
-✔ semear: rodar duas vezes não duplica nada e os usuários de demonstração entram com demo1234 (272.521805ms)
-✔ chamada de outra UF, vencida ou só com itens que ele não produz não aparece (2.543841ms)
-✔ mesma cidade primeiro e ganho = min(capacidade, pedido) × preço (0.467788ms)
-✔ ganho respeita limite restante (0.311622ms)
-✔ a capacidade vale para a soma dos itens do mesmo produto (1.85155ms)
-✔ o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante (0.40975ms)
-✔ a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2) (0.282543ms)
-✔ sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN (0.688453ms)
-✔ emTransacao desfaz tudo quando lança, confirma quando dá certo e recusa corpo async (2.703812ms)
-✔ migrar acrescenta entregas.item a um banco antigo, guarda as entregas e pode rodar de novo (2.809528ms)
-✔ pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e por segredo (2.257382ms)
-✔ GET /api/exportar: 401 sem a chave ou com outra (igual, mais curta, mais longa ou vazia); com a certa, 200 (103.717346ms)
-✔ a exportação não traz nome, CPF, CAF, e-mail, telefone, grupo prioritário nem id de agricultor (40.523714ms)
-✔ as chaves de cada coleção são as da fixture, e os pseudônimos batem com o HMAC do id (30.66126ms)
-✔ chamadas.dados sai com as 8 chaves da fixture e itens de 5, o contato nulo e o que falta nulo, mesmo com as 13 chaves da IA (30.152702ms)
-✔ uma proposta no formato da T7 (quantidade_pedida, total e falta) sai com as seis chaves do contrato (52.221798ms)
-✔ um item de proposta sem alocacoes não derruba a exportação, e a alocação sem agricultor_id é pulada (46.750505ms)
-✔ a entrega sai com o item, a posição do item na proposta; a entrega de antes da coluna sai com item nulo (45.28083ms)
-✔ desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400 (57.048166ms)
-✔ validarLeitura confere cada campo, nos limites de cada faixa (1.926682ms)
-✔ avaliarLeitura: temperatura acima do limite e porta aberta há mais dos minutos da config; porta fechada zera a conta (9.910141ms)
-✔ chave errada devolve 401 (83.101558ms)
-✔ leitura absurda devolve 400 e não alerta (38.922564ms)
-✔ momento gravado em UTC: com fuso vira UTC; sem momento, vale a hora do servidor (32.135741ms)
-✔ temperatura acima de 10 °C gera alerta de temperatura (30.966183ms)
-✔ porta aberta por mais de 2 minutos gera alerta de porta (60.793015ms)
-✔ porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam (31.663846ms)
-✔ depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve (29.770138ms)
-✔ alerta não se repete a cada leitura e é resolvido quando volta ao normal (34.300448ms)
-✔ porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve quando o seu volta ao normal (36.008366ms)
-✔ os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET (61.631784ms)
-✔ GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos (118.410289ms)
-✔ entrega com quantidade negativa devolve 400 (62.449875ms)
-✔ entrega registra o item da proposta pela posição: as duas abóboras de Catalão têm preços diferentes (99.704779ms)
-✔ entrega: só a cooperativa dona da proposta registra (104.766738ms)
-✔ o build gera a tela da câmara fria (0.150562ms)
-✔ agricultor não acessa rota de prefeitura (403) (289.841819ms)
-✔ prefeitura envia texto, recebe rascunho e publica (200.461927ms)
-✔ semanas de fornecimento: número inteiro de 1 a 53, ou em branco; o resto dá 400 e a chamada não muda (118.095356ms)
-✔ prefeitura inclui um item à mão num rascunho sem itens e publica (115.414497ms)
-✔ IA fora do ar devolve 502 com erro legível (163.457693ms)
-✔ prazo menor que 20 dias gera aviso no rascunho (84.067887ms)
-✔ prefeitura vê as propostas e as entregas da chamada (113.025184ms)
-✔ proposta conjunta nunca passa do pedido (75.930325ms)
-✔ alocação acima do teto, ou total do agricultor acima do limite restante, devolve 400 (66.54347ms)
-✔ Catalão: os itens contados em unidade saem da divisão em números inteiros, e o kg segue com centésimos (49.180208ms)
-✔ alocação fracionada num item contado em unidade inteira devolve 400 em português; no kg os centésimos passam (55.994125ms)
-✔ projeto de venda tem totais certos (71.084264ms)
-✔ agricultor gera o projeto de venda individual a partir do interesse (50.254434ms)
-✔ a chamada semeada de Catalão está publicada e aparece em oportunidades() de ana@demo.br com hoje 2026-07-15 (44.990798ms)
-✔ resumo da meta do ano e PUT /api/prefeitura/repasse (100.47356ms)
-✔ o build gera as telas da prefeitura, da cooperativa e do projeto de venda (0.147311ms)
-✔ projeto de venda soma quantidade × preço (2.686724ms)
-✔ projeto de venda avisa quando a família não tem mulher titular (0.747306ms)
-✔ cada linha sai em centavos e os totais somam as linhas arredondadas (0.429753ms)
-✔ a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20) (0.266509ms)
-✔ minimoDoAno: 30% até 2025 e 45% a partir de 2026 (1.100224ms)
-✔ minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio (0.473759ms)
-✔ constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos (0.860679ms)
-✔ limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN (1.40963ms)
-✔ SEMANAS_PADRAO vem do JSON e a variável de ambiente troca (131.951918ms)
-✔ o npm test ignora a SEMANAS_PADRAO do terminal: test/isolar-ambiente.js a tira, e o script o carrega (33.263732ms)
-✔ prazo mínimo de 20 dias (0.269605ms)
-✔ lerGruposPrioritarios aceita o texto JSON do SQLite ou uma lista e ignora o que não conhece (0.469581ms)
-✔ pontos RITS e prioridade (0.428642ms)
-✔ versaoRegra pela data do edital (0.376701ms)
-✔ unidadeInteira: pé, maço, dúzia e bandeja não se dividem; kg, g, l e ml seguem com centésimos (0.48759ms)
-✔ roteador casa parâmetros e para quando a resposta termina (2.964862ms)
-✔ estático nega ../ (81.187584ms)
-✔ corpo acima do limite devolve 413 e JSON quebrado devolve 400 (144.957817ms)
-✔ Content-Length declarado acima do limite devolve 413 na hora, sem ler o corpo, e a conexão fecha (48.90931ms)
-✔ corpo em pedaços acima do limite: 413, o servidor para de ler e fecha a conexão (45.692762ms)
-✔ corpo: 256 KB por padrão, e só POST /api/prefeitura/chamadas aceita até 10 MB (181.60276ms)
-✔ cliente que desiste no meio do envio não vira erro no log (30.778366ms)
-✔ erro inesperado vira 500 sem pilha para o cliente e fica no log (28.056178ms)
-✔ erros dos manipuladores: sempre no log; resposta já enviada chega inteira; a pela metade é cortada; a muda vira 500 (64.069807ms)
-✔ rota cuja lista não responde lança erro em vez de deixar a requisição pendurada (0.474603ms)
-✔ cliente da IA devolve o JSON, repassa o 4xx da IA e troca o resto por 502 (7.350366ms)
-✔ o build gerou cada página de web/, e toda página gerada tem a meta viewport e carrega /css/estilo.css (2.266364ms)
-✔ estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e a classe .rolavel (8.671059ms)
-✔ api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status (3.955692ms)
-✔ api() manda para a tela de entrar o 401 sem login ou com a sessão vencida, e deixa a mensagem do login com senha errada (0.776201ms)
-✔ nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src (1.951044ms)
-✔ lerNumero entende o número do jeito brasileiro e recusa o que não é número, com a mensagem em português (17.878386ms)
-✔ nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero (1.919842ms)
-✔ os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes (2.236025ms)
-✔ o termo de uso diz, uma vez só, que o CPF e o CAF aparecem só em parte na tela e no projeto de venda (0.413078ms)
-✔ a meta do ano diz que só conta as entregas registradas neste app, no texto que o botão Ouvir lê (1.031982ms)
-✔ o link de voltar da chamada é um botão de pelo menos 44 px de altura (0.40796ms)
-✔ o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão (0.373836ms)
-✔ a tela diz o que vai para a IA: município, UF, produtos, orgânico e se tem prioridade (sim ou não), e não escrever dado pessoal no chat (0.280508ms)
-✔ perto do limite anual o cartão só mostra o que a prefeitura pede, nunca a capacidade como se coubesse no limite (0.187791ms)
-✔ os botões que enviam não ficam disabled enquanto enviam (o foco se perderia): um guarda ignora o segundo toque (0.38514ms)
-✔ validarCpf (1.39429ms)
-✔ validarCaf, validarEmail e as máscaras (0.618187ms)
-✔ config sem JWT_SEGREDO lança erro (1.196485ms)
-✔ config recusa o texto de exemplo e o segredo com menos de 16 caracteres, e não imprime o valor (1.03398ms)
-✔ config usa DATA_REFERENCIA e, vazia, usa hoje (2.308842ms)
-ℹ tests 131
+✔ perfil com CPF inválido ou sem aceite devolve 400 (129.929696ms)
+✔ PUT perfil valida UF, catálogo, meses, quantidade, vendido e grupos, e grava produtos e critérios (124.147465ms)
+✔ GET perfil devolve CPF e CAF mascarados; cooperativa inexistente devolve 400 (93.43333ms)
+✔ oportunidades mostra chamada publicada da mesma UF com alface (91.515472ms)
+✔ vendido_no_ano_reais de 39000 limita o ganho a R$ 1000 (70.550409ms)
+✔ com DATA_REFERENCIA=2026-07-15, a chamada de Catalão aparece para a agricultora de demonstração (152.816666ms)
+✔ perfilParaIa: só município, UF, produtos, orgânico e se há prioridade, sem dado pessoal nem critério do RITS (0.275157ms)
+✔ assistente não envia dados pessoais para a IA (54.945025ms)
+✔ assistente: CPF ou e-mail no texto e mensagens fora do formato dão 400 sem chamar a IA; chamada não publicada 404 (72.404894ms)
+✔ assistente com a IA fora do ar devolve 502 com mensagem em português (60.436749ms)
+✔ assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo (76.048946ms)
+✔ a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404 (57.22773ms)
+✔ interesse grava, substitui o anterior e recusa item fora da chamada (93.509437ms)
+✔ prefeitura não acessa rota de agricultor (403) (91.941506ms)
+✔ divide igualmente e respeita capacidade (2.654327ms)
+✔ respeita limite em reais (0.646882ms)
+✔ a sobra vai primeiro para quem tem mais prioridade (0.645777ms)
+✔ Catalão: a alface em pç sai em números inteiros entre os cooperados da semente, e em kg seguiria com centésimos (1.209837ms)
+✔ em unidade inteira a sobra também é repartida em inteiros, por prioridade, e o pedido fracionado deixa o resto como falta (0.904227ms)
+✔ informa falta quando ninguém tem capacidade (0.332519ms)
+✔ nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios) (18.584714ms)
+✔ o limite anual vale para a soma dos itens (0.431646ms)
+✔ o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo) (0.368531ms)
+✔ o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º (0.236753ms)
+✔ a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º (0.149418ms)
+✔ a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item (0.148459ms)
+✔ hash de senha confere e rejeita senha errada (232.26388ms)
+✔ cadastro com e-mail inválido devolve 400; login errado 401; /api/eu sem token 401 e com token 200 (229.005058ms)
+✔ cadastro: 201 com token e a linha do papel; e-mail repetido 409; senha curta, papel ou CNPJ inválido 400 (194.471479ms)
+✔ exigirPapel responde 403 para outro papel e a lista de manipuladores para ali (1.072249ms)
+✔ token vencido e token de outro algoritmo recebem 401; o certo recebe 200 (93.844423ms)
+✔ exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar (1.310057ms)
+✔ GET /api/catalogo exige login e devolve o catálogo (97.292764ms)
+✔ semear: rodar duas vezes não duplica nada e os usuários de demonstração entram com demo1234 (407.626639ms)
+✔ chamada de outra UF, vencida ou só com itens que ele não produz não aparece (2.474787ms)
+✔ mesma cidade primeiro e ganho = min(capacidade, pedido) × preço (0.513291ms)
+✔ ganho respeita limite restante (0.679793ms)
+✔ a capacidade vale para a soma dos itens do mesmo produto (2.230234ms)
+✔ o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante (0.413502ms)
+✔ a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2) (0.296263ms)
+✔ sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN (0.845939ms)
+✔ emTransacao desfaz tudo quando lança, confirma quando dá certo e recusa corpo async (2.440552ms)
+✔ migrar acrescenta entregas.item a um banco antigo, guarda as entregas e pode rodar de novo (2.223879ms)
+✔ pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e por segredo (2.373379ms)
+✔ GET /api/exportar: 401 sem a chave ou com outra (igual, mais curta, mais longa ou vazia); com a certa, 200 (106.209981ms)
+✔ a exportação não traz nome, CPF, CAF, e-mail, telefone, grupo prioritário nem id de agricultor (61.059424ms)
+✔ as chaves de cada coleção são as da fixture, e os pseudônimos batem com o HMAC do id (33.662ms)
+✔ chamadas.dados sai com as 8 chaves da fixture e itens de 5, o contato nulo e o que falta nulo, mesmo com as 13 chaves da IA (38.736417ms)
+✔ uma proposta no formato da T7 (quantidade_pedida, total e falta) sai com as seis chaves do contrato (54.240501ms)
+✔ um item de proposta sem alocacoes não derruba a exportação, e a alocação sem agricultor_id é pulada (43.143263ms)
+✔ a entrega sai com o item, a posição do item na proposta; a entrega de antes da coluna sai com item nulo (31.272344ms)
+✔ desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400 (37.938644ms)
+✔ validarLeitura confere cada campo, nos limites de cada faixa (3.756539ms)
+✔ avaliarLeitura: temperatura acima do limite e porta aberta há mais dos minutos da config; porta fechada zera a conta (17.284173ms)
+✔ chave errada devolve 401 (154.408197ms)
+✔ leitura absurda devolve 400 e não alerta (58.744367ms)
+✔ momento gravado em UTC: com fuso vira UTC; sem momento, vale a hora do servidor (55.062284ms)
+✔ temperatura acima de 10 °C gera alerta de temperatura (50.359388ms)
+✔ porta aberta por mais de 2 minutos gera alerta de porta (101.033501ms)
+✔ porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam (50.610233ms)
+✔ depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve (50.636488ms)
+✔ alerta não se repete a cada leitura e é resolvido quando volta ao normal (54.578014ms)
+✔ porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve quando o seu volta ao normal (58.21852ms)
+✔ os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET (90.960496ms)
+✔ GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos (195.302023ms)
+✔ entrega com quantidade negativa devolve 400 (94.247009ms)
+✔ entrega registra o item da proposta pela posição: as duas abóboras de Catalão têm preços diferentes (152.139447ms)
+✔ entrega: só a cooperativa dona da proposta registra (106.660497ms)
+✔ o build gera a tela da câmara fria (0.144442ms)
+✔ agricultor não acessa rota de prefeitura (403) (298.770336ms)
+✔ prefeitura envia texto, recebe rascunho e publica (152.558102ms)
+✔ semanas de fornecimento: número inteiro de 1 a 53, ou em branco; o resto dá 400 e a chamada não muda (78.740007ms)
+✔ prefeitura inclui um item à mão num rascunho sem itens e publica (82.774776ms)
+✔ IA fora do ar devolve 502 com erro legível (135.879882ms)
+✔ prazo menor que 20 dias gera aviso no rascunho (61.880411ms)
+✔ prefeitura vê as propostas e as entregas da chamada (86.333083ms)
+✔ proposta conjunta nunca passa do pedido (94.452911ms)
+✔ alocação acima do teto, ou total do agricultor acima do limite restante, devolve 400 (78.729741ms)
+✔ Catalão: os itens contados em unidade saem da divisão em números inteiros, e o kg segue com centésimos (57.650074ms)
+✔ alocação fracionada num item contado em unidade inteira devolve 400 em português; no kg os centésimos passam (65.907376ms)
+✔ projeto de venda tem totais certos (80.282915ms)
+✔ agricultor gera o projeto de venda individual a partir do interesse (52.641439ms)
+✔ a chamada semeada de Catalão está publicada e aparece em oportunidades() de ana@demo.br com hoje 2026-07-15 (47.210754ms)
+✔ resumo da meta do ano e PUT /api/prefeitura/repasse (105.559955ms)
+✔ o build gera as telas da prefeitura, da cooperativa e do projeto de venda (0.15777ms)
+✔ projeto de venda soma quantidade × preço (1.317362ms)
+✔ projeto de venda avisa quando a família não tem mulher titular (0.359804ms)
+✔ cada linha sai em centavos e os totais somam as linhas arredondadas (0.274372ms)
+✔ a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20) (0.187995ms)
+✔ minimoDoAno: 30% até 2025 e 45% a partir de 2026 (1.598893ms)
+✔ minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio (0.719085ms)
+✔ constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos (1.379589ms)
+✔ limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN (1.822347ms)
+✔ SEMANAS_PADRAO vem do JSON e a variável de ambiente troca (156.167536ms)
+✔ o npm test ignora a SEMANAS_PADRAO do terminal: test/isolar-ambiente.js a tira, e o script o carrega (35.32623ms)
+✔ prazo mínimo de 20 dias (0.242971ms)
+✔ lerGruposPrioritarios aceita o texto JSON do SQLite ou uma lista e ignora o que não conhece (0.481817ms)
+✔ pontos RITS e prioridade (0.379847ms)
+✔ versaoRegra pela data do edital (5.007022ms)
+✔ unidadeInteira: pé, maço, dúzia e bandeja não se dividem; kg, g, l e ml seguem com centésimos (0.744798ms)
+✔ roteador casa parâmetros e para quando a resposta termina (2.787518ms)
+✔ estático nega ../ (87.325165ms)
+✔ corpo acima do limite devolve 413 e JSON quebrado devolve 400 (145.979901ms)
+✔ Content-Length declarado acima do limite devolve 413 na hora, sem ler o corpo, e a conexão fecha (54.441758ms)
+✔ corpo em pedaços acima do limite: 413, o servidor para de ler e fecha a conexão (48.340569ms)
+✔ corpo: 256 KB por padrão, e só POST /api/prefeitura/chamadas aceita até 10 MB (176.323286ms)
+✔ cliente que desiste no meio do envio não vira erro no log (30.749678ms)
+✔ erro inesperado vira 500 sem pilha para o cliente e fica no log (27.871879ms)
+✔ erros dos manipuladores: sempre no log; resposta já enviada chega inteira; a pela metade é cortada; a muda vira 500 (66.443563ms)
+✔ rota cuja lista não responde lança erro em vez de deixar a requisição pendurada (0.619136ms)
+✔ cliente da IA devolve o JSON, repassa o 4xx da IA e troca o resto por 502 (4.784694ms)
+✔ o build gerou cada página de web/, e toda página gerada tem a meta viewport e carrega /css/estilo.css (2.61909ms)
+✔ estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px, a classe .rolavel e a Inter do próprio app (102.949473ms)
+✔ api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status (4.978899ms)
+✔ api() manda para a tela de entrar o 401 sem login ou com a sessão vencida, e deixa a mensagem do login com senha errada (1.263882ms)
+✔ nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src (3.546301ms)
+✔ lerNumero entende o número do jeito brasileiro e recusa o que não é número, com a mensagem em português (19.270697ms)
+✔ as telas dizem Colhe e não Merenda do Vizinho (5.524626ms)
+✔ o topo de toda tela tem o prato de pontos ao lado do nome, com 45% dos pontos em laranja (2.332602ms)
+✔ nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero (1.937426ms)
+✔ os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes (2.722013ms)
+✔ o termo de uso diz, uma vez só, que o CPF e o CAF aparecem só em parte na tela e no projeto de venda (0.32748ms)
+✔ a meta do ano diz que só conta as entregas registradas neste app, no texto que o botão Ouvir lê (0.410171ms)
+✔ o link de voltar da chamada é um botão de pelo menos 44 px de altura (0.283087ms)
+✔ o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão (0.269622ms)
+✔ a tela diz o que vai para a IA: município, UF, produtos, orgânico e se tem prioridade (sim ou não), e não escrever dado pessoal no chat (0.294982ms)
+✔ perto do limite anual o cartão só mostra o que a prefeitura pede, nunca a capacidade como se coubesse no limite (0.198582ms)
+✔ os botões que enviam não ficam disabled enquanto enviam (o foco se perderia): um guarda ignora o segundo toque (0.414223ms)
+✔ validarCpf (1.35531ms)
+✔ validarCaf, validarEmail e as máscaras (0.556402ms)
+✔ config sem JWT_SEGREDO lança erro (1.448822ms)
+✔ config recusa o texto de exemplo e o segredo com menos de 16 caracteres, e não imprime o valor (1.110966ms)
+✔ config usa DATA_REFERENCIA e, vazia, usa hoje (2.086839ms)
+ℹ tests 133
 ℹ suites 0
-ℹ pass 131
+ℹ pass 133
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1711.056473
+ℹ duration_ms 1587.347645
 (código de saída: 0)
 
 $ python -m unittest discover -s ia/tests -t . -v
@@ -280,7 +282,7 @@ test_saude_no_modo_de_regras (ia.tests.test_servidor.TestServidor.test_saude_no_
 test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400 (ia.tests.test_servidor.TestServidor.test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400) ... ok
 
 ----------------------------------------------------------------------
-Ran 87 tests in 11.385s
+Ran 87 tests in 11.730s
 
 OK
 (código de saída: 0)
@@ -315,7 +317,7 @@ test_entrega_de_antes_da_coluna_item_acha_a_unidade_pelo_produto (dados.tests.te
 test_posicao_que_a_proposta_nao_tem_deixa_a_unidade_e_o_kg_vazios (dados.tests.test_pipeline.TestUnidadeDaEntrega.test_posicao_que_a_proposta_nao_tem_deixa_a_unidade_e_o_kg_vazios) ... ok
 
 ----------------------------------------------------------------------
-Ran 27 tests in 9.485s
+Ran 27 tests in 9.722s
 
 OK
 (código de saída: 0)

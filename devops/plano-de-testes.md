@@ -3,8 +3,8 @@
 Cada caso abaixo diz o que o teste confere, como, o que deve acontecer, o resultado e onde está a prova. Todos os casos
 têm um teste automatizado, que roda sozinho a cada commit no Jenkins (veja o CT15).
 
-**Resumo da última execução (19/11/2026, na versão final):** 15 casos, 15 passaram. Nos testes automatizados, 260 de 260
-passaram: 131 no app, 87 na IA, 27 nos dados e 15 no simulador. O Jenkins roda tudo isso a cada commit; como subir o
+**Resumo da última execução (19/11/2026, na versão final):** 15 casos, 15 passaram. Nos testes automatizados, 262 de 262
+passaram: 133 no app, 87 na IA, 27 nos dados e 15 no simulador. O Jenkins roda tudo isso a cada commit; como subir o
 Jenkins local está em [jenkins/README.md](jenkins/README.md).
 
 ## Como rodar

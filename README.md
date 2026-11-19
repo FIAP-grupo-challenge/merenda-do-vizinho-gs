@@ -444,7 +444,9 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `app/web/src/lib/CampoNumero.svelte` e `formato.js` (`lerNumero`) | campo de número que entende "10,5", "1.234,56" e "12.000" |
 | `app/web/src/lib/Ouvir.svelte` e `ouvir.js` | o botão "Ouvir", que lê o texto em voz alta em português (`speechSynthesis`) |
 | `app/web/src/lib/CaixaRolavel.svelte` | a caixa que rola uma tabela larga, sem rolar a página |
-| `app/web/public/css/estilo.css` | o estilo das telas: escrito para o celular primeiro, com `@media (min-width: 768px)` para telas maiores |
+| `app/web/src/lib/Marca.svelte` e `prato.js` | o logo do pitch, o prato de pontos com 45% em laranja, ao lado do nome no topo de cada tela |
+| `app/web/public/css/estilo.css` | o estilo das telas, nas cores e na fonte do pitch: escrito para o celular primeiro, com `@media (min-width: 768px)` para telas maiores |
+| `app/web/public/fonts/` | a fonte Inter, com a licença OFL, servida pelo próprio app: as telas não dependem de internet |
 | `app/vite.config.js` | o build das telas: uma entrada por página, com a saída em `app/public/` (gerada, fora do Git) |
 
 ### ia/ (IA em Python)
@@ -510,7 +512,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 Da raiz do repositório, cada área tem os seus testes. Eles precisam da preparação da seção 2B (o `.venv` com as dependências e o `npm ci` no `app/`), mas não do Docker. Nenhum usa a chave da Anthropic: a IA é testada com servidores falsos.
 
 ```bash
-# app: 131 testes (roda o build das telas antes)
+# app: 133 testes (roda o build das telas antes)
 (cd app && npm test)
 
 # IA: 87 testes
@@ -523,7 +525,7 @@ Da raiz do repositório, cada área tem os seus testes. Eles precisam da prepara
 .venv/bin/python -m unittest discover -s iot -t .
 ```
 
-Essas contagens são de 19/11/2026, na versão final (260 testes, todos passando); se um teste for acrescentado, vale o resumo que o próprio comando imprime. Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`bash devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK` (a seção 2A explica o que fazer se a porta 3000 estiver em uso). O plano de testes, com 15 casos (CT01 a CT15), cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md). O `Jenkinsfile` roda os testes, o build das imagens e o smoke a cada commit; como subir o Jenkins local está em [devops/jenkins/README.md](devops/jenkins/README.md), e as evidências de segurança, em [devops/seguranca.md](devops/seguranca.md).
+Essas contagens são de 19/11/2026, na versão final (262 testes, todos passando); se um teste for acrescentado, vale o resumo que o próprio comando imprime. Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`bash devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK` (a seção 2A explica o que fazer se a porta 3000 estiver em uso). O plano de testes, com 15 casos (CT01 a CT15), cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md). O `Jenkinsfile` roda os testes, o build das imagens e o smoke a cada commit; como subir o Jenkins local está em [devops/jenkins/README.md](devops/jenkins/README.md), e as evidências de segurança, em [devops/seguranca.md](devops/seguranca.md).
 
 ## Uso de IA generativa
 
