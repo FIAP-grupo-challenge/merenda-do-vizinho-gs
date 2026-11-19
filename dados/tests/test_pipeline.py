@@ -9,10 +9,14 @@ import os
 import tempfile
 import unittest
 import urllib.error
+import zipfile
+from contextlib import closing
 from pathlib import Path
 from unittest import mock
+from xml.etree import ElementTree
 
 import pandas as pd
+from openpyxl import Workbook, load_workbook
 
 from dados import pipeline
 from dados.etapas.baixar_fontes import ASSINATURAS, COPIA_VERSIONADA, FONTES, baixar, baixar_fontes
@@ -43,6 +47,22 @@ def resposta_http(corpo: bytes, content_length: int | None = None) -> http.clien
     resposta = http.client.HTTPResponse(_SocketFalso(cabecalho + corpo))
     resposta.begin()
     return resposta
+
+
+def celulas_de_texto_vazio(xlsx: Path) -> list[str]:
+    """As células <c t="inlineStr"> sem texto, lidas do XML. O openpyxl devolve None para elas, igual à célula vazia de
+    verdade, então só o XML mostra a diferença; o Power Query pode ler o texto vazio como "" em vez de null."""
+    vazias = []
+    with zipfile.ZipFile(xlsx) as arquivo:
+        for aba in (nome for nome in arquivo.namelist() if nome.startswith('xl/worksheets/sheet')):
+            with arquivo.open(aba) as xml:
+                for _, elemento in ElementTree.iterparse(xml):
+                    if elemento.tag.endswith('}c') and elemento.get('t') == 'inlineStr' \
+                            and not ''.join(elemento.itertext()):
+                        vazias.append(f'{aba}:{elemento.get("r")}')
+                    elif elemento.tag.endswith('}row'):
+                        elemento.clear()
+    return vazias
 
 
 class TestRegras(unittest.TestCase):
@@ -223,6 +243,23 @@ class TestPipelineTudo(unittest.TestCase):
         with pd.ExcelFile(self.refined / 'merenda_do_vizinho.xlsx') as excel:
             self.assertEqual(excel.sheet_names, ABAS)
         self.assertIn('municipios.csv: 5.571', pipeline.resumo(self.datalake))
+
+    def test_xlsx_com_celula_vazia_de_verdade_e_nao_texto_vazio(self):
+        with tempfile.TemporaryDirectory() as pasta:  # controle: o texto vazio é achado e a célula vazia, não
+            controle = Path(pasta) / 'controle.xlsx'
+            livro = Workbook()
+            livro.active.append(['', None, 'x'])
+            livro.save(controle)
+            self.assertEqual(celulas_de_texto_vazio(controle), ['xl/worksheets/sheet1.xml:A1'])
+        xlsx = self.refined / 'merenda_do_vizinho.xlsx'
+        self.assertEqual(celulas_de_texto_vazio(xlsx), [])
+        with closing(load_workbook(xlsx, read_only=True)) as livro:
+            linhas = livro['fato_pnae_af'].iter_rows(values_only=True)
+            cabecalho = next(linhas)
+            esfera = cabecalho.index('esfera')
+            estaduais = [dict(zip(cabecalho, linha)) for linha in linhas if linha[esfera] == 'ESTADUAL']
+        self.assertEqual(len(estaduais), 135)
+        self.assertTrue(all(linha['cod_ibge'] is None and linha['municipio'] is None for linha in estaduais))
 
     def test_trusted_sem_cpf_caf_nome(self):
         pessoais = [agricultor[chave] for agricultor in self.controle['agricultores']

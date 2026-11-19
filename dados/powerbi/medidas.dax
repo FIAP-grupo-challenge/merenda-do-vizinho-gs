@@ -173,10 +173,12 @@ DIVIDE (
 
 // Valor médio recebido por agricultor, só pelo pseudônimo. As entregas do app não têm
 // agricultor (pseudônimo vazio) e ficam fora da conta; no DAX, vazio = "" é verdadeiro.
+// KEEPFILTERS: sem ele, o filtro <> "" troca o filtro de um gráfico por pseudônimo, e as
+// 25 barras mostram a mesma média (R$ 6.415,18). Com ele, cada barra é a renda de um agricultor.
 Renda por agricultor =
 CALCULATE (
     DIVIDE ( [Valor entregue (R$)], DISTINCTCOUNT ( fato_entregas[agricultor_pseudonimo] ) ),
-    fato_entregas[agricultor_pseudonimo] <> ""
+    KEEPFILTERS ( fato_entregas[agricultor_pseudonimo] <> "" )
 )
 
 // Agricultores que vendem ao PNAE pela primeira vez (ja_vendeu_pnae falso no cadastro).

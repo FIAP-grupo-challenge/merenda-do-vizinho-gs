@@ -1,11 +1,21 @@
 # Guia do painel no Power BI web
 
-Este guia leva você da planilha `.xlsx` até as duas páginas do painel prontas e os prints, no Power BI do navegador (o serviço do Power BI, em app.powerbi.com), sem o Power BI Desktop. Siga na ordem. Leva cerca de 1h30.
+Este guia leva você da planilha `.xlsx` até as duas páginas do painel prontas e os prints, no Power BI do navegador (o serviço do Power BI, em app.powerbi.com), sem o Power BI Desktop. Siga na ordem. Na primeira vez, conte com cerca de 2 horas.
 
 No fim, o painel tem:
 
 - **Página 1, PNAE no Brasil** (dados reais do FNDE e do IBGE): percentual comprado da agricultura familiar (AF), municípios abaixo do mínimo, reais que faltaram, a simulação com 45%, a evolução por ano, o ranking por UF e por município e a verba mínima de 2023 a 2026. Filtros: ano, UF, região e faixa de cumprimento.
 - **Página 2, Cooperativa** (histórico simulado e dados do app): entregas no prazo, kg e valor por produto, minutos fora da faixa de temperatura por mês, agricultores na primeira venda e renda por agricultor, só pelo pseudônimo. Filtro: produto.
+
+## Se o tempo apertar
+
+A versão curta ainda tem mais de três indicadores, com filtros e medidas em DAX. Faça as seções 2 a 6 inteiras (planilha, tipos, tabelas calculadas, relações e as 17 medidas) e, nos relatórios, só isto:
+
+- **Página 1:** os filtros Ano e UF, os cartões e o gráfico de barras por UF.
+- **Página 2:** três cartões: `% Entregas no prazo`, `Valor entregue (R$)` e `Minutos fora da faixa`.
+- **Prints:** seção 9.
+
+Pule os blocos marcados com **(opcional)** nas seções 7 e 8. Na página 1: os filtros Região e Faixa (o desenho prevê quatro filtros na página 1; a versão curta fica com dois), as dicas de ferramentas, a evolução por ano, a tabela por município, a verba mínima e o ajuste das interações. Na página 2: o filtro Produto, os outros três cartões, o cartão de Catalão, a tabela e os dois gráficos. Faça-os depois, se sobrar tempo.
 
 ## Antes de começar
 
@@ -58,22 +68,19 @@ As medidas do `medidas.dax` dependem dos nomes exatos das tabelas e do tipo de c
 
 1. **Nomes das tabelas.** À esquerda, a lista de consultas (Queries) deve ter os seis nomes do passo 8, iguaizinhos. Se algum vier diferente (por exemplo, `fato_pnae_af (2)`), clique nele com o botão direito > **Renomear** (Rename).
 2. **Cabeçalhos.** Clique em cada consulta. As colunas devem se chamar `ano`, `cod_ibge`, `municipio`... Se aparecerem `Column1`, `Column2` e os nomes na primeira linha de dados, use **Usar a primeira linha como cabeçalho** (Use first row as headers), na guia **Transformar** (Transform).
-3. **Tipos.** O ícone à esquerda do nome da coluna mostra o tipo: `1²³` é número inteiro (Whole number), `1.2` é número decimal (Decimal number), `ABC` é texto (Text), o ✓✗ é verdadeiro/falso (True/False), um calendário é data (Date) e um calendário com relógio é data/hora (Date/Time). `ABC123` quer dizer "qualquer" (Any) e está sempre errado. Confira as colunas abaixo; as que não estão na tabela devem ser texto (`ABC`).
+3. **Tipos.** O ícone à esquerda do nome da coluna mostra o tipo: `1²³` é número inteiro (Whole number), `1.2` é número decimal (Decimal number), `ABC` é texto (Text), o ✓✗ é verdadeiro/falso (True/False), um calendário é data (Date) e um calendário com relógio é data/hora (Date/Time). `ABC123` quer dizer "qualquer" (Any) e está sempre errado. Confira as colunas abaixo (o `cod_ibge` precisa ser número inteiro nas duas tabelas; senão, a relação 1 da seção 5 não fecha). As que não estão na tabela são texto (`ABC`).
 
-   | Tabela | Número inteiro (`1²³`) | Número decimal (`1.2`) | Verdadeiro/falso | Data |
+   | Tabela | Número inteiro (`1²³`) | Número decimal (`1.2`) | Verdadeiro/falso | Data ou data/hora |
    |---|---|---|---|---|
    | `fato_pnae_af` | `ano`, `cod_ibge` | `repasse`, `compra_af`, `pct_af`, `minimo`, `falta_minimo_reais`, `falta_45_reais` | `preliminar`, `repasse_zero` | |
    | `fato_repasse_uf` | `ano` | `repasse`, `minimo`, `verba_minima_af_reais` | | |
-   | `fato_entregas` | | `kg`, `valor` | `no_prazo`, `primeira_venda` | `data` (data) |
+   | `fato_entregas` | `quantidade` | `kg`, `valor` | `no_prazo`, `primeira_venda` | `data` (provavelmente data/hora, porque a planilha grava o dia como 00:00; pode deixar assim) |
    | `fato_camara_fria` | `minutos_fora_faixa` | `temperatura_media_c` | `porta_aberta` | `hora` (data/hora) |
    | `dim_municipio` | `cod_ibge` | | | |
 
    Para trocar um tipo: clique no ícone > escolha o tipo > se o Power Query perguntar, **Substituir atual** (Replace current).
-
-   As colunas que mais podem vir erradas são `fato_pnae_af[cod_ibge]` e `fato_entregas[kg]`. Elas têm células vazias logo nas primeiras linhas (as secretarias estaduais não têm município, e as entregas por maço ou unidade não têm kg), e o Power Query pode achar que são texto. O `cod_ibge` precisa ser número inteiro nas duas tabelas; senão, a relação 1 da seção 5 não fecha.
-4. Se alguma célula mostrar **Error** depois da troca de tipo, clique com o botão direito no nome da coluna > **Substituir erros** (Replace errors) > digite `null` > **OK**. Assim a célula vazia da planilha fica vazia no modelo, que é o certo.
-5. Clique no botão de concluir, no canto inferior direito (**Avançar**/Next ou **Criar**/Create).
-6. Na tela final, dê o nome `Merenda do Vizinho`, deixe o local em **Meu workspace** e escolha **Criar apenas um modelo semântico** (Create a semantic model only). Espere carregar (um ou dois minutos). Abre o editor do modelo, no navegador.
+4. Clique no botão de concluir, no canto inferior direito (**Avançar**/Next ou **Criar**/Create).
+5. Na tela final, dê o nome `Merenda do Vizinho`, deixe o local em **Meu workspace** e escolha **Criar apenas um modelo semântico** (Create a semantic model only). Espere carregar (um ou dois minutos). Abre o editor do modelo, no navegador.
 
 ## 4. Tabelas calculadas e coluna `mes`
 
@@ -153,8 +160,8 @@ Sugestão de arrumação: filtros e aviso na faixa de cima; os cinco cartões lo
 |---|---|---|
 | Ano | `dim_ano` > `ano` | em **Seleção** (Selection), ligue **Seleção única** (Single select) e escolha 2022 |
 | UF | `dim_uf` > `uf` | |
-| Região | `dim_uf` > `regiao` | |
-| Faixa de cumprimento | `fato_pnae_af` > `faixa` | |
+| Região **(opcional)** | `dim_uf` > `regiao` | |
+| Faixa de cumprimento **(opcional)** | `fato_pnae_af` > `faixa` | |
 
 Use `dim_uf` para UF e região, não as colunas de `dim_municipio`: as secretarias estaduais não têm município e sumiriam do filtro.
 
@@ -163,22 +170,22 @@ Use `dim_uf` para UF e região, não as colunas de `dim_municipio`: as secretari
 - `Aviso dos dados`: mostra "dados preliminares" de 2020 a 2022 e "2026 parcial" em 2026; nos outros anos, fica vazio.
 - `% AF`, `Mínimo do ano`, `Municípios abaixo do mínimo`, `Faltou para o mínimo (R$)` e `Faltaria com 45% (R$)`.
 
-**Evolução por ano.** Visual **Gráfico de linhas** (Line chart): **Eixo X** = `dim_ano` > `ano`; **Eixo Y** = `% AF` e `Mínimo do ano`. No pincel > **Eixo X** (X-axis) > **Tipo** (Type), escolha **Categórico** (Categorical). Título: `% comprado da AF e mínimo da lei, por ano (2020 a 2022: dados preliminares)`. A linha do mínimo vai até 2026 e sobe para 45%; a do % AF para em 2022, o último ano publicado pelo FNDE.
+**Evolução por ano (opcional).** Visual **Gráfico de linhas** (Line chart): **Eixo X** = `dim_ano` > `ano`; **Eixo Y** = `% AF` e `Mínimo do ano`. No pincel > **Eixo X** (X-axis) > **Tipo** (Type), escolha **Categórico** (Categorical). Título: `% comprado da AF e mínimo da lei, por ano (2020 a 2022: dados preliminares)`. A linha do mínimo vai até 2026 e sobe para 45%; a do % AF para em 2022, o último ano publicado pelo FNDE.
 
-**Ranking por UF.** Visual **Gráfico de barras clusterizado** (Clustered bar chart): **Eixo Y** = `dim_uf` > `uf`; **Eixo X** = `Faltou para o mínimo (R$)`; **Dicas de ferramentas** (Tooltips) = `% do total nacional` e `Municípios abaixo do mínimo`. Título: `Quanto faltou para o mínimo, por UF`. As barras já vêm da maior para a menor.
+**Ranking por UF.** Visual **Gráfico de barras clusterizado** (Clustered bar chart): **Eixo Y** = `dim_uf` > `uf`; **Eixo X** = `Faltou para o mínimo (R$)`; **(opcional)** **Dicas de ferramentas** (Tooltips) = `% do total nacional` e `Municípios abaixo do mínimo`. Título: `Quanto faltou para o mínimo, por UF`. As barras já vêm da maior para a menor.
 
-**Ranking por município.** Visual **Tabela** (Table). Na caixa **Colunas** (Columns), nesta ordem: `dim_municipio` > `municipio`, `dim_municipio` > `uf`, `% AF`, `Faixa de cumprimento`, `Faltou para o mínimo (R$)` e `% do total nacional`. Depois:
+**Ranking por município (opcional).** Visual **Tabela** (Table). Na caixa **Colunas** (Columns), nesta ordem: `dim_municipio` > `municipio`, `dim_municipio` > `uf`, `% AF`, `Faixa de cumprimento`, `Faltou para o mínimo (R$)` e `% do total nacional`. Depois:
 
 1. No painel **Filtros** (Filters), arraste `fato_pnae_af` > `esfera` para **Filtros neste visual** (Filters on this visual) e marque só **MUNICIPAL**. Sem isso, aparece uma linha sem nome, com as secretarias estaduais.
 2. Clique no título da coluna `Faltou para o mínimo (R$)` até a tabela ficar do maior para o menor.
 3. Título: `Ranking por município: quanto faltou para o mínimo`.
 
-**Verba mínima de 2023 a 2026.** Visual **Gráfico de colunas clusterizado** (Clustered column chart): **Eixo X** = `dim_ano` > `ano`; **Eixo Y** = `Verba mínima para a AF (R$)`. No pincel > **Eixo X** > **Tipo**, escolha **Categórico**. Título: `Verba mínima para a AF por ano (2026 parcial: repasses até 08/04/2026)`.
+**Verba mínima de 2023 a 2026 (opcional).** Visual **Gráfico de colunas clusterizado** (Clustered column chart): **Eixo X** = `dim_ano` > `ano`; **Eixo Y** = `Verba mínima para a AF (R$)`. No pincel > **Eixo X** > **Tipo**, escolha **Categórico**. Título: `Verba mínima para a AF por ano (2026 parcial: repasses até 08/04/2026)`.
 
-**O filtro de ano não mexe na evolução nem na verba**, que mostram todos os anos:
+**O filtro de ano não mexe na evolução nem na verba**, que mostram todos os anos **(opcional, só se você fez esses dois gráficos)**:
 
-1. Na barra de menus do relatório, abra **Interações visuais** (Visual interactions) e ligue **Editar interações** (Edit interactions).
-2. Clique no filtro **Ano**. Aparecem ícones no canto de cada visual.
+1. Clique no filtro **Ano** para selecioná-lo.
+2. Na barra de menus do relatório, abra **Interações visuais** (Visual interactions) e ligue **Editar interações** (Edit interactions). Aparecem ícones no canto de cada visual.
 3. No gráfico de linhas e no gráfico da verba, clique no ícone **Nenhum** (None), o círculo cortado.
 4. Desligue **Editar interações**.
 
@@ -200,12 +207,12 @@ Salve (**Arquivo** > **Salvar**).
 ## 8. Página 2: Cooperativa
 
 1. Clique no **+** ao lado da aba da página, embaixo, e renomeie a página nova para `Cooperativa`.
-2. **Filtro Produto:** **Segmentação de dados** com `dim_produto` > `nome`, estilo **Lista suspensa**.
-3. **Cartões:** `% Entregas no prazo`, `Kg entregues`, `Valor entregue (R$)`, `Renda por agricultor`, `Agricultores na primeira venda` e `Minutos fora da faixa`.
-4. **Comparação com o FNDE:** mais um **Cartão**, com `Compra AF`. No painel **Filtros**, em **Filtros neste visual**, arraste `dim_municipio` > `municipio` e marque **Catalão** (use a busca do filtro); arraste também `dim_ano` > `ano` e marque **2022**. Título: `Compra da AF em Catalão (GO) em 2022, segundo o FNDE`. É o último dado publicado da cidade da cooperativa, para comparar com o valor entregue.
-5. **Kg e valor por produto:** **Tabela** com `dim_produto` > `nome`, `Kg entregues`, `Valor entregue (R$)` e `% Entregas no prazo`. Clique no título `Valor entregue (R$)` até ordenar do maior para o menor. Produtos vendidos por maço ou por unidade ficam sem kg.
-6. **Minutos fora da faixa por mês:** **Gráfico de linhas** com **Eixo X** = `fato_camara_fria` > `mes` e **Eixo Y** = `Minutos fora da faixa`. Se os meses saírem fora de ordem: **Mais opções** (...) do visual > **Classificar eixo** (Sort axis) > `mes`, e de novo em **Classificar eixo** > **Classificar em ordem crescente** (Sort ascending). Título: `Minutos acima de 10 °C na câmara fria, por mês`.
-7. **Renda por agricultor:** **Gráfico de barras clusterizado** com **Eixo Y** = `fato_entregas` > `agricultor_pseudonimo` e **Eixo X** = `Renda por agricultor`. Título: `Renda por agricultor (pseudônimo)`.
+2. **Filtro Produto (opcional):** **Segmentação de dados** com `dim_produto` > `nome`, estilo **Lista suspensa**.
+3. **Cartões:** `% Entregas no prazo`, `Valor entregue (R$)` e `Minutos fora da faixa`. **(opcional)** Mais três: `Kg entregues`, `Renda por agricultor` e `Agricultores na primeira venda`.
+4. **Comparação com o FNDE (opcional):** mais um **Cartão**, com `Compra AF`. No painel **Filtros**, em **Filtros neste visual**, arraste `dim_municipio` > `municipio` e marque **Catalão** (use a busca do filtro); arraste também `dim_ano` > `ano` e marque **2022**. Título: `Compra da AF em Catalão (GO) em 2022, segundo o FNDE`. É o último dado publicado da cidade da cooperativa, para comparar com o valor entregue.
+5. **Kg e valor por produto (opcional):** **Tabela** com `dim_produto` > `nome`, `Kg entregues`, `Valor entregue (R$)` e `% Entregas no prazo`. Clique no título `Valor entregue (R$)` até ordenar do maior para o menor. Produtos vendidos por maço ou por unidade ficam sem kg.
+6. **Minutos fora da faixa por mês (opcional):** **Gráfico de linhas** com **Eixo X** = `fato_camara_fria` > `mes` e **Eixo Y** = `Minutos fora da faixa`. Se os meses saírem fora de ordem: **Mais opções** (...) do visual > **Classificar eixo** (Sort axis) > `mes`, e de novo em **Classificar eixo** > **Classificar em ordem crescente** (Sort ascending). Título: `Minutos acima de 10 °C na câmara fria, por mês`.
+7. **Renda por agricultor (opcional):** **Gráfico de barras clusterizado** com **Eixo Y** = `fato_entregas` > `agricultor_pseudonimo` e **Eixo X** = `Renda por agricultor`. Título: `Renda por agricultor (pseudônimo)`. Confira: são 25 barras diferentes, da menor, R$ 4.172,75, à maior, R$ 8.740,96. Se todas as barras mostrarem o mesmo valor, R$ 6.415,18, a medida `Renda por agricultor` está sem o `KEEPFILTERS`: confira o bloco colado com o do `medidas.dax`.
 8. Salve.
 
 O filtro Produto muda os cartões, a tabela e a renda das entregas, mas não a câmara fria nem o cartão do FNDE. Essas tabelas não têm ligação com produto, e está certo: a temperatura da câmara não é de um produto.
@@ -228,11 +235,12 @@ A tarefa do pacote de entrega usa esses dois arquivos, com esses nomes, no PDF d
 - **"Carregar arquivo" não aparece ou falha** (uma conta sem OneDrive, por exemplo): envie o `.xlsx` ao seu OneDrive (<https://www.office.com> > OneDrive > **Carregar**). No passo 4 da seção 2, use **Vincular ao arquivo** (Link to file) > **Procurar no OneDrive** (Browse OneDrive).
 - **A janela de entrar na conta não abre:** libere as janelas pop-up para app.powerbi.com no navegador.
 - **A lista do passo 8 da seção 2 (Navigator) não mostra as abas:** siga o plano B.
+- **`DataFormat.Error` ao criar o modelo:** clique em **Transformar dados** (Transform data), selecione a coluna que a mensagem cita > **Substituir erros** (Replace errors) > `null` > **OK** e salve. Confira também o tipo dessa coluna na seção 3.
 - **Erro ao criar uma relação, com tipos diferentes:** a coluna (`cod_ibge` ou `ano`) não tem o mesmo tipo nas duas tabelas. No editor do modelo, clique em **Transformar dados** (Transform data), corrija o tipo como na seção 3 e salve, para a mudança chegar ao modelo [1].
 - **Erro na medida, "não encontra a tabela ou a coluna":** o nome da tabela não está igual ao da aba (seção 3, passo 1), ou o bloco foi colado pela metade.
 - **Erro de sintaxe em toda medida com vírgula** (no Desktop): **Arquivo** > **Opções e configurações** > **Opções** > **Configurações regionais**, e use os separadores do DAX recomendados (vírgula entre argumentos e ponto nos decimais).
 - **O ano aparece como 2.022:** veja a seção 4, passo 5.
-- **Cartões em branco ao escolher de 2023 a 2026:** é o esperado. O FNDE ainda não publicou a compra da AF desses anos; só o gráfico da verba tem dados, e 2026 é parcial.
+- **Os cartões da AF em branco ao escolher de 2023 a 2026** (`% AF`, `Municípios abaixo do mínimo`, `Faltou para o mínimo (R$)` e `Faltaria com 45% (R$)`): é o esperado. O FNDE ainda não publicou a compra da AF desses anos. O `Mínimo do ano` mostra 30% (45% em 2026), o `Aviso dos dados` mostra "2026 parcial" em 2026, e só o gráfico da verba mostra os repasses.
 
 ## 11. Plano B: Power BI Desktop no Windows de um colega
 
@@ -278,11 +286,12 @@ Mais conferências de 2022:
 | % Entregas no prazo | 88,6% (694 de 783 entregas) |
 | Kg entregues | 12.799 |
 | Valor entregue (R$) | R$ 160.379,40 |
-| Renda por agricultor | R$ 6.415,18 (25 agricultores) |
+| Renda por agricultor | R$ 6.415,18 (a média dos 25 agricultores) |
 | Agricultores na primeira venda | 12 |
 | Minutos fora da faixa | 12.660 |
 | Compra da AF em Catalão (GO), 2022 | R$ 312.740,30 (34,3% de um repasse de R$ 912.752) |
 
+- Gráfico `Renda por agricultor`: 25 barras diferentes, da menor, R$ 4.172,75, à maior, R$ 8.740,96; a média delas é o R$ 6.415,18 do cartão. Todas as barras iguais a R$ 6.415,18 quer dizer que a medida está sem o `KEEPFILTERS`.
 - Produtos com maior valor entregue: Cenoura (R$ 8.868,16; 749 kg), Mamão (R$ 8.780,94; 606 kg) e Manga (R$ 7.309,44; 576 kg).
 - Minutos fora da faixa por mês, de 2025-07 a 2026-06: 960, 900, 1.080, 1.080, 960, 960, 1.260, 1.080, 900, 1.320, 1.140 e 1.020.
 

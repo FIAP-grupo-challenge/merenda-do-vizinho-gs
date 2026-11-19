@@ -77,7 +77,7 @@ Ficam de fora:
 
 ## Tabelas do painel (refined)
 
-Relações para o Power BI: `fato_pnae_af[cod_ibge]` com `dim_municipio[cod_ibge]` e `fato_entregas[produto_id]` com `dim_produto[produto_id]`. As secretarias estaduais não têm `cod_ibge`, então não se ligam a nenhum município: **todo visual ou medida por município (ou por região imediata ou intermediária) deve filtrar `esfera = 'MUNICIPAL'`**. Para UF e região, que as secretarias têm, use `fato_pnae_af[uf]` e `fato_pnae_af[regiao]`, não as colunas de `dim_municipio`.
+O modelo do Power BI (as seis relações, as medidas e a regra de filtrar `esfera = 'MUNICIPAL'` em tudo que é por município) está em `dados/powerbi/README.md`.
 
 **`fato_pnae_af`**: uma linha por entidade executora e ano, de 2018 a 2022. A chave é (`ano`, `cod_ibge`) nas prefeituras (`MUNICIPAL`) e (`ano`, `uf`, `entidade`) nas secretarias estaduais (`ESTADUAL`; o Amapá tem duas em 2020 e em 2021). As secretarias ficam **sem `cod_ibge` e sem `municipio`**: o FNDE grava nelas o código de um município da UF, não o do estado, e ligado a `dim_municipio` ele levaria o repasse do estado a essa cidade (em 2022, os R$ 51,0 milhões da secretaria da Bahia ficariam em Abaíra, ao lado dos R$ 0,09 milhão da prefeitura). `uf`, `regiao` e `entidade` continuam preenchidos.
 

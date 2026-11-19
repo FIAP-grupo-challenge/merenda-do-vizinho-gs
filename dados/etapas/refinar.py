@@ -36,6 +36,12 @@ def refinar(trusted: Path, refined: Path) -> dict[str, Path]:
         for nome, tabela in tabelas.items():
             tabela.to_csv(caminhos[nome], index=False)
             tabela.to_excel(excel, sheet_name=nome, index=False)
+            # o pandas grava o vazio como texto vazio (<c t="inlineStr"/>), que o Power Query pode ler como "";
+            # com None o openpyxl nem escreve a célula, e ela vira vazio de verdade (null)
+            for linha in excel.sheets[nome].iter_rows():
+                for celula in linha:
+                    if celula.value == '':
+                        celula.value = None
     return caminhos
 
 

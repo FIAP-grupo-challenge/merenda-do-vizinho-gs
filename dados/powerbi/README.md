@@ -4,7 +4,7 @@ O painel do Merenda do Vizinho é montado no Power BI web (o serviço do Power B
 
 | Arquivo | O que tem |
 |---|---|
-| `guia-do-painel.md` | o passo a passo na versão web: subir o `.xlsx`, conferir os tipos, criar as tabelas calculadas, as relações e as medidas, montar as páginas 1 e 2 e tirar os prints. Traz as fontes da Microsoft, o plano B (Power BI Desktop no Windows) e os valores esperados |
+| `guia-do-painel.md` | o passo a passo na versão web: subir o `.xlsx`, conferir os tipos, criar as tabelas calculadas, as relações e as medidas, montar as páginas 1 e 2 e tirar os prints. Traz uma versão curta para quando o tempo apertar, as fontes da Microsoft, o plano B (Power BI Desktop no Windows) e os valores esperados |
 | `medidas.dax` | as duas tabelas calculadas, a coluna calculada e as 17 medidas, cada uma com a tabela onde fica e um comentário com o porquê |
 
 **Entrada:** `dados/datalake/refined/merenda_do_vizinho.xlsx`, gerado com `PIPELINE_OFFLINE=1 .venv/bin/python -m dados.pipeline tudo` (fica fora do Git). As colunas estão em `dados/datalake/README.md`.
@@ -14,7 +14,8 @@ O painel do Merenda do Vizinho é montado no Power BI web (o serviço do Power B
 - tabelas da planilha: `fato_pnae_af`, `fato_repasse_uf`, `fato_entregas`, `fato_camara_fria`, `dim_produto` e `dim_municipio`;
 - tabelas calculadas: `dim_ano` (2018 a 2026), para um só filtro de ano valer na AF e nos repasses, e `dim_uf` (UF e região), para os filtros de UF e região pegarem também as secretarias estaduais, que não têm município;
 - coluna calculada: `fato_camara_fria[mes]`, para os minutos fora da faixa por mês;
-- seis relações muitos para um: `fato_pnae_af[cod_ibge]` com `dim_municipio`, `fato_entregas[produto_id]` com `dim_produto`, `fato_pnae_af[ano]` e `fato_repasse_uf[ano]` com `dim_ano`, e `fato_pnae_af[uf]` e `fato_repasse_uf[uf]` com `dim_uf`.
+- seis relações muitos para um: `fato_pnae_af[cod_ibge]` com `dim_municipio`, `fato_entregas[produto_id]` com `dim_produto`, `fato_pnae_af[ano]` e `fato_repasse_uf[ano]` com `dim_ano`, e `fato_pnae_af[uf]` e `fato_repasse_uf[uf]` com `dim_uf`;
+- as secretarias estaduais (esfera `ESTADUAL`) não têm `cod_ibge` e não se ligam a nenhum município: toda medida ou visual por município (ou por região imediata ou intermediária) filtra `esfera = "MUNICIPAL"`. UF e região vêm de `dim_uf`, que vale também para as secretarias.
 
 **Medidas:**
 
@@ -23,7 +24,7 @@ O painel do Merenda do Vizinho é montado no Power BI web (o serviço do Power B
 - `fato_entregas`: `Kg entregues`, `Valor entregue (R$)`, `% Entregas no prazo`, `Renda por agricultor` e `Agricultores na primeira venda`;
 - `fato_camara_fria`: `Minutos fora da faixa`.
 
-As funções analíticas usadas são `CALCULATE`, `FILTER`, `ALL`, `VALUES`, `DIVIDE`, `SUMX`, `DISTINCTCOUNT`, `VAR`/`RETURN`, `IF`, `SWITCH(TRUE(), ...)`, `ISBLANK` e `ISEMPTY`.
+As funções analíticas usadas são `CALCULATE`, `KEEPFILTERS`, `FILTER`, `ALL`, `VALUES`, `DIVIDE`, `SUMX`, `DISTINCTCOUNT`, `VAR`/`RETURN`, `IF`, `SWITCH(TRUE(), ...)`, `ISBLANK` e `ISEMPTY`.
 
 A medida do repasse se chama `Repasse (R$)`, e não `Repasse`: o Power BI não aceita medida com o nome de uma coluna do modelo, e os nomes não diferenciam maiúsculas (a coluna `repasse` existe). `Aviso dos dados` mostra "dados preliminares" de 2020 a 2022 e "2026 parcial" em 2026.
 
