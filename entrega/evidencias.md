@@ -16,7 +16,7 @@ gerar o PDF, e uma imagem que ainda não existe vira um quadro "A preencher pelo
 # A solução
 
 ::: nota
-**Sobre este PDF.** Ele reúne a solução, a arquitetura e as evidências das quatro áreas do edital, na ordem dos critérios de cada área. Os prints do app foram tirados em 19/11/2026, com o app rodando localmente, sem Docker, com os usuários de demonstração e `DATA_REFERENCIA=2026-07-15` (a data em que a chamada real de Catalão ainda estava aberta; o README explica). As saídas de comando são cópias de arquivos do repositório, citados pelo caminho. Os quadros "A preencher pelo grupo" marcam os prints do Power BI e do TinkerCad.
+**Sobre este PDF.** Ele reúne a solução, a arquitetura e as evidências das quatro áreas do edital, na ordem dos critérios de cada área. Os prints do app foram tirados em 19/11/2026, com o app rodando localmente, sem Docker, com os usuários de demonstração e `DATA_REFERENCIA=2026-07-15` (a data em que a chamada real de Catalão ainda estava aberta; o README explica). As saídas de comando são cópias de arquivos do repositório, citados pelo caminho.
 :::
 
 ## O problema
@@ -290,7 +290,7 @@ Saída do simulador no cenário de porta aberta, com 15 leituras, uma por segund
 
 Um uso completo, com os usuários de demonstração e a chamada real de Catalão (GO):
 
-1. **A prefeitura publica a chamada.** Ela envia o PDF do edital, a IA lê (prints 2 e 3, na seção 3.1), ela confere e publica. A chamada 003/2026 fica publicada, com os 16 itens (print 4).
+1. **A prefeitura publica a chamada.** Ela envia o PDF do edital, a IA lê (prints 2 e 3, na seção 3.1), ela confere e publica. A chamada 003/2026 publicada, com os 16 itens, é a do print 4: no app de demonstração ela já vem publicada de antes, e a tela a marca como "Leitura já conferida antes (cache)". A leitura que a IA fez na hora é a dos prints 2 e 3.
 2. **A agricultora acha a oportunidade.** A Ana entra e vê a chamada da cidade dela, com quanto pode ganhar: até R$ 21.082,00 (print 5).
 3. **O assistente ajuda a decidir.** Ela pergunta se pode entregar 50 de alface por semana, e a resposta faz a conta (print 6, na seção 3.1) e preenche o campo. Ela toca em "Quero participar", e o interesse vai para a cooperativa (print 7).
 4. **A cooperativa monta a proposta.** O app divide cada item entre os cooperados que plantam, respeitando o que cada um produz e o limite de R$ 40 mil por ano. A cooperativa ajusta a alface para números inteiros e salva a divisão (print 9).
@@ -298,7 +298,7 @@ Um uso completo, com os usuários de demonstração e a chamada real de Catalão
 6. **A câmara fria guarda os alimentos.** As leituras chegam a cada segundo, e quando a temperatura passa de 10 °C a faixa vermelha avisa (print 11, na seção 5.2).
 7. **A entrega é registrada, e a prefeitura acompanha.** A cooperativa registra a entrega de 300 kg de mandioca (R$ 3.513,00). A prefeitura vê a proposta recebida, a entrega e quanto falta para a meta do ano (print 12).
 
-![**Print 4.** Trecho da tela da prefeitura: a chamada 003/2026 publicada, com os 16 itens.](prints/04-prefeitura-chamada-publicada.png)
+![**Print 4.** Trecho da tela da prefeitura: a chamada 003/2026 publicada, com os 16 itens. É a chamada de demonstração que já estava publicada (a tela diz "Leitura já conferida antes (cache)", publicada em 09/07/2026); a leitura que a IA fez na hora é a dos prints 2 e 3.](prints/04-prefeitura-chamada-publicada.png)
 
 ![**Print 5.** As oportunidades da agricultora Ana: a chamada de Catalão, na cidade dela, com até R$ 21.082,00 de ganho e os itens que ela planta.](prints/05-agricultora-oportunidades.png)
 
@@ -312,7 +312,9 @@ Um uso completo, com os usuários de demonstração e a chamada real de Catalão
 
 ## Arquitetura (1 ponto)
 
-O diagrama da arquitetura geral, com as quatro áreas e como elas se ligam, está na seção 2 (`docs/arquitetura.png`). A versão em Mermaid, os módulos, os contratos e o caminho de produção estão em `docs/arquitetura.md`.
+O diagrama da arquitetura geral, com as quatro áreas e como elas se ligam, é o mesmo da seção 2 (`docs/arquitetura.png`), repetido aqui. A versão em Mermaid, os módulos, os contratos e o caminho de produção estão em `docs/arquitetura.md`.
+
+![Os módulos e como eles se ligam. Linhas cheias: o que roda no MVP. Tracejado: a chamada opcional ao Claude, que só existe com a chave, e o caminho de produção (Kafka, NiFi e Spark), que **não** está implementado.](../docs/arquitetura.png){width=165mm}
 
 # DevOps, segurança e qualidade (3 pontos)
 
