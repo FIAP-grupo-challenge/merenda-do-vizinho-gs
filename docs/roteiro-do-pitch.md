@@ -107,8 +107,8 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
   - "Faltaria com 45% (R$)" tem de mostrar 244,8 milhões;
   - "% AF" mostra 44,5%.
   - Se o seu painel mostrar outro número, acerte o pipeline antes de gravar. Não troque a fala sem conferir.
-- **Por que 1.531 e não 1.604:** o 1.531 conta só prefeituras e deixa de fora as linhas com repasse zero (42) ou valor não numérico. O painel do FNDE conta 1.604. A diferença é de 73. As 42 linhas com repasse zero são uma causa provável, mas 42 é menos que 73, então não explicam tudo (`dados/datalake/README.md`, "Números de referência de 2022").
-- **Por que 44,5% e não 45,15%:** o 44,5% é o cálculo do grupo e o 45,15% é o que o painel do FNDE mostra. A diferença vem, provavelmente, das mesmas linhas com repasse zero, que o cálculo do grupo deixa de fora (`dados/datalake/README.md`, "Números de referência de 2022").
+- **Por que 1.531 e não 1.604:** o 1.531 conta só prefeituras e deixa de fora as linhas com repasse zero (42) ou valor não numérico. O painel do FNDE conta 1.604. A diferença é de 73. As 42 linhas com repasse zero são uma causa provável, mas 42 é menos que 73, então não explicam tudo (o 1.531 está em `dados/datalake/README.md`, "Números de referência de 2022"; o 1.604 é do painel do FNDE, referência 24 de `docs/fontes.md`).
+- **Por que 44,5% e não 45,15%:** o 44,5% é o cálculo do grupo e o 45,15% é o que o painel do FNDE mostra. A diferença vem, provavelmente, das mesmas linhas com repasse zero, que o cálculo do grupo deixa de fora (o 44,5% está em `dados/datalake/README.md`, "Números de referência de 2022"; o 45,15% é do painel do FNDE, referência 24 de `docs/fontes.md`).
 - **O que cada número conta:** o 44,5% é o percentual nacional, sobre todas as entidades (prefeituras e secretarias estaduais). O 1.531, o R$ 97,1 milhões e o R$ 244,8 milhões contam só prefeituras.
 - **Ana:** a tela "Oportunidades" mostra o cartão de Catalão e, na tela da chamada, o botão "Quero participar" está ligado (ele fica desligado se o perfil não tem cooperativa).
 

@@ -60,6 +60,6 @@ Canvas do Merenda do Vizinho. Todos os blocos são hipóteses do grupo, a testar
 
 - Assinatura mensal da prefeitura, conforme o porte
 - Taxa pequena sobre cada venda fechada pela cooperativa com o projeto de venda do app
-- Os valores da assinatura e da taxa ainda não estão definidos: são hipóteses, a fechar no piloto
+- Valores em hipótese, a validar no piloto: assinatura de R$ 400, R$ 900 ou R$ 2.000 por mês, conforme o porte do município, e taxa de 1% sobre a venda fechada
 
 *Todos os blocos são hipóteses do grupo, para validar no piloto.*
