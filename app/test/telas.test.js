@@ -3,6 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const PUBLICA = path.join(__dirname, '..', 'public');
 
@@ -23,4 +24,22 @@ test('estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e 
   assert.doesNotMatch(css, /@media \(max-width/, 'celular primeiro: só min-width');
   assert.match(css, /min-height: 44px/);
   assert.match(css, /\.rolavel \{[^}]*overflow-x: auto/);
+  assert.match(css, /\.topo :focus-visible \{[^}]*outline-color: #fff/, 'o anel de foco azul some no verde do topo');
+});
+
+// api.js é um script de navegador (funções globais): roda aqui com um navegador de mentira.
+test('api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor', async () => {
+  const codigo = fs.readFileSync(path.join(PUBLICA, 'js', 'api.js'), 'utf8');
+  const navegador = { localStorage: { getItem: () => null, removeItem() {} }, location: {} };
+  vm.runInNewContext(codigo, navegador);
+
+  navegador.fetch = async () => {
+    throw new TypeError('Failed to fetch');
+  };
+  await assert.rejects(navegador.api('GET', '/api/eu'), { message: 'Sem conexão com o servidor. Confira a internet e tente de novo.' });
+
+  navegador.fetch = async () => ({ ok: false, status: 400, json: async () => ({ erro: 'Confira o e-mail.' }) });
+  await assert.rejects(navegador.api('POST', '/api/cadastro', {}), { message: 'Confira o e-mail.' });
+  navegador.fetch = async () => ({ ok: false, status: 500, json: async () => Promise.reject(new Error('não é JSON')) });
+  await assert.rejects(navegador.api('GET', '/api/eu'), { message: 'Não deu certo. Tente de novo.' });
 });

@@ -64,6 +64,11 @@ a {
   outline-offset: 2px;
 }
 
+/* o azul do foco quase some no verde do topo: ali o anel é branco */
+.topo :focus-visible {
+  outline-color: #ffffff;
+}
+
 /* ---------- Estrutura ---------- */
 
 .topo {
@@ -261,7 +266,9 @@ td {
   vertical-align: top;
 }
 
-/* tabela larga rola dentro desta caixa, nunca a página */
+/* tabela larga rola dentro desta caixa, nunca a página.
+   Em cada caixa .rolavel, a página põe tabindex="0" (para rolar pelo teclado) e role="region" com aria-label
+   (para o leitor de tela dizer o que ela é): sem isso, quem não usa mouse não alcança a tabela. */
 .rolavel {
   overflow-x: auto;
   max-width: 100%;

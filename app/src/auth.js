@@ -39,6 +39,11 @@ async function exigirLogin(req, res, ctx) {
 
 // Manipulador de rota, depois do exigirLogin: só deixa passar os papéis dados.
 function exigirPapel(...papeis) {
+  // Sem isto, `exigirPapel` sem os parênteses viraria um manipulador que não barra ninguém (a rota ficaria aberta):
+  // o roteador o chamaria com (req, res, ctx), e aqui isso falha alto.
+  if (!papeis.length || !papeis.every((papel) => typeof papel === 'string')) {
+    throw new TypeError("exigirPapel recebe os papéis em texto, como exigirPapel('prefeitura')");
+  }
   return async (req, res, ctx) => {
     if (!ctx.usuario || !papeis.includes(ctx.usuario.papel)) {
       responderJson(res, 403, { erro: 'Esta parte do app não é para o seu tipo de conta.' });

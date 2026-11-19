@@ -6,11 +6,17 @@ async function api(metodo, caminho, corpo) {
   const cabecalhos = {};
   if (corpo !== undefined) cabecalhos['Content-Type'] = 'application/json';
   if (token) cabecalhos.Authorization = `Bearer ${token}`;
-  const resposta = await fetch(caminho, {
-    method: metodo,
-    headers: cabecalhos,
-    body: corpo === undefined ? undefined : JSON.stringify(corpo),
-  });
+  let resposta;
+  try {
+    resposta = await fetch(caminho, {
+      method: metodo,
+      headers: cabecalhos,
+      body: corpo === undefined ? undefined : JSON.stringify(corpo),
+    });
+  } catch {
+    // o fetch só lança quando a resposta nem chegou (internet caiu, servidor fora do ar); sem isto a tela mostraria "Failed to fetch"
+    throw new Error('Sem conexão com o servidor. Confira a internet e tente de novo.');
+  }
   const dados = await resposta.json().catch(() => ({}));
   // sessão vencida (8 h) ou inválida: volta para a tela de entrar
   if (resposta.status === 401 && token) sair();

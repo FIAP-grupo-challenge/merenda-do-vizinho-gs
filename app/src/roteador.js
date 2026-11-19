@@ -21,6 +21,9 @@ function criarRoteador() {
         await manipulador(req, res, ctx);
         if (res.writableEnded) break;
       }
+      // Lista que acabou sem responder é erro da rota: o servidor registra e responde 500, em vez de deixar a requisição
+      // pendurada. Resposta já começada e por terminar (escrita aos poucos) não é: o manipulador a termina depois.
+      if (!res.writableEnded && !res.headersSent) throw new Error(`rota sem resposta: ${req.method} ${url.pathname}`);
       return true;
     }
     return false;

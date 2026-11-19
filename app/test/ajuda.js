@@ -3,22 +3,17 @@ const { lerConfig } = require('../src/config');
 const { abrirBanco, migrar } = require('../src/db');
 const { semear } = require('../src/semente');
 const { criarServidor } = require('../src/servidor');
-
-const ENV_TESTE = {
-  JWT_SEGREDO: 'segredo-so-dos-testes',
-  CHAVE_SERVICO: 'chave-servico-dos-testes',
-  CHAVE_DISPOSITIVO: 'chave-dispositivo-dos-testes',
-  DATA_REFERENCIA: '2026-07-15',
-};
+const { ENV_TESTE } = require('./env-teste');
 
 // Sobe o app como o index.js faz (banco migrado e semeado), mas em memória e numa porta livre.
 // `ia` é o cliente da IA: nos testes, um objeto falso com saude, extrairChamada e assistente.
-async function subirApp({ ia = {}, env = {} } = {}) {
+// `pastaRotas` troca a pasta de onde o servidor carrega as rotas (os testes de erro usam rotas falsas).
+async function subirApp({ ia = {}, env = {}, pastaRotas } = {}) {
   const config = lerConfig({ ...ENV_TESTE, ...env });
   const db = abrirBanco(':memory:');
   migrar(db);
   semear(db);
-  const servidor = criarServidor({ db, config, ia });
+  const servidor = criarServidor({ db, config, ia, pastaRotas });
   await new Promise((resolve) => servidor.listen(0, '127.0.0.1', resolve));
   const url = `http://127.0.0.1:${servidor.address().port}`;
 
@@ -31,6 +26,7 @@ async function subirApp({ ia = {}, env = {} } = {}) {
       method: metodo,
       headers,
       body: corpo === undefined || typeof corpo === 'string' ? corpo : JSON.stringify(corpo),
+      signal: AbortSignal.timeout(10_000), // requisição pendurada falha em vez de travar o teste para sempre
     });
     const texto = await resposta.text();
     const ehJson = (resposta.headers.get('content-type') || '').includes('application/json');
@@ -47,10 +43,10 @@ async function subirApp({ ia = {}, env = {} } = {}) {
   async function fechar() {
     servidor.closeAllConnections();
     await new Promise((resolve) => servidor.close(resolve));
-    db.close();
+    if (db.isOpen) db.close(); // um teste de erro pode ter fechado o banco antes
   }
 
-  return { url, db, config, pedir, entrar, fechar };
+  return { url, servidor, db, config, pedir, entrar, fechar };
 }
 
 // Resposta falsa para testar o roteador sem rede: guarda o status e o corpo de responderJson.

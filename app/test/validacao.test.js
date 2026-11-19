@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validarCpf, validarCaf, validarEmail, mascararCpf, mascararCaf } = require('../src/validacao');
 const { lerConfig } = require('../src/config');
-const { ENV_TESTE } = require('./ajuda');
+const { ENV_TESTE } = require('./env-teste');
 
 test('validarCpf', () => {
   assert.ok(validarCpf('529.982.247-25'));

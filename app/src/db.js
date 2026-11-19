@@ -116,11 +116,13 @@ function migrar(db) {
   `);
 }
 
-// Roda funcao() numa transação: tudo grava, ou nada grava.
+// Roda funcao() numa transação: tudo grava, ou nada grava. A funcao é síncrona, e não pode ser async.
 function emTransacao(db, funcao) {
   db.exec('BEGIN');
   try {
     const resultado = funcao();
+    // com async, o COMMIT sairia antes do fim da funcao, e o que viesse depois do primeiro await ficaria fora da transação
+    if (resultado instanceof Promise) throw new TypeError('emTransacao: a funcao não pode ser async nem devolver Promise');
     db.exec('COMMIT');
     return resultado;
   } catch (erro) {

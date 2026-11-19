@@ -17,21 +17,26 @@ function responderJson(res, status, objeto) {
 }
 
 // Lê o corpo como objeto JSON. Corpo vazio vale {}.
+// O servidor lê o corpo antes do login, então o limite é a defesa: o Content-Length acima dele é recusado sem ler
+// nada, e passar dele no meio da leitura para a leitura. Depois do 413, quem fecha a conexão é o servidor.
 function lerCorpoJson(req, limiteBytes) {
   return new Promise((resolve, reject) => {
     const partes = [];
     let tamanho = 0;
+    const recusar = () => {
+      partes.length = 0;
+      req.pause(); // não lê nem guarda o resto
+      const limite = limiteBytes >= 1048576 ? `${limiteBytes / 1048576} MB` : `${limiteBytes / 1024} KB`;
+      reject(new ErroHttp(413, `O envio passa do limite de ${limite}. Mande um arquivo ou um texto menor.`));
+    };
+    // o cliente desistiu no meio do envio (ECONNRESET "aborted"): ninguém lê a resposta, e não é erro do servidor
+    req.on('error', () => reject(new ErroHttp(400, 'O envio foi interrompido.')));
+    if (Number(req.headers['content-length']) > limiteBytes) return recusar();
     req.on('data', (parte) => {
       tamanho += parte.length;
-      if (tamanho <= limiteBytes) {
-        partes.push(parte);
-      } else {
-        // solta o que guardou e segue lendo e descartando o resto: com a conexão cortada, o cliente não veria o 413
-        partes.length = 0;
-        reject(new ErroHttp(413, `o corpo passa do limite de ${Math.round(limiteBytes / 1024 / 1024)} MB`));
-      }
+      if (tamanho > limiteBytes) return recusar();
+      partes.push(parte);
     });
-    req.on('error', reject);
     req.on('end', () => {
       if (tamanho > limiteBytes) return;
       const texto = Buffer.concat(partes).toString('utf8');

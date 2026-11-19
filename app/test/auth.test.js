@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const jwt = require('jsonwebtoken');
 const { hashSenha, conferirSenha, emitirToken, exigirLogin, exigirPapel } = require('../src/auth');
 const { produtoExiste } = require('../src/catalogo');
 const { criarRoteador } = require('../src/roteador');
@@ -90,6 +91,35 @@ test('exigirPapel responde 403 para outro papel e a lista de manipuladores para 
   assert.equal(res.status, 403);
   assert.ok(JSON.parse(res.corpo).erro);
   assert.equal(chegou, false);
+});
+
+test('token vencido e token de outro algoritmo recebem 401; o certo recebe 200', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  const { id, papel } = (await app.pedir('GET', '/api/eu', { token: await app.entrar('ana@demo.br') })).corpo;
+  const eu = (token) => app.pedir('GET', '/api/eu', { token });
+  const segredo = app.config.jwtSegredo;
+  assert.equal((await eu(emitirToken({ id, papel }, segredo))).status, 200, 'controle: o mesmo usuário, com o token certo, entra');
+  const vencido = jwt.sign({ id, papel, exp: Math.floor(Date.now() / 1000) - 60 }, segredo, { algorithm: 'HS256' });
+  assert.equal((await eu(vencido)).status, 401, 'venceu há um minuto');
+  const outroAlgoritmo = jwt.sign({ id, papel }, segredo, { algorithm: 'HS512' });
+  assert.equal((await eu(outroAlgoritmo)).status, 401, 'segredo certo, mas só HS256 vale');
+});
+
+test('exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar', async () => {
+  assert.equal(typeof exigirPapel('agricultor', 'prefeitura'), 'function'); // controle
+  assert.throws(() => exigirPapel(), TypeError);
+  assert.throws(() => exigirPapel(['prefeitura']), TypeError);
+  assert.throws(() => exigirPapel('prefeitura', undefined), TypeError);
+
+  // sem os parênteses, o roteador chama exigirPapel(req, res, ctx) como se fosse um manipulador
+  const roteador = criarRoteador();
+  roteador.get('/aberta-por-engano', exigirLogin, exigirPapel, async (req, res) => res.end('passou'));
+  const token = emitirToken({ id: 3, papel: 'agricultor' }, 'segredo');
+  const req = { method: 'GET', url: '/aberta-por-engano', headers: { authorization: `Bearer ${token}` } };
+  const res = respostaFalsa();
+  await assert.rejects(roteador.tratar(req, res, { config: { jwtSegredo: 'segredo' } }), TypeError);
+  assert.equal(res.corpo, null, 'o manipulador final não rodou');
 });
 
 test('GET /api/catalogo exige login e devolve o catálogo', async (t) => {
