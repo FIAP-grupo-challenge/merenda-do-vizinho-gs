@@ -1,7 +1,11 @@
 # segredos e dados locais
 .env
+.env.*
+!.env.example
 *.db
 *.db-journal
+*.db-wal
+*.db-shm
 node_modules/
 __pycache__/
 .venv/
