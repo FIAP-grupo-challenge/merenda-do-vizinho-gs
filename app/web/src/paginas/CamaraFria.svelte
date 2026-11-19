@@ -238,7 +238,7 @@
     font-weight: 700;
   }
 
-  /* o azul do foco some no vermelho: ali o anel é branco, como no topo */
+  /* o anel de foco escuro some no vermelho: ali o anel é branco, como no topo */
   .faixa-alerta :global(:focus-visible) {
     outline-color: #ffffff;
   }

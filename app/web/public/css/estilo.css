@@ -511,11 +511,12 @@ thead th {
     top: 0;
     align-self: start;
     height: 100vh;
+    flex-wrap: nowrap; /* herdava o wrap do .topo: em janela baixa a frase ia para uma segunda coluna */
   }
 
   .capa .marca {
-    width: 16rem;
-    height: 16rem;
+    width: min(16rem, 38vh);
+    height: min(16rem, 38vh);
     margin-bottom: 2.25rem;
   }
 
