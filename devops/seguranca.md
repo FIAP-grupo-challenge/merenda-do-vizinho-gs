@@ -19,6 +19,10 @@ os testes automatizados de cada uma estão no `devops/plano-de-testes.md` (CT01 
 - O login devolve um JWT HS256 que vale 8 horas. O app só aceita HS256: um token sem assinatura (`alg: none`), de outra
   chave ou vencido dá 401.
 - Cada rota diz quais papéis a usam (`exigirPapel`): papel errado dá 403.
+- **Limite do MVP:** qualquer pessoa pode criar uma conta e escolher o papel (prefeitura ou cooperativa, além de
+  agricultor) sem verificação, e a senha dos usuários de demonstração (`demo1234`) é pública. Isso é aceitável no
+  MVP; em produção, o cadastro de prefeitura e de cooperativa precisaria de verificação, e as contas de demonstração
+  sairiam.
 
 ```bash
 # 1.1 senha errada: 401
