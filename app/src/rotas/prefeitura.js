@@ -119,7 +119,7 @@ function registrar(roteador, { db, config, ia }) {
   }
 
   const buscarEntregas = db.prepare(
-    'SELECT id, produto_id, quantidade, valor, data, no_prazo FROM entregas WHERE proposta_id = ? ORDER BY data, id',
+    'SELECT id, produto_id, item, quantidade, valor, data, no_prazo FROM entregas WHERE proposta_id = ? ORDER BY data, id',
   );
 
   // A chamada com as propostas recebidas. A prefeitura vê o total de cada item, não quem planta o quê.

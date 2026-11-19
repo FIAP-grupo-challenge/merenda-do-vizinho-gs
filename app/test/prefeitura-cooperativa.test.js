@@ -74,10 +74,11 @@ function marcarInteresse(app, email, chamadaId, produtoId, quantidade) {
     .run(idDe(app, email), chamadaId, produtoId, quantidade);
 }
 
-function inserirEntrega(app, propostaId, produtoId, quantidade, valor, data, noPrazo = 1) {
+// `item`: a posição do item na proposta, como a câmara fria grava; sem ela, é uma entrega antiga
+function inserirEntrega(app, propostaId, produtoId, quantidade, valor, data, noPrazo = 1, item = null) {
   app.db
-    .prepare('INSERT INTO entregas (proposta_id, produto_id, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?)')
-    .run(propostaId, produtoId, quantidade, valor, data, noPrazo);
+    .prepare('INSERT INTO entregas (proposta_id, produto_id, item, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?, ?)')
+    .run(propostaId, produtoId, item, quantidade, valor, data, noPrazo);
 }
 
 const chamadaSemeada = (app) => app.db.prepare("SELECT * FROM chamadas WHERE origem = 'cache'").get();
@@ -351,8 +352,10 @@ test('prefeitura vê as propostas e as entregas da chamada', async (t) => {
   const { id: chamadaId } = chamadaSemeada(app);
   const proposta = await app.pedir('POST', `/api/cooperativa/chamadas/${chamadaId}/proposta`, { token: cooperativa });
   assert.equal(proposta.status, 201);
-  inserirEntrega(app, proposta.corpo.id, 'alface', 100, 703, '2026-08-05', 1);
-  inserirEntrega(app, proposta.corpo.id, 'mandioca', 50, 585.5, '2026-08-06', 0);
+  const posicao = (produtoId) => proposta.corpo.itens.findIndex((it) => it.produto_id === produtoId);
+  inserirEntrega(app, proposta.corpo.id, 'alface', 100, 703, '2026-08-05', 1, posicao('alface'));
+  inserirEntrega(app, proposta.corpo.id, 'mandioca', 50, 585.5, '2026-08-06', 0, posicao('mandioca'));
+  inserirEntrega(app, proposta.corpo.id, 'tomate', 1, 12.04, '2026-08-07'); // entrega antiga: sem a posição do item
 
   const lista = await app.pedir('GET', '/api/prefeitura/chamadas', { token: prefeitura });
   assert.equal(lista.corpo.find((chamada) => chamada.id === chamadaId).propostas, 1);
@@ -370,8 +373,9 @@ test('prefeitura vê as propostas e as entregas da chamada', async (t) => {
   assert.ok(alocacoes.length > 0);
   assert.deepEqual(recebida.itens.find((it) => it.produto_id === 'alface'), alfaceSemAlocacoes);
   assert.deepEqual(recebida.entregas.map(({ id, ...entrega }) => entrega), [
-    { produto_id: 'alface', quantidade: 100, valor: 703, data: '2026-08-05', no_prazo: true },
-    { produto_id: 'mandioca', quantidade: 50, valor: 585.5, data: '2026-08-06', no_prazo: false },
+    { produto_id: 'alface', item: posicao('alface'), quantidade: 100, valor: 703, data: '2026-08-05', no_prazo: true },
+    { produto_id: 'mandioca', item: posicao('mandioca'), quantidade: 50, valor: 585.5, data: '2026-08-06', no_prazo: false },
+    { produto_id: 'tomate', item: null, quantidade: 1, valor: 12.04, data: '2026-08-07', no_prazo: true },
   ]);
   // a prefeitura vê os totais da proposta, não quem planta o quê
   assert.ok(!JSON.stringify(detalhe.corpo).includes('agricultor_id'));

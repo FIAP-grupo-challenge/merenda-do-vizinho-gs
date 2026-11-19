@@ -101,6 +101,7 @@ function migrar(db) {
       id INTEGER PRIMARY KEY,
       proposta_id INTEGER NOT NULL,
       produto_id TEXT NOT NULL,
+      item INTEGER, -- posição do item na proposta (o mesmo produto pode ter dois itens, com preços diferentes); vazia nas entregas antigas
       quantidade REAL NOT NULL,
       valor REAL NOT NULL,
       data TEXT NOT NULL,
@@ -114,6 +115,10 @@ function migrar(db) {
       PRIMARY KEY (prefeitura_id, ano)
     );
   `);
+  // O CREATE TABLE IF NOT EXISTS não mexe numa tabela que já existe: o banco criado antes de `entregas.item` ganha a coluna aqui.
+  if (!db.prepare('PRAGMA table_info(entregas)').all().some((coluna) => coluna.name === 'item')) {
+    db.exec('ALTER TABLE entregas ADD COLUMN item INTEGER');
+  }
 }
 
 // Roda funcao() numa transação: tudo grava, ou nada grava. A funcao é síncrona, e não pode ser async.

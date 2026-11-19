@@ -87,8 +87,8 @@ function registrar(roteador, { db, config }) {
 
     const valor = arredondar(entregue * escolhido.preco_unitario);
     const { lastInsertRowid } = db
-      .prepare('INSERT INTO entregas (proposta_id, produto_id, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?)')
-      .run(proposta.id, escolhido.produto_id, entregue, valor, data, no_prazo ? 1 : 0);
+      .prepare('INSERT INTO entregas (proposta_id, produto_id, item, quantidade, valor, data, no_prazo) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(proposta.id, escolhido.produto_id, item, entregue, valor, data, no_prazo ? 1 : 0);
     responderJson(res, 201, {
       id: Number(lastInsertRowid),
       proposta_id: proposta.id,

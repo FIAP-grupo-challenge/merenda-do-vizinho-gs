@@ -331,6 +331,7 @@ test('entrega registra o item da proposta pela posição: as duas abóboras de C
   const aboboras = proposta.itens.map((item, posicao) => ({ ...item, posicao })).filter((item) => item.produto_id === 'abobora');
   assert.equal(aboboras.length, 2);
   assert.notEqual(aboboras[0].preco_unitario, aboboras[1].preco_unitario);
+  assert.notEqual(aboboras[0].produto, aboboras[1].produto); // o nome é o que diferencia as duas na tela da prefeitura
   const registradas = [];
   for (const abobora of aboboras) {
     assert.ok(abobora.quantidade >= 10, `${abobora.produto}: a semente oferece abóbora`);
@@ -344,14 +345,22 @@ test('entrega registra o item da proposta pela posição: as duas abóboras de C
     registradas.push(valor);
   }
   assert.deepEqual(
-    app.db.prepare('SELECT valor, no_prazo FROM entregas ORDER BY id').all().map((e) => [e.valor, e.no_prazo]),
-    [[registradas[0], 1], [registradas[1], 0]],
+    app.db.prepare('SELECT item, valor, no_prazo FROM entregas ORDER BY id').all().map((e) => [e.item, e.valor, e.no_prazo]),
+    [[aboboras[0].posicao, registradas[0], 1], [aboboras[1].posicao, registradas[1], 0]],
+    'a entrega guarda a posição do item, não só o produto',
   );
 
   // a prefeitura vê as entregas na meta do ano (compras da agricultura familiar)
   const prefeitura = await app.entrar('prefeitura@demo.br');
   const resumo = await app.pedir('GET', '/api/prefeitura/resumo?ano=2026', { token: prefeitura });
   assert.equal(resumo.corpo.compras_af_reais, arredondar(registradas[0] + registradas[1]));
+
+  // e vê de qual item é cada uma: a tela mostra o nome do item da proposta, e as duas abóboras são o mesmo produto
+  const { id: chamadaId } = app.db.prepare("SELECT id FROM chamadas WHERE origem = 'cache'").get();
+  const detalhe = await app.pedir('GET', `/api/prefeitura/chamadas/${chamadaId}`, { token: prefeitura });
+  const [recebida] = detalhe.corpo.propostas;
+  assert.deepEqual(recebida.entregas.map((e) => e.item), aboboras.map((abobora) => abobora.posicao));
+  assert.deepEqual(recebida.entregas.map((e) => recebida.itens[e.item].produto), aboboras.map((abobora) => abobora.produto));
 
   const semOferta = proposta.itens.findIndex((item) => item.quantidade === 0);
   assert.ok(semOferta >= 0, 'a proposta de Catalão tem item sem oferta');
