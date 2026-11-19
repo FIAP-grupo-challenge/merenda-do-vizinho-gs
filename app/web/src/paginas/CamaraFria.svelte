@@ -3,10 +3,10 @@
 <script>
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
+  import CampoNumero from '../lib/CampoNumero.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
+  import { lerNumero, numero, reais } from '../lib/formato.js';
 
-  const numero = (valor) => valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-  const reais = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   // o momento chega em UTC; a tela mostra no fuso de quem olha
   const quando = (momento) => new Date(momento).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
   const hora = (momento) => new Date(momento).toLocaleTimeString('pt-BR');
@@ -22,9 +22,9 @@
   const ultima = $derived(camara?.leituras[0]);
   const resumo = $derived(
     ultima
-      ? `${ultima.dispositivo}, leitura de ${quando(ultima.momento)}: ${numero(ultima.temperatura_c)} graus, ` +
-          `${numero(ultima.peso_kg)} quilos e porta ${ultima.porta_aberta ? 'aberta' : 'fechada'}. ` +
-          `O app avisa acima de ${numero(camara.limite_temp_c)} graus ou com a porta aberta mais de ${numero(camara.minutos_porta_aberta)} minutos.`
+      ? `${ultima.dispositivo}, leitura de ${quando(ultima.momento)}: ${numero(ultima.temperatura_c, 2)} graus, ` +
+          `${numero(ultima.peso_kg, 2)} quilos e porta ${ultima.porta_aberta ? 'aberta' : 'fechada'}. ` +
+          `O app avisa acima de ${numero(camara.limite_temp_c, 2)} graus ou com a porta aberta mais de ${numero(camara.minutos_porta_aberta, 2)} minutos.`
       : '',
   );
 
@@ -48,7 +48,7 @@
   let propostas = $state(null);
   let propostaId = $state(null);
   let item = $state(''); // a posição do item na proposta: o mesmo produto pode estar em dois itens de preços diferentes
-  let quantidade = $state(null);
+  let quantidade = $state(''); // o texto do campo ("25,5"): na hora de enviar, lerNumero(quantidade).valor
   let data = $state(hoje());
   let noPrazo = $state(true);
   let enviando = $state(false);
@@ -77,9 +77,10 @@
     enviando = true;
     const alimento = escolhido;
     try {
-      const entrega = await api('POST', '/api/cooperativa/entregas', { proposta_id: propostaId, item, quantidade, data, no_prazo: noPrazo });
-      mensagem = `Entrega registrada: ${numero(entrega.quantidade)} ${alimento.unidade} de ${alimento.produto}, no valor de ${reais(entrega.valor)}.`;
-      quantidade = null;
+      const corpo = { proposta_id: propostaId, item, quantidade: lerNumero(quantidade).valor, data, no_prazo: noPrazo };
+      const entrega = await api('POST', '/api/cooperativa/entregas', corpo);
+      mensagem = `Entrega registrada: ${numero(entrega.quantidade, 2)} ${alimento.unidade} de ${alimento.produto}, no valor de ${reais(entrega.valor)}.`;
+      quantidade = '';
     } catch (falha) {
       erroEntrega = falha.message;
     } finally {
@@ -125,11 +126,11 @@
       <dl class="numeros">
         <div class:fora={ultima.temperatura_c > camara.limite_temp_c}>
           <dt>Temperatura</dt>
-          <dd>{numero(ultima.temperatura_c)} °C</dd>
+          <dd>{numero(ultima.temperatura_c, 2)} °C</dd>
         </div>
         <div>
           <dt>Peso</dt>
-          <dd>{numero(ultima.peso_kg)} kg</dd>
+          <dd>{numero(ultima.peso_kg, 2)} kg</dd>
         </div>
         <div>
           <dt>Porta</dt>
@@ -165,8 +166,8 @@
               <tr>
                 <td>{hora(leitura.momento)}</td>
                 <td>{leitura.dispositivo}</td>
-                <td class="numero">{numero(leitura.temperatura_c)} °C</td>
-                <td class="numero">{numero(leitura.peso_kg)} kg</td>
+                <td class="numero">{numero(leitura.temperatura_c, 2)} °C</td>
+                <td class="numero">{numero(leitura.peso_kg, 2)} kg</td>
                 <td>{leitura.porta_aberta ? 'aberta' : 'fechada'}</td>
               </tr>
             {/each}
@@ -195,12 +196,12 @@
         <select id="entrega-item" bind:value={item}>
           <option value="" disabled>Escolha o alimento</option>
           {#each comOferta as it (it.posicao)}
-            <option value={it.posicao}>{it.produto} ({it.unidade}, {reais(it.preco_unitario)}): oferecido {numero(it.quantidade)}</option>
+            <option value={it.posicao}>{it.produto} ({it.unidade}, {reais(it.preco_unitario)}): oferecido {numero(it.quantidade, 2)}</option>
           {/each}
         </select>
 
         <label for="entrega-quantidade">Quantidade entregue{escolhido ? ` (${escolhido.unidade})` : ''}</label>
-        <input id="entrega-quantidade" type="number" min="0.01" step="0.01" inputmode="decimal" bind:value={quantidade} required>
+        <CampoNumero id="entrega-quantidade" bind:texto={quantidade} required />
 
         <label for="entrega-data">Data da entrega</label>
         <input id="entrega-data" type="date" bind:value={data} required>

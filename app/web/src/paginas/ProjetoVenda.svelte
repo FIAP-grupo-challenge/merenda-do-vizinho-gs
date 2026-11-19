@@ -5,14 +5,13 @@
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
+  import { numero, reais } from '../lib/formato.js';
 
   const parametros = new URLSearchParams(location.search);
   const proposta = parametros.get('proposta');
   const chamada = parametros.get('chamada');
   const voltar = proposta ? '/cooperativa.html' : '/agricultor.html';
 
-  const reais = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  const numero = (valor) => valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
   const cnpj = (digitos) => String(digitos ?? '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
   const lugar = (municipio, uf) => (municipio || uf ? `${municipio ?? ''}/${uf ?? ''}` : null);
 
@@ -59,7 +58,7 @@
           <tr>
             <td>{linha.produto}</td>
             <td>{linha.unidade}</td>
-            <td class="numero">{numero(linha.quantidade)}</td>
+            <td class="numero">{numero(linha.quantidade, 2)}</td>
             <td class="numero">{reais(linha.preco_unitario)}</td>
             <td class="numero">{reais(linha.valor)}</td>
           </tr>

@@ -273,7 +273,7 @@
             <h3>Termo de uso dos dados</h3>
             <ul id="texto-termo">
               <li>O app guarda os dados do seu sítio para mostrar as chamadas da merenda e montar o projeto de venda.</li>
-              <li>O CPF e o CAF aparecem na tela só em parte. Eles vão no projeto de venda, que é entregue à prefeitura.</li>
+              <li>O CPF e o CAF aparecem na tela só em parte. No projeto de venda, o CPF e o CAF aparecem só em parte: você escreve o número completo à mão.</li>
               <li>As respostas sobre prioridade (mulher, jovem, assentado, indígena e quilombola) servem só para a seleção.</li>
               <li>O assistente com IA recebe só o município, a UF, os produtos (com a quantidade por semana e os meses de colheita), se a produção é orgânica e se você tem prioridade (sim ou não).</li>
               <li>Ele não recebe o seu nome, CPF, CAF nem e-mail. O que você escrever no chat também vai para a IA: não escreva nome, telefone, e-mail nem CPF.</li>

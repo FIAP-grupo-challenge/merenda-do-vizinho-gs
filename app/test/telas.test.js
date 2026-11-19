@@ -109,16 +109,68 @@ test('lerNumero entende o número do jeito brasileiro e recusa o que não é nú
 });
 
 const lerPagina = (nome) => fs.readFileSync(path.join(WEB, 'src', 'paginas', nome), 'utf8');
+// toda tela e todo componente de web/src, com o código-fonte: [caminho dentro de web/src, texto]
+const fontesSvelte = () =>
+  fs
+    .readdirSync(path.join(WEB, 'src'), { recursive: true })
+    .filter((nome) => nome.endsWith('.svelte'))
+    .map((nome) => [nome, fs.readFileSync(path.join(WEB, 'src', nome), 'utf8')]);
 
-test('as telas do agricultor não usam <input type="number">: os números são campos de texto lidos por lerNumero', () => {
-  for (const nome of ['Agricultor.svelte', 'Chamada.svelte']) {
-    const fonte = lerPagina(nome);
-    assert.doesNotMatch(fonte, /type="number"/, nome);
-    assert.match(fonte, /<CampoNumero/, nome);
+test('nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero', () => {
+  const fontes = fontesSvelte();
+  assert.ok(fontes.some(([nome]) => nome === path.join('paginas', 'Entrar.svelte')), 'a busca não achou as telas');
+  for (const [nome, fonte] of fontes) assert.doesNotMatch(fonte, /type\s*=\s*\{?\s*["']?number/, nome);
+  // as telas que pedem número digitado usam o CampoNumero: um campo trocado por outra coisa, ou que sumiu, não passa
+  for (const nome of ['Agricultor', 'Chamada', 'CamaraFria', 'Cooperativa', 'Prefeitura']) {
+    assert.match(lerPagina(`${nome}.svelte`), /<CampoNumero/, nome);
   }
   const campo = fs.readFileSync(path.join(WEB, 'src', 'lib', 'CampoNumero.svelte'), 'utf8');
   assert.match(campo, /type="text"/);
   assert.match(campo, /inputmode="decimal"/);
+});
+
+// As telas da prefeitura, da cooperativa, do projeto de venda e da câmara fria tinham cada uma a sua cópia destes formatadores.
+// O texto que eles escrevem é o de antes: 2 casas nas quantidades (numero(x, 2)), "sem data" quando não há data.
+test('os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes', async () => {
+  for (const [nome, fonte] of fontesSvelte()) assert.doesNotMatch(fonte, /\b(?:const|function) (?:reais|numero|data|plural)\b\s*[=(]/, nome);
+
+  const codigo = fs.readFileSync(path.join(WEB, 'src', 'lib', 'formato.js'), 'utf8');
+  const { reais, numero, data, plural, nomeDoItem } = await import(`data:text/javascript,${encodeURIComponent(codigo)}`);
+  assert.equal(reais(99243.1), 'R$\u00a099.243,10');
+  assert.equal(numero(2280), '2.280');
+  assert.equal(numero(12.3456), '12,346'); // o padrão (3 casas) é o das telas do agricultor e do eco dos campos de número
+  assert.equal(numero(12.3456, 2), '12,35'); // as quantidades da prefeitura, da cooperativa e da câmara fria
+  assert.equal(numero(1234567.891, 2), '1.234.567,89');
+  assert.equal(numero(null, 2), '0');
+  assert.equal(numero(undefined), '0');
+  assert.equal(data('2026-07-30'), '30/07/2026');
+  assert.equal(data('2026-07-09T12:00:00.000Z'), '09/07/2026'); // o momento em que a chamada foi publicada
+  for (const vazio of [null, undefined, '']) assert.equal(data(vazio), 'sem data', String(vazio));
+  assert.equal(plural(1, 'proposta', 'propostas'), '1 proposta');
+  assert.equal(plural(0, 'proposta', 'propostas'), '0 propostas');
+  assert.equal(plural(2, 'entrega registrada', 'entregas registradas'), '2 entregas registradas');
+
+  // a entrega aparece com o nome do item da proposta, pela posição: Catalão tem duas abóboras (7,00 a unidade e 6,87 o quilo)
+  const proposta = {
+    itens: [
+      { produto_id: 'abobora', produto: 'Abóbora Cabotiá' },
+      { produto_id: 'alface', produto: 'Alface' },
+      { produto_id: 'abobora', produto: 'Abóbora verde' },
+    ],
+  };
+  assert.equal(nomeDoItem(proposta, { produto_id: 'abobora', item: 2 }), 'Abóbora verde');
+  assert.equal(nomeDoItem(proposta, { produto_id: 'abobora', item: 0 }), 'Abóbora Cabotiá');
+  assert.equal(nomeDoItem(proposta, { produto_id: 'alface', item: 1 }), 'Alface');
+  assert.equal(nomeDoItem(proposta, { produto_id: 'abobora', item: null }), 'Abóbora Cabotiá', 'entrega antiga, sem a posição: o primeiro do produto');
+  assert.equal(nomeDoItem(proposta, { produto_id: 'alface', item: 9 }), 'Alface', 'posição que a proposta não tem');
+  assert.equal(nomeDoItem(proposta, { produto_id: 'tomate', item: null }), 'tomate', 'produto que a proposta não tem: o próprio id');
+  assert.match(lerPagina('Prefeitura.svelte'), /nomeDoItem\(proposta, entrega\)/, 'a tabela de entregas usa o nome do item, não o do produto');
+});
+
+test('o termo de uso diz que o CPF e o CAF aparecem só em parte no projeto de venda e que o número completo se escreve à mão', () => {
+  const fonte = lerPagina('Agricultor.svelte');
+  assert.match(fonte, /No projeto de venda, o CPF e o CAF aparecem só em parte: você escreve o número completo à mão\./);
+  assert.doesNotMatch(fonte, /vão no projeto de venda/, 'a frase antiga, que dizia que o CPF e o CAF vão no projeto, saiu');
 });
 
 test('o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão', () => {

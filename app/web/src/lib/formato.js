@@ -1,8 +1,16 @@
-// Números, dinheiro e datas do jeito brasileiro, para as telas.
+// Números, dinheiro, datas e nomes do jeito que as telas mostram.
 export const reais = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-export const numero = (valor) => valor.toLocaleString('pt-BR');
-// 'AAAA-MM-DD' (o formato das chamadas) vira 'DD/MM/AAAA'
-export const data = (texto) => texto.slice(0, 10).split('-').reverse().join('/');
+// Até `casas` casas decimais: 3 é o padrão do pt-BR; as telas de quantidades da prefeitura, da cooperativa e da câmara fria
+// pedem 2, como o servidor arredonda. Sem número, 0.
+export const numero = (valor, casas = 3) => (valor ?? 0).toLocaleString('pt-BR', { maximumFractionDigits: casas });
+// 'AAAA-MM-DD' (o formato das chamadas), ou um momento ISO, vira 'DD/MM/AAAA'; sem data, 'sem data'
+export const data = (texto) => (texto ? texto.slice(0, 10).split('-').reverse().join('/') : 'sem data');
+// plural(1, 'proposta', 'propostas') -> '1 proposta'; plural(2, ...) -> '2 propostas'
+export const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+// O nome do alimento de uma entrega, na tela da prefeitura: o do item da proposta em que ela foi registrada, pela posição
+// (entrega.item: Catalão tem duas abóboras, com preços diferentes). Entrega antiga, sem posição, vale o primeiro item do mesmo produto.
+export const nomeDoItem = (proposta, entrega) =>
+  (proposta.itens[entrega.item] ?? proposta.itens.find((item) => item.produto_id === entrega.produto_id))?.produto ?? entrega.produto_id;
 
 // Número escrito num campo de texto, do jeito de quem digita no Brasil. O <input type="number"> depende do idioma do
 // navegador ("10,5" vira 105 num Chrome em inglês, "12.000" vira 12 num em português) e não avisa: por isso os campos de

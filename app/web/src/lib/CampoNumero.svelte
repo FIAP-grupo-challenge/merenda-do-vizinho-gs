@@ -3,11 +3,12 @@
      O texto fica com quem usa (bind:texto): na hora de enviar, o número é lerNumero(texto).valor. Texto que não é número
      deixa o campo inválido para o navegador, então o formulário não envia e o foco vai para ele.
      Uso: <label for="peso">Peso</label> <CampoNumero id="peso" bind:texto={peso} required />
-     formato: como mostrar o número entendido (numero, ou reais para dinheiro); descricao: id de outra dica do campo. -->
+     formato: como mostrar o número entendido (numero, ou reais para dinheiro); descricao: id de outra dica do campo;
+     compacto: para campo dentro de tabela, sem o "Entendi: ..." (só o erro aparece, e a tabela não cresce). -->
 <script>
   import { lerNumero, numero } from './formato.js';
 
-  let { id, texto = $bindable(), formato = numero, descricao = '', ...resto } = $props();
+  let { id, texto = $bindable(), formato = numero, descricao = '', compacto = false, ...resto } = $props();
 
   const lido = $derived(lerNumero(texto));
   let campo = $state();
@@ -26,7 +27,7 @@
   {...resto}>
 {#if lido.erro}
   <p class="erro" id="{id}-lido">{lido.erro}</p>
-{:else if lido.valor !== null}
+{:else if lido.valor !== null && !compacto}
   <p class="dica" id="{id}-lido">Entendi: {formato(lido.valor)}</p>
 {/if}
 

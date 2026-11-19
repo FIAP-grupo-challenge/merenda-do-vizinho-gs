@@ -4,21 +4,19 @@
   import { tick } from 'svelte';
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
+  import CampoNumero from '../lib/CampoNumero.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
+  import { data, escreverNumero, lerNumero, nomeDoItem, numero, plural, reais } from '../lib/formato.js';
 
   // O servidor aceita até 10 MB de JSON nesta rota, e o base64 cresce 4/3: o PDF vai até uns 7,5 MB.
   const LIMITE_PDF = 7_800_000;
   const UFS = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO'.split(' ');
   const ORIGENS = { ia: 'Lida pela IA', regras: 'Lida pelas regras do app, sem IA', cache: 'Leitura já conferida antes (cache)' };
 
-  const reais = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  const numero = (valor) => (valor ?? 0).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-  const data = (iso) => (iso ? iso.slice(0, 10).split('-').reverse().join('/') : 'sem data');
   const porcento = (fracao) => `${(fracao * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
-  const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
 
   let resumo = $state(null);
-  let repasse = $state(null);
+  let repasse = $state(''); // o texto do campo ("1200000", "1.200.000,50"): na hora de enviar, lerNumero(repasse).valor
   let chamadas = $state([]);
   let catalogo = $state([]);
   let arquivos = $state(null);
@@ -37,7 +35,7 @@
         api('GET', '/api/catalogo'),
       ]);
       resumo = dadosResumo;
-      repasse = dadosResumo.repasse;
+      repasse = escreverNumero(dadosResumo.repasse);
       chamadas = lista;
       catalogo = produtos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
     } catch (falha) {
@@ -59,20 +57,48 @@
     });
   }
 
-  // O formulário edita uma cópia; as listas de texto viram uma linha por item.
+  // O formulário edita uma cópia; as listas de texto viram uma linha por item, e os números ficam como texto ("1234,5", como
+  // a pessoa escreve): dadosDoFormulario() os transforma de volta.
   function abrirFormulario(chamada) {
-    const copia = $state.snapshot(chamada);
+    const { itens, semanas_fornecimento, ...copia } = $state.snapshot(chamada);
     form = {
       ...copia,
       documentos: (copia.documentos_exigidos ?? []).join('\n'),
       criterios: (copia.criterios_prioridade ?? []).join('\n'),
+      semanas: escreverNumero(semanas_fornecimento),
+      itens: itens.map(({ quantidade, preco_unitario, ...item }) => ({
+        ...item,
+        quantidadeTexto: escreverNumero(quantidade),
+        precoTexto: escreverNumero(preco_unitario),
+      })),
     };
   }
 
   function dadosDoFormulario() {
-    const { documentos, criterios, ...campos } = $state.snapshot(form);
+    const { documentos, criterios, semanas, itens, ...campos } = $state.snapshot(form);
     const linhas = (texto) => texto.split('\n').map((linha) => linha.trim()).filter(Boolean);
-    return { ...campos, documentos_exigidos: linhas(documentos), criterios_prioridade: linhas(criterios) };
+    return {
+      ...campos,
+      semanas_fornecimento: lerNumero(semanas).valor,
+      itens: itens.map(({ quantidadeTexto, precoTexto, ...item }) => ({
+        ...item,
+        quantidade: lerNumero(quantidadeTexto).valor,
+        preco_unitario: lerNumero(precoTexto).valor,
+      })),
+      documentos_exigidos: linhas(documentos),
+      criterios_prioridade: linhas(criterios),
+    };
+  }
+
+  // O botão Publicar não passa pela conferência do formulário: sem isto, um número que não deu para ler seguiria como "em branco".
+  function numeroIlegivel() {
+    const campos = [['Semanas de fornecimento', form.semanas]];
+    form.itens.forEach((item, i) => campos.push([`Item ${i + 1}, quantidade`, item.quantidadeTexto], [`Item ${i + 1}, preço`, item.precoTexto]));
+    for (const [nome, texto] of campos) {
+      const { erro: motivo } = lerNumero(texto);
+      if (motivo) return `${nome}: ${motivo}`;
+    }
+    return '';
   }
 
   async function mostrar(detalhe) {
@@ -123,12 +149,17 @@
   }
 
   function incluirItem() {
-    form.itens.push({ produto: '', produto_id: null, unidade: '', quantidade: null, preco_unitario: null, entrega: null, observacoes: null });
+    form.itens.push({ produto: '', produto_id: null, unidade: '', quantidadeTexto: '', precoTexto: '', entrega: null, observacoes: null });
   }
 
   async function salvar() {
     erro.edicao = '';
     mensagem = '';
+    const ilegivel = numeroIlegivel();
+    if (ilegivel) {
+      erro.edicao = ilegivel;
+      return false;
+    }
     ocupado = true;
     try {
       aberta = await api('PUT', `/api/prefeitura/chamadas/${aberta.id}`, dadosDoFormulario());
@@ -163,7 +194,7 @@
     evento.preventDefault();
     erro.resumo = '';
     try {
-      await api('PUT', '/api/prefeitura/repasse', { ano: resumo.ano, valor: repasse });
+      await api('PUT', '/api/prefeitura/repasse', { ano: resumo.ano, valor: lerNumero(repasse).valor });
       resumo = await api('GET', '/api/prefeitura/resumo');
     } catch (falha) {
       erro.resumo = falha.message;
@@ -180,9 +211,6 @@
     }
     return `${texto}.`;
   });
-
-  // nome do alimento de uma entrega: o do item da proposta
-  const nomeDoProduto = (proposta, produtoId) => proposta.itens.find((item) => item.produto_id === produtoId)?.produto ?? produtoId;
 </script>
 
 <header class="topo">
@@ -223,7 +251,7 @@
       <form class="linha-form" onsubmit={salvarRepasse}>
         <div>
           <label for="repasse">Repasse do PNAE em {resumo.ano} (R$)</label>
-          <input id="repasse" type="number" min="0" step="0.01" inputmode="decimal" bind:value={repasse}>
+          <CampoNumero id="repasse" bind:texto={repasse} formato={reais} />
         </div>
         <button type="submit">Salvar repasse</button>
       </form>
@@ -297,7 +325,7 @@
             <div><label for="c-periodo">Período de fornecimento</label><input id="c-periodo" bind:value={form.periodo_fornecimento}></div>
             <div>
               <label for="c-semanas">Semanas de fornecimento</label>
-              <input id="c-semanas" type="number" min="1" max="53" step="1" bind:value={form.semanas_fornecimento} aria-describedby="dica-semanas">
+              <CampoNumero id="c-semanas" compacto bind:texto={form.semanas} descricao="dica-semanas" />
               <p class="dica" id="dica-semanas">Em branco, o app conta 40 semanas (200 dias letivos).</p>
             </div>
             <div><label for="c-local">Local de entrega</label><input id="c-local" bind:value={form.local_entrega}></div>
@@ -335,8 +363,8 @@
                         </select>
                       </td>
                       <td><input aria-label="Item {i + 1}: unidade" bind:value={item.unidade}></td>
-                      <td><input type="number" min="0" step="any" inputmode="decimal" aria-label="Item {i + 1}: quantidade" bind:value={item.quantidade}></td>
-                      <td><input type="number" min="0" step="0.01" inputmode="decimal" aria-label="Item {i + 1}: preço em reais" bind:value={item.preco_unitario}></td>
+                      <td><CampoNumero id="item-{i}-quantidade" compacto aria-label="Item {i + 1}: quantidade" bind:texto={item.quantidadeTexto} /></td>
+                      <td><CampoNumero id="item-{i}-preco" compacto aria-label="Item {i + 1}: preço em reais" bind:texto={item.precoTexto} /></td>
                       <td><button type="button" class="botao-secundario" onclick={() => form.itens.splice(i, 1)} aria-label="Remover o item {i + 1}">Remover</button></td>
                     </tr>
                   {/each}
@@ -365,7 +393,7 @@
             <tbody>
               {#each aberta.chamada.itens as item, i (i)}
                 <tr>
-                  <td>{item.produto}</td><td>{item.unidade}</td><td class="numero">{numero(item.quantidade)}</td>
+                  <td>{item.produto}</td><td>{item.unidade}</td><td class="numero">{numero(item.quantidade, 2)}</td>
                   <td class="numero">{reais(item.preco_unitario)}</td><td class="numero">{reais(item.valor_total ?? 0)}</td>
                 </tr>
               {/each}
@@ -393,8 +421,8 @@
                 <tbody>
                   {#each proposta.itens as item, i (i)}
                     <tr>
-                      <td>{item.produto}</td><td>{item.unidade}</td><td class="numero">{numero(item.quantidade_pedida)}</td>
-                      <td class="numero">{numero(item.quantidade)}</td><td class="numero">{numero(item.falta)}</td><td class="numero">{reais(item.valor)}</td>
+                      <td>{item.produto}</td><td>{item.unidade}</td><td class="numero">{numero(item.quantidade_pedida, 2)}</td>
+                      <td class="numero">{numero(item.quantidade, 2)}</td><td class="numero">{numero(item.falta, 2)}</td><td class="numero">{reais(item.valor)}</td>
                     </tr>
                   {/each}
                 </tbody>
@@ -409,8 +437,8 @@
                   <tbody>
                     {#each proposta.entregas as entrega (entrega.id)}
                       <tr>
-                        <td>{data(entrega.data)}</td><td>{nomeDoProduto(proposta, entrega.produto_id)}</td>
-                        <td class="numero">{numero(entrega.quantidade)}</td><td class="numero">{reais(entrega.valor)}</td>
+                        <td>{data(entrega.data)}</td><td>{nomeDoItem(proposta, entrega)}</td>
+                        <td class="numero">{numero(entrega.quantidade, 2)}</td><td class="numero">{reais(entrega.valor)}</td>
                         <td>{entrega.no_prazo ? 'sim' : 'não'}</td>
                       </tr>
                     {/each}
@@ -463,6 +491,7 @@
 
   /* campos da tabela de itens: largos o bastante para digitar; a tabela rola dentro da caixa no celular */
   .edicao input,
+  .edicao :global(input),
   .edicao select {
     min-width: 7rem;
   }
@@ -509,10 +538,15 @@
       column-gap: 1.5rem;
     }
 
+    /* o botão fica na linha do campo, e não do "Entendi: ..." que o CampoNumero põe embaixo dele: o topo do botão desce a altura do rótulo */
     .linha-form {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: 1rem;
+    }
+
+    .linha-form button[type='submit'] {
+      margin-top: 2.75rem;
     }
 
     .acoes button {

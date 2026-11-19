@@ -4,12 +4,9 @@
   import { tick } from 'svelte';
   import { api, sair } from '../lib/api.js';
   import CaixaRolavel from '../lib/CaixaRolavel.svelte';
+  import CampoNumero from '../lib/CampoNumero.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
-
-  const reais = (valor) => valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  const numero = (valor) => valor.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-  const data = (iso) => (iso ? iso.split('-').reverse().join('/') : 'sem data');
-  const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+  import { data, escreverNumero, lerNumero, numero, plural, reais } from '../lib/formato.js';
 
   let chamadas = $state([]);
   let propostas = $state([]);
@@ -18,6 +15,15 @@
   let ocupado = $state(false);
   let mensagem = $state('');
   const erro = $state({ geral: '', proposta: '' });
+
+  // A divisão chega do servidor com números; a tabela edita o texto de cada campo ("855,51"), e salvar() o lê de volta.
+  const comTextos = (proposta) => ({
+    ...proposta,
+    itens: proposta.itens.map((item) => ({
+      ...item,
+      alocacoes: item.alocacoes.map(({ quantidade, ...alocacao }) => ({ ...alocacao, texto: escreverNumero(quantidade) })),
+    })),
+  });
 
   async function carregar() {
     [chamadas, propostas] = await Promise.all([api('GET', '/api/cooperativa/chamadas'), api('GET', '/api/cooperativa/propostas')]);
@@ -41,8 +47,8 @@
     return [...vistos].map(([id, nome]) => ({ id, nome })).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
   });
 
-  // A soma de um item com o que está digitado agora (campo vazio vale zero).
-  const somaDe = (item) => Math.round(item.alocacoes.reduce((total, a) => total + (a.quantidade ?? 0), 0) * 100) / 100;
+  // A soma de um item com o que está digitado agora (campo vazio, ou que não é número, vale zero).
+  const somaDe = (item) => Math.round(item.alocacoes.reduce((total, a) => total + (lerNumero(a.texto).valor ?? 0), 0) * 100) / 100;
 
   const resumo = $derived.by(() => {
     if (!aberta) return '';
@@ -57,7 +63,7 @@
   });
 
   async function mostrar(proposta) {
-    aberta = proposta;
+    aberta = comTextos(proposta);
     alterada = false;
     await tick();
     document.getElementById('titulo-proposta')?.focus();
@@ -91,12 +97,23 @@
   async function salvar() {
     erro.proposta = '';
     mensagem = '';
+    // número que não deu para ler não pode virar zero em silêncio: a divisão não é salva e a mensagem diz onde está
+    const itens = [];
+    for (const item of aberta.itens) {
+      const alocacoes = [];
+      for (const { agricultor_id, nome, texto } of item.alocacoes) {
+        const { valor, erro: motivo } = lerNumero(texto);
+        if (motivo) {
+          erro.proposta = `${item.produto}, ${nome}: ${motivo}`;
+          return false;
+        }
+        alocacoes.push({ agricultor_id, quantidade: valor ?? 0 });
+      }
+      itens.push({ alocacoes });
+    }
     ocupado = true;
     try {
-      const itens = aberta.itens.map((item) => ({
-        alocacoes: item.alocacoes.map(({ agricultor_id, quantidade }) => ({ agricultor_id, quantidade: quantidade ?? 0 })),
-      }));
-      aberta = await api('PUT', `/api/cooperativa/propostas/${aberta.id}`, { itens });
+      aberta = comTextos(await api('PUT', `/api/cooperativa/propostas/${aberta.id}`, { itens }));
       alterada = false;
       mensagem = 'Divisão salva.';
       await carregar();
@@ -204,26 +221,24 @@
               {@const soma = somaDe(item)}
               <tr>
                 <th scope="row">{item.produto} <span class="detalhe">({item.unidade}, {reais(item.preco_unitario)})</span></th>
-                <td class="numero">{numero(item.quantidade_pedida)}</td>
+                <td class="numero">{numero(item.quantidade_pedida, 2)}</td>
                 {#each colunas as cooperado (cooperado.id)}
                   {@const alocacao = item.alocacoes.find((a) => a.agricultor_id === cooperado.id)}
                   <td>
                     {#if alocacao}
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        inputmode="decimal"
+                      <CampoNumero
+                        id="alocacao-{i}-{cooperado.id}"
+                        compacto
                         aria-label="{item.produto} ({item.unidade}): quantidade de {cooperado.nome}"
-                        bind:value={alocacao.quantidade}
-                        oninput={() => (alterada = true)}>
+                        bind:texto={alocacao.texto}
+                        oninput={() => (alterada = true)} />
                     {:else}
                       <span aria-hidden="true">—</span><span class="so-leitor">não marcou</span>
                     {/if}
                   </td>
                 {/each}
-                <td class="numero" class:acima={soma > item.quantidade_pedida}>{numero(soma)}</td>
-                <td class="numero">{numero(Math.max(0, Math.round((item.quantidade_pedida - soma) * 100) / 100))}</td>
+                <td class="numero" class:acima={soma > item.quantidade_pedida}>{numero(soma, 2)}</td>
+                <td class="numero">{numero(Math.max(0, Math.round((item.quantidade_pedida - soma) * 100) / 100), 2)}</td>
               </tr>
             {/each}
           </tbody>
@@ -268,7 +283,8 @@
     padding: 0.5rem;
   }
 
-  .divisao input {
+  /* o campo é do CampoNumero: o estilo só o alcança com :global */
+  .divisao :global(input) {
     min-width: 5.5rem;
   }
 
