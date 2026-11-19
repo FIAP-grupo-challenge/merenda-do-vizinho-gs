@@ -175,6 +175,16 @@ test('o termo de uso diz, uma vez só, que o CPF e o CAF aparecem só em parte n
   assert.doesNotMatch(fonte, /vão no projeto de venda/, 'a frase antiga, que dizia que o CPF e o CAF vão no projeto, saiu');
 });
 
+// O percentual da tela sai só das entregas registradas no app: sem a frase, parecia a parte oficial da agricultura familiar.
+test('a meta do ano diz que só conta as entregas registradas neste app, no texto que o botão Ouvir lê', () => {
+  const fonte = lerPagina('Prefeitura.svelte');
+  const frase = 'Conta só as entregas registradas neste app.';
+  assert.equal(fonte.split(frase).length - 1, 1, 'a frase aparece uma vez só');
+  const paragrafo = fonte.match(/<p id="texto-meta">([\s\S]*?)<\/p>/);
+  assert.ok(paragrafo, 'o parágrafo da meta (#texto-meta) sumiu');
+  assert.match(paragrafo[1], /em alimentos da agricultura familiar\.\s+Conta só as entregas registradas neste app\.\s+\{#if /, 'a frase vem logo depois do total recebido');
+});
+
 test('o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão', () => {
   const fonte = lerPagina('Chamada.svelte');
   const AVISO = 'Não escreva seu nome, telefone, e-mail nem CPF aqui.';

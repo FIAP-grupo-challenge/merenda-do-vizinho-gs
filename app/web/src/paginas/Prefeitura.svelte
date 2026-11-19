@@ -234,6 +234,7 @@
     {#if resumo}
       <p id="texto-meta">
         Em {resumo.ano}, a prefeitura recebeu {reais(resumo.compras_af_reais)} em alimentos da agricultura familiar.
+        Conta só as entregas registradas neste app.
         {#if resumo.percentual === null}
           Informe o repasse do PNAE de {resumo.ano} para ver o percentual. A lei pede pelo menos {porcento(resumo.minimo)} do
           repasse em compras da agricultura familiar.
