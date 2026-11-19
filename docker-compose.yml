@@ -1,0 +1,71 @@
+# Merenda do Vizinho no Docker Compose. Os segredos vêm do .env: copie o .env.example para .env e preencha.
+#   docker compose up -d --build     sobe o app (http://localhost:3000) e a IA
+#   docker compose run --rm iot      manda leituras da câmara fria ao app (veja os cenários em iot/README.md)
+#   docker compose run --rm dados    roda o pipeline do data lake, que grava em ./dados/datalake
+# O contexto de build é a raiz do repositório: as imagens levam compartilhado/, lido por caminho relativo.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      JWT_SEGREDO: ${JWT_SEGREDO:?copie o .env.example para .env}
+      CHAVE_SERVICO: ${CHAVE_SERVICO:?copie o .env.example para .env}
+      CHAVE_DISPOSITIVO: ${CHAVE_DISPOSITIVO:?copie o .env.example para .env}
+      IA_URL: http://ia:3001
+      CAMINHO_BANCO: /dados/merenda.db
+      DATA_REFERENCIA: ${DATA_REFERENCIA:-}
+      LIMITE_TEMP_C: ${LIMITE_TEMP_C:-}
+      MINUTOS_PORTA_ABERTA: ${MINUTOS_PORTA_ABERTA:-}
+      SEMANAS_PADRAO: ${SEMANAS_PADRAO:-}
+    volumes:
+      - banco:/dados
+    depends_on:
+      - ia
+    init: true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+
+  ia:
+    build:
+      context: .
+      dockerfile: ia/Dockerfile
+    # Sem "ports": a IA não tem login e gasta a chave da Anthropic, então só o app fala com ela, pela rede do
+    # Compose. Para testar do host, publique só no próprio computador: "127.0.0.1:3001:3001".
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      MODELO_CLAUDE: ${MODELO_CLAUDE:-}
+    init: true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/saude')"]
+      interval: 10s
+      timeout: 5s
+
+  dados:
+    build:
+      context: .
+      dockerfile: dados/Dockerfile
+    profiles: ["tarefas"]
+    environment:
+      APP_URL: http://app:3000
+      CHAVE_SERVICO: ${CHAVE_SERVICO:?copie o .env.example para .env}
+      PIPELINE_OFFLINE: ${PIPELINE_OFFLINE:-}
+    volumes:
+      - ./dados/datalake:/srv/dados/datalake
+
+  iot:
+    build:
+      context: .
+      dockerfile: iot/Dockerfile
+    profiles: ["tarefas"]
+    environment:
+      CHAVE_DISPOSITIVO: ${CHAVE_DISPOSITIVO:?copie o .env.example para .env}
+    command: ["python", "iot/simulador.py", "--url", "http://app:3000/api/leituras"]
+
+volumes:
+  banco:

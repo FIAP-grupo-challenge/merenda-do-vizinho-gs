@@ -1,0 +1,17 @@
+# Fora do contexto de build: segredos, dependências e arquivos gerados (cada imagem instala e gera os seus).
+.git
+.env
+.venv
+.superpowers
+.worktrees
+ebooks
+**/node_modules
+**/__pycache__
+**/*.db
+**/*.db-journal
+**/*.baixando
+app/public
+dados/datalake/raw/app
+dados/datalake/raw/simulado
+dados/datalake/trusted
+dados/datalake/refined
