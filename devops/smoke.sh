@@ -22,7 +22,7 @@ if [ ! -f .env ]; then
   (
     umask 077
     printf '%s\n' '# criado pelo devops/smoke.sh, com segredos aleatórios' 'ANTHROPIC_API_KEY=' "JWT_SEGREDO=$jwt" \
-      "CHAVE_SERVICO=$servico" "CHAVE_DISPOSITIVO=$dispositivo" 'DATA_REFERENCIA=' > .env
+      "CHAVE_SERVICO=$servico" "CHAVE_DISPOSITIVO=$dispositivo" 'DATA_REFERENCIA=2026-07-15' > .env
   )
   echo 'criei o .env de teste, com segredos aleatórios'
 fi

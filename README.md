@@ -97,7 +97,7 @@ chmod 600 .env
 
 Rode esse bloco só se ainda não existe `.env`: ele cria o arquivo do zero. Sem o `openssl`, troque cada `$(openssl rand -hex 32)` por `$(python3 -c 'import secrets; print(secrets.token_hex(32))')`.
 
-Outro jeito é copiar o modelo, `cp .env.example .env`, e editar. O modelo traz os três segredos como `troque-este-valor` (troque cada um por um valor aleatório, como os que o bloco gera) e a `DATA_REFERENCIA` vazia (escreva `DATA_REFERENCIA=2026-07-15`; o motivo está em "Usuários de demonstração e data de referência"). Se o `.env` já existe, abra-o num editor e confira esses mesmos pontos.
+Outro jeito é copiar o modelo, `cp .env.example .env`, e editar. O modelo traz os três segredos como `troque-este-valor` (troque cada um por um valor aleatório, como os que o bloco gera) e a `DATA_REFERENCIA=2026-07-15` já preenchida (o motivo está em "Usuários de demonstração e data de referência"). Se o `.env` já existe, abra-o num editor e confira esses mesmos pontos.
 
 Para usar a IA com o Claude, cole a chave da API em `ANTHROPIC_API_KEY=`. Sem a chave, tudo funciona no modo de regras.
 
@@ -149,7 +149,7 @@ docker compose --profile tarefas run --rm iot python iot/simulador.py --cenario 
 docker compose --profile tarefas run --rm -e PIPELINE_OFFLINE=1 dados
 ```
 
-**Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios e sem chave da API.
+**Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios, `DATA_REFERENCIA=2026-07-15` e sem chave da API.
 
 O app do smoke também quer a porta 3000 do computador. Com a pilha do `docker compose up` ainda no ar, o smoke falha com `Bind for 0.0.0.0:3000 failed: port is already allocated`. Há dois jeitos de evitar isso. O primeiro é parar a pilha antes (o banco fica guardado):
 
@@ -255,7 +255,7 @@ A senha de **todos** os usuários de demonstração é `demo1234`. Eles são fic
 
 Os seis agricultores são cooperados da cooperativa de demonstração. A cada subida do app, a semente cria os usuários que faltam (os que já existem não são mexidos) e publica a chamada de Catalão, já lida, com o interesse dos agricultores. Essa leitura (`app/semente/chamada-demo.json`) começou de uma extração do Claude, e um agente de IA conferiu os 16 itens contra o PDF e ajustou alguns campos de texto. Para recomeçar do zero: `docker compose down -v` (com Docker) ou apague `app/merenda.db` (sem Docker).
 
-**Por que `DATA_REFERENCIA=2026-07-15`.** A chamada pública de Catalão (nº 003/2026) recebeu projetos de 09/07 a 30/07/2026 e já fechou. O app mostra como oportunidades só as chamadas com prazo a partir da data de referência, que é o "hoje" dele. Sem essa data, o app usa a data do computador, a chamada aparece como encerrada, e a agricultora de demonstração (Ana) não vê nenhuma oportunidade. Por isso o bloco da seção 1 já grava `DATA_REFERENCIA=2026-07-15` no `.env`. Se você copiou o `.env.example`, essa linha vem vazia: escreva a data nela.
+**Por que `DATA_REFERENCIA=2026-07-15`.** A chamada pública de Catalão (nº 003/2026) recebeu projetos de 09/07 a 30/07/2026 e já fechou. O app mostra como oportunidades só as chamadas com prazo a partir da data de referência, que é o "hoje" dele. Sem essa data, o app usa a data do computador, a chamada aparece como encerrada, e a agricultora de demonstração (Ana) não vê nenhuma oportunidade. Por isso o bloco da seção 1 e o `.env.example` já trazem `DATA_REFERENCIA=2026-07-15`. Para usar a data de hoje, como num uso de verdade, deixe a variável vazia.
 
 ## Como rodar cada área e o que deve aparecer
 
