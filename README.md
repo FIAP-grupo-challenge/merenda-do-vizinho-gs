@@ -70,7 +70,7 @@ unzip merenda-do-vizinho.zip
 cd merenda-do-vizinho
 ```
 
-**Se for pelo Git:** use o endereço HTTPS, que não pede chave SSH. A versão final está na `main` (o grupo faz o merge nela antes de entregar).
+**Se for pelo Git:** use o endereço HTTPS, que não pede chave SSH. A versão final está na `main`.
 
 ```bash
 git clone https://github.com/FIAP-grupo-challenge/merenda-do-vizinho-gs.git

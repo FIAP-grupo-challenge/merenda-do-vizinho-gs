@@ -23,15 +23,18 @@ Prazo: **19/11/2026, até 23h55, na plataforma** (sem prorrogação). Uma entreg
   - [ ] `entrega/evidencias.md`: o link do TinkerCad (troque o `[PREENCHER: link público do projeto no TinkerCad]{.a-preencher-linha}` pelo link).
 - [ ] Os prints e os textos estão **com commit** (o `.zip` só leva o que tem commit: o script avisa do que ficou de fora).
 
-## 2. Merge na `main`
+## 2. Merge na `main` e envio ao GitHub
 
 - [ ] Faça o merge do ramo de trabalho na `main`, **com o OK de quem cuida do repositório**. Daqui em diante, tudo é feito na `main`.
+- [ ] `git push origin main`. A `main` do GitHub ainda é só o commit inicial, e o README manda quem corrige clonar a `main`.
+- [ ] Abra a URL HTTPS do repositório (`https://github.com/FIAP-grupo-challenge/merenda-do-vizinho-gs`) numa janela anônima e confira que o README e o último commit aparecem (o repositório precisa estar público ou com acesso para os professores).
 
 ## 3. Na `main`: gerar o PDF e fazer o commit
 
 - [ ] `bash entrega/gerar-pdf.sh` (precisa do `pandoc` e do `weasyprint`). O fim da saída deve dizer `nenhuma pendência do grupo no PDF`. Se der erro, o `entrega/evidencias.pdf` anterior é mantido: leia a mensagem e rode de novo.
 - [ ] Abra o `entrega/evidencias.pdf` e confira: os 4 prints novos no lugar, nenhum quadro "A preencher pelo grupo" e nenhum nome de conta ou e-mail aparecendo.
 - [ ] Faça o commit, na `main`, do `entrega/evidencias.pdf` e do `devops/evidencias/git-log.txt` (a primeira linha dele diz de que ramo o histórico foi tirado: tem de dizer `main`).
+- [ ] `git push origin main` de novo, para o commit do PDF chegar ao GitHub, e confira na janela anônima que o último commit é esse.
 
 ## 4. Empacotar
 
