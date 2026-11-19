@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Gera entrega/evidencias.pdf a partir de entrega/evidencias.md, com o Pandoc e o WeasyPrint (ferramentas do computador
 # de quem gera o PDF; não entram nos requirements do projeto). Antes, refaz devops/evidencias/git-log.txt.
+# O PDF novo sai num arquivo temporário e só troca o evidencias.pdf se der certo (sem erro e com 30 páginas ou mais):
+# se falhar, o evidencias.pdf que já existia continua como estava.
 # Uso, de qualquer pasta: bash entrega/gerar-pdf.sh
 # Rode de novo depois de salvar os prints do Power BI e do TinkerCad em entrega/prints/ e de preencher o grupo.txt.
 set -euo pipefail
 cd "$(dirname "$0")"
-for programa in git pandoc weasyprint; do
+for programa in git pandoc weasyprint pdfinfo; do
   command -v "$programa" >/dev/null || { echo "falta o programa $programa: instale e rode de novo" >&2; exit 1; }
 done
 
@@ -15,13 +17,17 @@ done
   git log --oneline --graph
 } > ../devops/evidencias/git-log.txt
 
+novo="evidencias.$$.pdf"
+trap 'rm -f "$novo"' EXIT
 # sem tex_math_dollars: "R$ 40" é dinheiro, não fórmula
 pandoc evidencias.md --from markdown-tex_math_dollars --to html5 --standalone --template pdf/modelo.html \
   --lua-filter pdf/filtro.lua --toc --toc-depth 2 --number-sections --wrap none \
-  | weasyprint --base-url . - evidencias.pdf
+  | weasyprint --base-url . - "$novo"
 
-paginas=$(pdfinfo evidencias.pdf 2>/dev/null | awk '/^Pages:/ {print $2}' || true)
-echo "PDF pronto: entrega/evidencias.pdf (${paginas:-?} páginas)"
+paginas=$(pdfinfo "$novo" 2>/dev/null | awk '/^Pages:/ {print $2}' || true)
+[ "${paginas:-0}" -ge 30 ] || { echo "o PDF novo não abriu ou tem só ${paginas:-0} páginas (o certo é 30 ou mais): o entrega/evidencias.pdf anterior foi mantido" >&2; exit 1; }
+mv "$novo" evidencias.pdf
+echo "PDF pronto: entrega/evidencias.pdf ($paginas páginas)"
 
 pendencias=0
 for print in powerbi-1 powerbi-2 tinkercad-circuito tinkercad-simulacao; do
