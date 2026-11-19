@@ -58,7 +58,8 @@ done
 proibidos="$(grep -E '(^|/)(\.env(\..*)?|\.venv|node_modules|__pycache__|ebooks|\.worktrees|\.superpowers)(/|$)|\.db(-journal|-wal|-shm)?$' \
   <<<"$lista" | grep -v -x 'merenda-do-vizinho/\.env\.example' || true)"
 [ -z "$proibidos" ] || problemas+=("arquivos que não podem ir no .zip:"$'\n'"$proibidos")
-if zipinfo "$tmp/pacote.zip" | grep -q '^l'; then problemas+=('o .zip tem link simbólico'); fi
+# grep -c lê tudo: com o -q, o pipefail veria o zipinfo morto pelo SIGPIPE e o if daria falso
+if zipinfo "$tmp/pacote.zip" | grep -c '^l' >/dev/null; then problemas+=('o .zip tem link simbólico'); fi
 unzip -l "$tmp/pacote.zip" | tail -1
 echo "na raiz da pasta merenda-do-vizinho/:"
 grep -o -E '^merenda-do-vizinho/[^/]+/?' <<<"$lista" | sort -u | sed 's|^merenda-do-vizinho/|  |' | paste -sd ' '
@@ -103,7 +104,7 @@ for doc in README.md iot/README.md entrega/evidencias.md; do
   linhas="$(grep -n -E '_\(preencher|PREENCHER' "$repo/$doc" | cut -d: -f1 | paste -sd, || true)"
   [ -z "$linhas" ] || pendencias+=("$doc, linhas $linhas")
 done
-if command -v pdftotext >/dev/null && pdftotext -q "$repo/entrega/evidencias.pdf" - | grep -q 'A preencher pelo grupo'; then
+if command -v pdftotext >/dev/null && pdftotext -q "$repo/entrega/evidencias.pdf" - | grep -c 'A preencher pelo grupo' >/dev/null; then
   pendencias+=('entrega/evidencias.pdf ainda tem quadros "A preencher pelo grupo": rode bash entrega/gerar-pdf.sh')
 fi
 for item in "${pendencias[@]}"; do echo "- $item"; done
