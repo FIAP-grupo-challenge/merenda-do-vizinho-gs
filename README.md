@@ -402,7 +402,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | Arquivo | O que faz |
 |:--|:--|
 | `app/src/index.js` | sobe o app: lê a configuração, migra e semeia o banco, e escuta na porta 3000 |
-| `app/src/config.js` | lê as variáveis de ambiente, com as regras de vazio e de valor inválido |
+| `app/src/config.js` | lê as variáveis de ambiente, com as regras de vazio, de valor inválido e de segredo de exemplo ou curto demais |
 | `app/src/servidor.js` | o servidor HTTP: a API em `/api/` e as telas estáticas de `app/public/` |
 | `app/src/roteador.js` | roteador pequeno, com rotas `:parametro` e uma lista de manipuladores por rota |
 | `app/src/http-util.js` | leitura do corpo JSON com limite de tamanho, respostas JSON e arquivos estáticos |
@@ -437,7 +437,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `app/web/src/paginas/Prefeitura.svelte` | ler o PDF com a IA, conferir, publicar e acompanhar propostas, entregas e a meta do ano |
 | `app/web/src/paginas/CamaraFria.svelte` | a câmara fria ao vivo, os alertas e o registro de entregas |
 | `app/web/src/paginas/*.js` | um módulo por tela, que monta o componente da página correspondente |
-| `app/web/src/lib/api.js` | chamadas à API do app com o token da sessão |
+| `app/web/src/lib/api.js` | chamadas à API do app com o token da sessão; um 401 (sem login ou sessão vencida) leva para a tela de entrar |
 | `app/web/src/lib/formato.js` | números, dinheiro, datas e nomes no formato brasileiro |
 | `app/web/src/lib/CampoNumero.svelte` e `formato.js` (`lerNumero`) | campo de número que entende "10,5", "1.234,56" e "12.000" |
 | `app/web/src/lib/Ouvir.svelte` e `ouvir.js` | o botão "Ouvir", que lê o texto em voz alta em português (`speechSynthesis`) |
