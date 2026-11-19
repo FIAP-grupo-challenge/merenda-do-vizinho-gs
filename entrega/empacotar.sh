@@ -147,4 +147,4 @@ fi
 mv "$tmp/pacote.zip" "$saida"
 echo "PRONTO: entrega/merenda-do-vizinho.zip ($(du -h "$saida" | cut -f1)), do ramo $ramo, sem problema de segurança."
 [ "$ramo" = main ] || echo "ATENÇÃO: este .zip é só de TESTE (ramo $ramo). Não envie: para a entrega, rode bash entrega/empacotar.sh main"
-[ "${#pendencias[@]}" -eq 0 ] || echo "ATENÇÃO: ainda há ${#pendencias[@]} pendências do grupo (lista acima)."
+[ "${#pendencias[@]}" -eq 0 ] || echo "ATENÇÃO: ainda há ${#pendencias[@]} pendência(s) do grupo (lista acima)."
