@@ -3,7 +3,7 @@
 MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos para a merenda escolar (PNAE).
 
 - **Curso:** Global Solution 2026/2, CitizenTech (FIAP)
-- **Integrantes:** _(preencher)_
+- **Integrantes:** Leonardo Viotti Bonini (RM551716), Enzo de Oliveira Cunha (RM550985), Eduardo Gomes Pinho Junior (RM97919) e Gustavo Ferreira Lopes (RM98887)
 - **Entrega:** o PDF de evidências (`entrega/evidencias.pdf`) e o `.txt` do grupo (`entrega/grupo.txt`) estão na pasta [entrega/](entrega/).
 
 ## O que é, para quem e qual problema resolve
