@@ -312,6 +312,12 @@ class TestServidorAssistente(unittest.TestCase):
             'quantidade em texto': {**self.corpo, 'chamada': com_item(quantidade='1200')},
             'quantidade verdadeiro': {**self.corpo, 'chamada': com_item(quantidade=True)},  # bool não é número
             'quantidade NaN': {**self.corpo, 'chamada': com_item(quantidade=float('nan'))},
+            'quantidade Infinity': {**self.corpo, 'chamada': com_item(quantidade=float('inf'))},
+            # o que dava 500: o inteiro não cabe em float, e a conta da validação estourava (OverflowError)
+            'quantidade inteira de 309 dígitos': {**self.corpo, 'chamada': com_item(quantidade=2 * 10 ** 308)},
+            'quantidade inteira gigante': {**self.corpo, 'chamada': com_item(quantidade=10 ** 400)},
+            'quantidade inteira gigante e negativa': {**self.corpo, 'chamada': com_item(quantidade=-10 ** 400)},
+            'semanas inteiras gigantes': {**self.corpo, 'chamada': {**CHAMADA_EXEMPLO, 'semanas_fornecimento': 10 ** 400}},
             'produto_id em lista': {**self.corpo, 'chamada': com_item(produto_id=['alface'])},
             'produto_id do perfil em lista': {**self.corpo, 'perfil': {
                 **PERFIL_ALFACE, 'produtos': [{**PERFIL_ALFACE['produtos'][0], 'produto_id': ['alface']}]}},

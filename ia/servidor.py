@@ -1,7 +1,7 @@
 """Servidor HTTP da IA (porta 3001). Subir com: python -m ia.servidor"""
 import json
-import math
 import os
+import sys
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -51,7 +51,9 @@ def _texto_ou_nulo(valor):
 
 
 def _numero_ou_nulo(valor):  # em JSON, true não é número, e NaN e Infinity não são números de verdade
-    return valor is None or (type(valor) in (int, float) and math.isfinite(valor))
+    # abs(valor) <= o maior float, e não math.isfinite: um inteiro de 309 dígitos ou mais não cabe em float e daria
+    # OverflowError (500). NaN e Infinity também ficam de fora, pois nenhum deles é <= ao maior float.
+    return valor is None or (type(valor) in (int, float) and abs(valor) <= sys.float_info.max)
 
 
 def _item_ok(item):
