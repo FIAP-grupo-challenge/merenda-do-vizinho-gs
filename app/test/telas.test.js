@@ -57,6 +57,30 @@ test('api() troca a falha de rede por uma mensagem em português e repassa o err
   await assert.rejects(api('GET', '/api/eu'), { message: 'Não deu certo. Tente de novo.', status: 500 });
 });
 
+// Página de papel aberta direto, sem entrar (ou com a sessão vencida), não fica só com uma mensagem de erro: vai para a tela de entrar.
+test('api() manda para a tela de entrar o 401 sem login ou com a sessão vencida, e deixa a mensagem do login com senha errada', async () => {
+  const codigo = fs.readFileSync(path.join(WEB, 'src', 'lib', 'api.js'), 'utf8');
+  const { api } = await import(`data:text/javascript,${encodeURIComponent(codigo)}`);
+  let removidos = 0;
+  const sessao = (token) => {
+    removidos = 0;
+    Object.assign(globalThis, { localStorage: { getItem: () => token, removeItem: () => removidos++ }, location: {} });
+  };
+  globalThis.fetch = async () => ({ ok: false, status: 401, json: async () => ({ erro: 'Entre na sua conta para continuar.' }) });
+
+  sessao(null); // abriu /agricultor.html (ou outra página de papel) sem ter entrado
+  await assert.rejects(api('GET', '/api/agricultor/oportunidades'), { message: 'Entre na sua conta para continuar.', status: 401 });
+  assert.equal(location.href, '/');
+
+  sessao('token-vencido'); // a sessão de 8 h acabou: o token velho sai e a pessoa volta para entrar
+  await assert.rejects(api('GET', '/api/eu'), { status: 401 });
+  assert.deepEqual([location.href, removidos], ['/', 1]);
+
+  sessao(null); // senha errada na própria tela de entrar: a mensagem aparece lá, a página não recarrega
+  await assert.rejects(api('POST', '/api/login', { email: 'ana@demo.br', senha: 'errada' }), { status: 401 });
+  assert.equal(location.href, undefined);
+});
+
 // Texto do servidor (e dos PDFs) entra na tela só por interpolação {...}, que o Svelte escapa.
 test('nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src', () => {
   const fontes = fs.readdirSync(path.join(WEB, 'src'), { recursive: true }).filter((nome) => /\.(svelte|js)$/.test(nome));
@@ -183,6 +207,13 @@ test('a meta do ano diz que só conta as entregas registradas neste app, no text
   const paragrafo = fonte.match(/<p id="texto-meta">([\s\S]*?)<\/p>/);
   assert.ok(paragrafo, 'o parágrafo da meta (#texto-meta) sumiu');
   assert.match(paragrafo[1], /em alimentos da agricultura familiar\.\s+Conta só as entregas registradas neste app\.\s+\{#if /, 'a frase vem logo depois do total recebido');
+});
+
+// O "Voltar" da chamada era só um link de texto, mais baixo que o toque de 44 px do resto da tela (.botao tem min-height: 44px).
+test('o link de voltar da chamada é um botão de pelo menos 44 px de altura', () => {
+  assert.match(lerPagina('Chamada.svelte'), /<a class="botao botao-secundario" href="\/agricultor\.html">Voltar para as oportunidades<\/a>/);
+  const css = fs.readFileSync(path.join(WEB, 'public', 'css', 'estilo.css'), 'utf8');
+  assert.match(css, /(?:^|\n)button,\n\.botao \{[^}]*min-height: 44px/, 'a regra de .botao perdeu o min-height de 44 px');
 });
 
 test('o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão', () => {

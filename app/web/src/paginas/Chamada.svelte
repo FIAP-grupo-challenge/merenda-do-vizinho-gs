@@ -140,7 +140,7 @@
 </header>
 
 <main class="estreita">
-  <p><a href="/agricultor.html">Voltar para as oportunidades</a></p>
+  <p><a class="botao botao-secundario" href="/agricultor.html">Voltar para as oportunidades</a></p>
   <p class="erro" role="alert">{erro}</p>
 
   {#if chamada && perfil}
