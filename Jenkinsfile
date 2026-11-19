@@ -60,4 +60,9 @@ pipeline {
       steps { archiveArtifacts artifacts: 'devops/evidencias/**' }
     }
   }
+  post {
+    // também numa execução vermelha: a saída dos testes é a primeira coisa que se abre
+    // (allowEmptyArchive: se a falha veio antes de a pasta existir, o archive não vira um segundo erro)
+    always { archiveArtifacts artifacts: 'devops/evidencias/**', allowEmptyArchive: true }
+  }
 }

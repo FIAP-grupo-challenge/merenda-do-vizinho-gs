@@ -1,6 +1,7 @@
 # Jenkins local que roda o Jenkinsfile da raiz a cada commit. Passo a passo no README.md desta pasta:
 #   mkdir -p /tmp/merenda-jenkins
-#   DOCKER_GID=$(stat -c %g /var/run/docker.sock) docker compose -f devops/jenkins/docker-compose.yml up -d --build
+#   export DOCKER_GID=$(stat -c %g /var/run/docker.sock)   # todo comando deste arquivo precisa dela, até o down
+#   docker compose -f devops/jenkins/docker-compose.yml up -d --build
 # nome próprio: o projeto do Compose do smoke no pipeline é outro (merenda-ci)
 name: merenda-jenkins
 services:
@@ -25,8 +26,14 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      # só o .git, somente leitura: o Jenkins clona daqui, e o .env da sua pasta não entra no contêiner
-      - ../../.git:/repo:ro
+      # só o .git, somente leitura: o Jenkins clona daqui, e o .env da sua pasta não entra no contêiner;
+      # precisa de um clone com a pasta .git: sem ela, o Compose para em vez de criar uma pasta do root
+      - type: bind
+        source: ../../.git
+        target: /repo
+        read_only: true
+        bind:
+          create_host_path: false
       # a pasta tem de existir e ser sua: sem ela, o Docker criaria uma pasta do root, onde o Jenkins não grava
       - type: bind
         source: ${PASTA_TRABALHO:-/tmp/merenda-jenkins}

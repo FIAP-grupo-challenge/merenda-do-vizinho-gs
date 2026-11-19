@@ -39,8 +39,10 @@ curl -s -w ' -> HTTP %{http_code}\n' $APP/api/prefeitura/chamadas -H "Authorizat
 
 ## 2. Validação de entrada
 
-- O servidor confere cada campo antes de gravar: CPF pelos dígitos verificadores, CAF no formato do extrato, UF, datas
-  e números (`app/src/validacao.js` e as rotas). Erro é 400 com a mensagem em português.
+- O servidor confere cada campo antes de gravar: CPF pelos dígitos verificadores, UF, datas e números
+  (`app/src/validacao.js` e as rotas). O CAF só é conferido por tamanho (5 a 30 caracteres) e por caracteres (letras sem
+  acento, números, ponto, barra e hífen), porque não há formato oficial publicado do número. Erro é 400 com a mensagem
+  em português.
 - JSON quebrado dá 400. Envio acima de 256 KB dá 413, e o servidor para de ler; só o envio do PDF da chamada aceita até
   10 MB.
 - A leitura da câmara fria só entra com a chave do dispositivo e dentro das faixas físicas dos sensores.
@@ -69,7 +71,8 @@ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/leituras -H "X-Chave-Dispo
 ## 3. Proteção de dados (LGPD)
 
 - Os segredos (`JWT_SEGREDO`, `CHAVE_SERVICO`, `CHAVE_DISPOSITIVO` e `ANTHROPIC_API_KEY`) ficam só no `.env`, que o
-  `.gitignore` deixa fora do Git e o `.dockerignore` deixa fora das imagens. Sem eles, o app não sobe.
+  `.gitignore` deixa fora do Git e o `.dockerignore` deixa fora das imagens. Sem os três primeiros, o app não sobe; a
+  `ANTHROPIC_API_KEY` é opcional (sem ela, a IA responde pelas regras).
 - O agricultor aceita o termo de uso dos dados antes de salvar o perfil. CPF e CAF aparecem mascarados na tela.
 - A IA nunca recebe nome, CPF, CAF, e-mail, telefone nem dados bancários: o app manda só município, UF, produtos,
   orgânico e se há prioridade, e barra CPF, CAF ou e-mail escritos no chat antes de chamar a IA.
