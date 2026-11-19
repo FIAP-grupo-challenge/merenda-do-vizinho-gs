@@ -1,6 +1,20 @@
 # git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
-* 7589fc2 fix(entrega): o empacotar.sh acha link simbólico e PDF com pendência mesmo com pipefail
-* f31eb48 chore(entrega): PDF de evidências, grupo.txt e empacotamento
+* 3a96c55 docs(entrega): prints 9 e 12 refeitos com a divisão em inteiros que o app faz sozinho, sem edição, e a contagem de testes
+* 4f91127 docs(repo): 127 testes no app e 255 no total, com a saída dos testes refeita numa rodada real
+*   8604842 merge: integração (divisão da proposta em números inteiros) na trilha-entrega
+|\  
+| * 4c4e264 fix(app): erro de número inteiro diz quem errou e serve para qualquer produto; unidades no plural
+| * 7ef83a1 fix(app): und, mlh, pact e pcte também são unidades inteiras
+| * 5539fe8 fix(app): divisão da proposta em números inteiros para itens contados em unidade
+* | 464d884 fix(entrega): o empacotar.sh diz pendência(s) no singular e no plural
+* | 29c6bf3 docs(entrega): print 4 é a chamada semeada, arquitetura repetida na seção 5.4 e sem a frase fixa que dava falso aviso de pendência
+* | af3996b docs(entrega): checklist com [ ] para o grupo, na ordem final, sem coluna de estado, com corte de conta e e-mail dos prints
+* | f833adc fix(entrega): o empacotar.sh confere todas as variáveis do .env, chaves do GitHub e chave privada, o PDF e o aviso de pendência
+* | 03054a2 fix(entrega): o gerar-pdf.sh só troca o evidencias.pdf se o PDF novo sair com 30 páginas ou mais
+* | 7c1fa32 chore(entrega): print novo do Jenkins, roteiro do pitch atualizado e PDF refeito
+* | 7589fc2 fix(entrega): o empacotar.sh acha link simbólico e PDF com pendência mesmo com pipefail
+* | f31eb48 chore(entrega): PDF de evidências, grupo.txt e empacotamento
+|/  
 * c35e858 docs(repo): comentários dizem que a chamada de demonstração e os gabaritos foram conferidos por agente de IA
 * 6faf31b docs(repo): plano de testes com 250 testes, saída dos testes refeita e privacidade precisa em segurança
 * 4ce8b3c docs(repo): roteiro do pitch igual ao aprovado em planejamento/pitch
