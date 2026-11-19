@@ -344,7 +344,7 @@ Tudo é versionado com Git: commits pequenos, com mensagens em português no for
 
 **Teste de fumaça.** O `devops/smoke.sh` sobe a pilha num projeto próprio, confere o app e a IA, faz uma pergunta ao assistente como a Ana (o app chama a IA e a resposta volta), manda 5 leituras do simulador, roda o pipeline e derruba tudo. Trecho de `devops/evidencias/smoke.txt` (o build das imagens e o resumo do pipeline foram omitidos):
 
-```{.text incluir="../devops/evidencias/smoke.txt" comeca="$ ;== ;200 ;201 ;NAME ;merenda-smoke-app-1 ;merenda-smoke-ia-1 ;SMOKE OK"}
+```{.text incluir="../devops/evidencias/smoke.txt" comeca="$ ;== ;200 ;201 ;NAME ;merenda-smoke-final-app-1 ;merenda-smoke-final-ia-1 ;SMOKE OK"}
 ```
 
 **Integração contínua no Jenkins.** O `Jenkinsfile` roda sozinho a cada commit, sem passo manual: o Jenkins confere o repositório a cada 2 minutos e roda seis etapas, o checkout, os testes do app (Node 24), os testes de Python (IA, dados e IoT, no Python 3.12), o build das quatro imagens, o smoke e o arquivamento das evidências. O Jenkins local sobe com `devops/jenkins/docker-compose.yml` (passo a passo em `devops/jenkins/README.md`).

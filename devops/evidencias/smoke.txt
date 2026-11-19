@@ -1,12 +1,12 @@
-$ devops/smoke.sh    # 2026-11-19T05:08:47-03:00, cópia limpa do repositório, sem .env
+$ COMPOSE_PROJECT_NAME=merenda-smoke-final PORTA_APP=0 devops/smoke.sh    # 2026-11-19T08:45:45-03:00, cópia limpa do repositório (commit ed7f89e), sem .env
 == 1. .env, build e subida
 criei o .env de teste, com segredos aleatórios
- Image merenda-smoke-iot Building 
- Image merenda-smoke-app Building 
- Image merenda-smoke-ia Building 
- Image merenda-smoke-dados Building 
+ Image merenda-smoke-final-ia Building 
+ Image merenda-smoke-final-dados Building 
+ Image merenda-smoke-final-iot Building 
+ Image merenda-smoke-final-app Building 
 #1 [internal] load local bake definitions
-#1 reading from stdin 2.34kB done
+#1 reading from stdin 2.38kB done
 #1 DONE 0.0s
 
 #2 [ia internal] load build definition from Dockerfile
@@ -14,45 +14,45 @@ criei o .env de teste, com segredos aleatórios
 #2 transferring dockerfile: 565B done
 #2 DONE 0.2s
 
-#3 [app internal] load build definition from Dockerfile
-#3 transferring dockerfile: 1.27kB done
+#3 [iot internal] load build definition from Dockerfile
+#3 transferring dockerfile: 399B done
 #3 DONE 0.2s
 
-#4 [dados internal] load build definition from Dockerfile
-#4 transferring dockerfile: 712B done
-#4 DONE 0.2s
+#4 [ia internal] load metadata for docker.io/library/python:3.12-slim
+#4 ...
 
-#5 [ia internal] load metadata for docker.io/library/python:3.12-slim
-#5 ...
+#5 [dados internal] load build definition from Dockerfile
+#5 transferring dockerfile: 712B done
+#5 DONE 0.2s
 
-#6 [iot internal] load build definition from Dockerfile
-#6 transferring dockerfile: 399B done
+#6 [app internal] load build definition from Dockerfile
+#6 transferring dockerfile: 1.27kB done
 #6 DONE 0.2s
 
-#5 [iot internal] load metadata for docker.io/library/python:3.12-slim
-#5 DONE 0.7s
+#4 [dados internal] load metadata for docker.io/library/python:3.12-slim
+#4 DONE 1.7s
 
 #7 [app internal] load metadata for docker.io/library/node:24-alpine
-#7 DONE 0.7s
+#7 DONE 1.7s
 
-#8 [ia internal] load .dockerignore
+#8 [dados internal] load .dockerignore
 #8 transferring context: 588B done
 #8 DONE 0.1s
 
 #9 [app internal] load build context
 #9 DONE 0.0s
 
-#10 [dados 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#10 [dados 1/7] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 #10 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 #10 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 0.1s done
-#10 DONE 0.1s
+#10 DONE 0.2s
 
 #11 [app build 1/6] FROM docker.io/library/node:24-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5
 #11 resolve docker.io/library/node:24-alpine@sha256:116b800c3754b440ee0aa3ed2f20f5bf3d99a554bfd9adeea09ea8017f6e85f5 0.1s done
 #11 DONE 0.2s
 
 #12 [iot internal] load build context
-#12 transferring context: 17.36kB done
+#12 transferring context: 17.47kB done
 #12 DONE 0.2s
 
 #13 [dados internal] load build context
@@ -69,184 +69,216 @@ criei o .env de teste, com segredos aleatórios
 #16 [iot 4/4] COPY iot iot
 #16 CACHED
 
-#17 [dados 2/4] WORKDIR /srv
+#17 [dados 3/7] COPY dados/requirements.txt dados/
 #17 CACHED
 
-#18 [dados 5/7] RUN useradd --uid 1000 --create-home merenda
+#18 [dados 4/7] RUN pip install --no-cache-dir --root-user-action=ignore -r dados/requirements.txt
 #18 CACHED
 
-#19 [dados 6/7] COPY compartilhado compartilhado
+#19 [dados 2/7] WORKDIR /srv
 #19 CACHED
 
-#20 [dados 3/7] COPY dados/requirements.txt dados/
+#20 [dados 6/7] COPY compartilhado compartilhado
 #20 CACHED
 
-#21 [dados 4/7] RUN pip install --no-cache-dir --root-user-action=ignore -r dados/requirements.txt
+#21 [dados 5/7] RUN useradd --uid 1000 --create-home merenda
 #21 CACHED
 
 #22 [dados 7/7] COPY dados dados
 #22 CACHED
 
-#9 [app internal] load build context
-#9 transferring context: 460.15kB done
-#9 DONE 0.2s
-
 #23 [iot] exporting to image
 #23 exporting layers done
-#23 exporting manifest sha256:2ed16b40c1a71cb00df1b2eaa4bdb238484032921c621aca1d7a01c0226b53cb 0.0s done
-#23 exporting config sha256:300fa211a45fbb468761b79d1e90d2eb69fda6b67c663432e8f248b64a7cc87d
+#23 exporting manifest sha256:9004b1aeb75c5c5b521955230b4a6015048f4944685c0a8034f9de87b06bedb8 0.0s done
+#23 exporting config sha256:dec7762f3b24a0a76d613787b6fecd73e561cc3b793f94fab575d5c44a2b215e
 #23 ...
 
-#24 [ia 5/7] RUN useradd --uid 1000 --create-home merenda
+#19 [ia 2/7] WORKDIR /srv
+#19 CACHED
+
+#24 [ia 4/7] RUN pip install --no-cache-dir --root-user-action=ignore -r ia/requirements.txt
 #24 CACHED
 
-#17 [ia 2/4] WORKDIR /srv
-#17 CACHED
-
-#25 [ia 4/7] RUN pip install --no-cache-dir --root-user-action=ignore -r ia/requirements.txt
+#25 [ia 3/7] COPY ia/requirements.txt ia/
 #25 CACHED
 
-#26 [ia 6/7] COPY compartilhado compartilhado
+#26 [ia 5/7] RUN useradd --uid 1000 --create-home merenda
 #26 CACHED
 
-#27 [ia 3/7] COPY ia/requirements.txt ia/
+#27 [ia 6/7] COPY compartilhado compartilhado
 #27 CACHED
 
-#28 [ia 7/7] COPY ia ia
+#9 [app internal] load build context
+#9 transferring context: 483.62kB done
+#9 DONE 0.1s
+
+#28 [app build 2/6] WORKDIR /srv/app
 #28 CACHED
 
-#29 [app build 2/6] WORKDIR /srv/app
+#29 [app build 3/6] COPY app/package.json app/package-lock.json ./
 #29 CACHED
 
-#30 [app stage-1 5/9] COPY compartilhado /srv/compartilhado
+#30 [app build 4/6] RUN npm ci
 #30 CACHED
 
-#31 [app stage-1 6/9] COPY app/src ./src
+#31 [app stage-1 4/9] RUN npm ci --omit=dev && npm cache clean --force
 #31 CACHED
 
-#32 [app build 6/6] RUN npm run build
+#32 [app stage-1 5/9] COPY compartilhado /srv/compartilhado
 #32 CACHED
 
-#33 [app build 4/6] RUN npm ci
-#33 CACHED
-
-#34 [app stage-1 4/9] RUN npm ci --omit=dev && npm cache clean --force
-#34 CACHED
-
-#35 [app build 3/6] COPY app/package.json app/package-lock.json ./
-#35 CACHED
-
-#36 [app stage-1 8/9] COPY --from=build /srv/app/public ./public
-#36 CACHED
-
-#37 [app stage-1 7/9] COPY app/semente ./semente
-#37 CACHED
-
-#38 [app build 5/6] COPY app/ ./
-#38 CACHED
-
-#39 [app stage-1 9/9] RUN mkdir /dados && chown node:node /dados
-#39 CACHED
-
 #23 [iot] exporting to image
-#23 exporting config sha256:300fa211a45fbb468761b79d1e90d2eb69fda6b67c663432e8f248b64a7cc87d 0.1s done
-#23 exporting attestation manifest sha256:cbb253963395deeb0da3c5056d928a6db7a3746d8887ef5eaf8a7d11f05fc38c
-#23 exporting attestation manifest sha256:cbb253963395deeb0da3c5056d928a6db7a3746d8887ef5eaf8a7d11f05fc38c 0.1s done
-#23 exporting manifest list sha256:097aa31b0dd1a6b55bb3f5debb44c7f0d51d048f5c51667a275ba662a83e4419 0.1s done
-#23 naming to docker.io/library/merenda-smoke-iot:latest
-#23 naming to docker.io/library/merenda-smoke-iot:latest 0.0s done
-#23 unpacking to docker.io/library/merenda-smoke-iot:latest
+#23 exporting config sha256:dec7762f3b24a0a76d613787b6fecd73e561cc3b793f94fab575d5c44a2b215e 0.0s done
+#23 exporting attestation manifest sha256:c3f37433b60faad98254ec6df46c4689265064f09747fdb7ce48b37da0f48c7e
 #23 ...
 
-#40 [app] exporting to image
-#40 exporting layers done
-#40 exporting manifest sha256:f241f1f6b828182e155dfabc3a652efdc58bc77fdd83b8093ded70fef4bb1d8c 0.1s done
-#40 exporting config sha256:e3522c0940cb7617add180701cb31058a5d1512eaeb3be9fe5368d9c5a064827 0.1s done
-#40 exporting attestation manifest sha256:4b725be63f18074279346e0f1f8ac008a12dcf4c5094c5beb5314a42deff1a9f 0.1s done
-#40 exporting manifest list sha256:753e152d1d03abe10ade07bc62866cf23c5866db7c6aec7f34cd6c373c137c36 0.1s done
-#40 naming to docker.io/library/merenda-smoke-app:latest 0.0s done
-#40 unpacking to docker.io/library/merenda-smoke-app:latest 0.3s done
-#40 DONE 0.7s
+#33 [ia 7/7] COPY ia ia
+#33 DONE 0.2s
 
-#41 [ia] exporting to image
-#41 exporting layers done
-#41 exporting manifest sha256:1fc858e6af4c21bc77bf795b4c8b88f5b6facae2abc588231906ed0aa7557177 0.1s done
-#41 exporting config sha256:5f43b3650c5f5e07712c0c579a2f039fdbaa6966881ffb0c0fcd9e012919803e 0.1s done
-#41 exporting attestation manifest sha256:0cafcf0ba03306eaef5716d63f82483f31ae23953c1c30845d06e4f520280dc5 0.1s done
-#41 exporting manifest list sha256:b594a50aa25e064b90ea5d8bb9873b86c0394c19b51bcc2797f9c57bf8b7bcd8 0.0s done
-#41 naming to docker.io/library/merenda-smoke-ia:latest 0.0s done
-#41 unpacking to docker.io/library/merenda-smoke-ia:latest
-#41 ...
+#34 [app stage-1 6/9] COPY app/src ./src
+#34 DONE 0.2s
 
-#42 [app] resolving provenance for metadata file
-#42 DONE 0.0s
+#35 [app build 5/6] COPY app/ ./
+#35 DONE 0.3s
 
-#43 [dados] exporting to image
-#43 exporting layers done
-#43 exporting manifest sha256:0c8497b8c7cb43b10bc49687d2ddef03e58293000c10ec0f5751905b104dc047 0.0s done
-#43 exporting config sha256:03f6e734fd1878813fc9dc2c10b5788f1bec40189cc9ddd3c0239e1560ccf78f 0.1s done
-#43 exporting attestation manifest sha256:50c7baebf13212c5ac9c329cb8abd911726499a34096ef4b203602be93bcb3cd 0.1s done
-#43 exporting manifest list sha256:a749ecdef8413412cb8e884174dc5c944efa69e3065b5c5aa601a35a1d044836 0.1s done
-#43 naming to docker.io/library/merenda-smoke-dados:latest 0.0s done
-#43 unpacking to docker.io/library/merenda-smoke-dados:latest
-#43 ...
+#36 [app stage-1 7/9] COPY app/semente ./semente
+#36 ...
 
 #23 [iot] exporting to image
-#23 unpacking to docker.io/library/merenda-smoke-iot:latest 1.5s done
-#23 DONE 1.9s
+#23 exporting attestation manifest sha256:c3f37433b60faad98254ec6df46c4689265064f09747fdb7ce48b37da0f48c7e 0.1s done
+#23 exporting manifest list sha256:61233f2c2d7f892dd97491b93ac8baba4a396b78b99fab0e0e1f165bec633f30 0.1s done
+#23 naming to docker.io/library/merenda-smoke-final-iot:latest 0.0s done
+#23 unpacking to docker.io/library/merenda-smoke-final-iot:latest 0.2s done
+#23 DONE 0.7s
 
-#44 [iot] resolving provenance for metadata file
-#44 DONE 0.0s
+#37 [dados] exporting to image
+#37 exporting layers done
+#37 exporting manifest sha256:dffd9fa3627f4702adfbfa855e2c985bef5614e5c493d030bcf6047afe52fe5d 0.1s done
+#37 exporting config sha256:bdbbeb0da8db42f2c9f73912166d32fc53b0df3a86f6b231558369d14335d4aa 0.1s done
+#37 exporting attestation manifest sha256:644218a02eaa7ca3105f5df64a188c2d0c1163784d98ac3eca697418c5a71f5b 0.1s done
+#37 exporting manifest list sha256:db51d66ed9ec3d1b68b1689a90ab0501974cdd8ac6d467ae82e327c67146b8a7 0.1s done
+#37 naming to docker.io/library/merenda-smoke-final-dados:latest 0.1s done
+#37 unpacking to docker.io/library/merenda-smoke-final-dados:latest 0.1s done
+#37 DONE 0.6s
 
-#43 [dados] exporting to image
-#43 ...
+#36 [app stage-1 7/9] COPY app/semente ./semente
+#36 DONE 0.3s
 
-#41 [ia] exporting to image
-#41 unpacking to docker.io/library/merenda-smoke-ia:latest 2.1s done
-#41 DONE 2.5s
+#38 [ia] exporting to image
+#38 exporting layers 0.5s done
+#38 exporting manifest sha256:b6eee0b2f4690fde067596aacf6cf5d0ef6ab85f15926935f9c711e4f0ca068e 0.0s done
+#38 exporting config sha256:2476fc94a9bd78cc6068fddd4455f2ba6bf0e73d00df6ec60b6a773dd57f0b75 0.0s done
+#38 exporting attestation manifest sha256:0e741b1d20ac68621600c0eb7ac80bcf8b8bacbaa2cf6f15cb42e9853c7730e2 0.0s done
+#38 exporting manifest list sha256:e1dac3594153b343b0f916a654b6790783d33f13c5e38a74711513ee7123d6d2
+#38 exporting manifest list sha256:e1dac3594153b343b0f916a654b6790783d33f13c5e38a74711513ee7123d6d2 0.0s done
+#38 naming to docker.io/library/merenda-smoke-final-ia:latest 0.0s done
+#38 unpacking to docker.io/library/merenda-smoke-final-ia:latest 0.1s done
+#38 DONE 0.8s
 
-#43 [dados] exporting to image
-#43 ...
+#39 [dados] resolving provenance for metadata file
+#39 DONE 0.0s
 
-#45 [ia] resolving provenance for metadata file
-#45 DONE 0.0s
+#40 [iot] resolving provenance for metadata file
+#40 DONE 0.1s
 
-#43 [dados] exporting to image
-#43 unpacking to docker.io/library/merenda-smoke-dados:latest 2.6s done
-#43 DONE 3.0s
+#41 [app build 6/6] RUN npm run build
+#41 0.519 
+#41 0.519 > merenda-do-vizinho-app@1.0.0 build
+#41 0.519 > vite build
+#41 0.519 
+#41 0.834 vite v8.3.8 building client environment for production...
+#41 0.842 transforming...
+#41 ...
 
-#46 [dados] resolving provenance for metadata file
+#42 [ia] resolving provenance for metadata file
+#42 DONE 0.0s
+
+#41 [app build 6/6] RUN npm run build
+#41 1.060 ✓ 141 modules transformed.
+#41 1.084 rendering chunks...
+#41 1.103 computing gzip size...
+#41 1.105 public/index.html                            0.52 kB │ gzip:  0.32 kB
+#41 1.105 public/chamada.html                          0.83 kB │ gzip:  0.39 kB
+#41 1.105 public/agricultor.html                       0.84 kB │ gzip:  0.39 kB
+#41 1.105 public/projeto-venda.html                    0.85 kB │ gzip:  0.39 kB
+#41 1.105 public/prefeitura.html                       1.00 kB │ gzip:  0.42 kB
+#41 1.105 public/cooperativa.html                      1.00 kB │ gzip:  0.42 kB
+#41 1.105 public/camara-fria.html                      1.00 kB │ gzip:  0.43 kB
+#41 1.105 public/assets/CampoNumero-DIWwqcsA.css       0.04 kB │ gzip:  0.06 kB
+#41 1.105 public/assets/CaixaRolavel-BkCk-CpE.css      0.04 kB │ gzip:  0.06 kB
+#41 1.105 public/assets/chamada-BT06BBaL.css           0.53 kB │ gzip:  0.30 kB
+#41 1.105 public/assets/camara-fria-BqoirZfP.css       1.08 kB │ gzip:  0.41 kB
+#41 1.105 public/assets/cooperativa-CheLR6Vp.css       1.09 kB │ gzip:  0.44 kB
+#41 1.105 public/assets/projeto-venda-DhlLwqvV.css     1.10 kB │ gzip:  0.45 kB
+#41 1.105 public/assets/agricultor-ISK4klkl.css        1.15 kB │ gzip:  0.46 kB
+#41 1.105 public/assets/prefeitura-DNlHOFn6.css        1.48 kB │ gzip:  0.53 kB
+#41 1.105 public/assets/rolldown-runtime-B8xr6ykz.js   0.18 kB │ gzip:  0.14 kB
+#41 1.105 public/assets/CaixaRolavel-B2tr-1_z.js       0.39 kB │ gzip:  0.29 kB
+#41 1.105 public/assets/formato-DTf2Ygg2.js            1.02 kB │ gzip:  0.62 kB
+#41 1.105 public/assets/CampoNumero-CG7OLAXs.js        1.29 kB │ gzip:  0.74 kB
+#41 1.105 public/assets/index-CWFFDr-u.js              5.37 kB │ gzip:  2.19 kB
+#41 1.105 public/assets/camara-fria-1tvuppQl.js        8.28 kB │ gzip:  3.51 kB
+#41 1.105 public/assets/cooperativa-CDFItqOh.js        9.13 kB │ gzip:  3.71 kB
+#41 1.105 public/assets/chamada-ia0HDEdh.js            9.13 kB │ gzip:  3.95 kB
+#41 1.105 public/assets/projeto-venda-CD1lW0we.js     10.03 kB │ gzip:  3.76 kB
+#41 1.105 public/assets/agricultor-BPKs_EFM.js        14.02 kB │ gzip:  5.69 kB
+#41 1.105 public/assets/prefeitura-Ocny8MNV.js        18.90 kB │ gzip:  6.79 kB
+#41 1.105 public/assets/Ouvir-Cf9Hc_qt.js             56.83 kB │ gzip: 22.00 kB
+#41 1.105 
+#41 1.105 ✓ built in 270ms
+#41 DONE 1.2s
+
+#43 [app stage-1 8/9] COPY --from=build /srv/app/public ./public
+#43 DONE 0.1s
+
+#44 [app stage-1 9/9] RUN mkdir /dados && chown node:node /dados
+#44 DONE 0.2s
+
+#45 [app] exporting to image
+#45 exporting layers 0.4s done
+#45 exporting manifest sha256:6df264070a2088866f3166f1327e4a87d742f18432215635e4f58eb50da4262e 0.0s done
+#45 exporting config sha256:6092b3a0a73b2efc71c4179da0275b373851e92ebb44b8cd8fe5637da158d45a 0.0s done
+#45 exporting attestation manifest sha256:43dd882612673a7357240158e9bfe4cd40f5d335849f7eaede3447d1dd62b190 0.0s done
+#45 exporting manifest list sha256:81b9375cddeb8563cf4b8f6d9208f0756ac1400990d8abf68d44cb41e4862856 0.0s done
+#45 naming to docker.io/library/merenda-smoke-final-app:latest
+#45 naming to docker.io/library/merenda-smoke-final-app:latest done
+#45 unpacking to docker.io/library/merenda-smoke-final-app:latest 0.1s done
+#45 DONE 0.6s
+
+#46 [app] resolving provenance for metadata file
 #46 DONE 0.0s
- Image merenda-smoke-dados Built 
- Image merenda-smoke-ia Built 
- Image merenda-smoke-iot Built 
- Image merenda-smoke-app Built 
- Volume merenda-smoke_banco Creating 
- Network merenda-smoke_default Creating 
- Volume merenda-smoke_banco Created 
- Network merenda-smoke_default Created 
- Container merenda-smoke-ia-1 Creating 
- Container merenda-smoke-ia-1 Created 
- Container merenda-smoke-app-1 Creating 
- Container merenda-smoke-app-1 Created 
- Container merenda-smoke-ia-1 Starting 
- Container merenda-smoke-ia-1 Started 
- Container merenda-smoke-app-1 Starting 
- Container merenda-smoke-app-1 Started 
+ Image merenda-smoke-final-app Built 
+ Image merenda-smoke-final-dados Built 
+ Image merenda-smoke-final-ia Built 
+ Image merenda-smoke-final-iot Built 
+ Network merenda-smoke-final_default Creating 
+ Volume merenda-smoke-final_banco Creating 
+ Volume merenda-smoke-final_banco Created 
+ Network merenda-smoke-final_default Created 
+ Container merenda-smoke-final-ia-1 Creating 
+ Container merenda-smoke-final-ia-1 Created 
+ Container merenda-smoke-final-app-1 Creating 
+ Container merenda-smoke-final-app-1 Created 
+ Container merenda-smoke-final-ia-1 Starting 
+ Container merenda-smoke-final-ia-1 Started 
+ Container merenda-smoke-final-app-1 Starting 
+ Container merenda-smoke-final-app-1 Started 
 == 2. app e IA respondendo 200
 200 http://ia:3001/saude {"ok": true, "modo": "regras"}
 200 http://localhost:3000/ <!doctype html> <html lang="pt-BR"> <head> <meta charset="utf-8"> <meta name="vi
-== 3. 5 leituras do simulador com a porta aberta
- Container merenda-smoke-iot-run-b3af1cf06e90 Creating 
- Container merenda-smoke-iot-run-b3af1cf06e90 Created 
-201 {"dispositivo":"camara-01","temperatura_c":5.0,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T08:08:56+00:00"}
-201 {"dispositivo":"camara-01","temperatura_c":5.4,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T08:08:57+00:00"}
-201 {"dispositivo":"camara-01","temperatura_c":5.8,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T08:08:58+00:00"}
-201 {"dispositivo":"camara-01","temperatura_c":6.2,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T08:08:59+00:00"}
-201 {"dispositivo":"camara-01","temperatura_c":6.6,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T08:09:00+00:00"}
-== 4. pipeline do data lake, com a cópia versionada das fontes públicas e os dados do app
- Container merenda-smoke-dados-run-f815eb256cb7 Creating 
- Container merenda-smoke-dados-run-f815eb256cb7 Created 
+== 3. login da Ana e uma pergunta ao assistente: o app chama a IA e a resposta volta
+200 {"origem":"regras","resposta":"Com 50 pç por semana, em 40 semanas de entrega, d
+== 4. 5 leituras do simulador com a porta aberta
+ Container merenda-smoke-final-iot-run-44dae9675508 Creating 
+ Container merenda-smoke-final-iot-run-44dae9675508 Created 
+201 {"dispositivo":"camara-01","temperatura_c":5.0,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T11:45:54+00:00"}
+201 {"dispositivo":"camara-01","temperatura_c":5.4,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T11:45:55+00:00"}
+201 {"dispositivo":"camara-01","temperatura_c":5.8,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T11:45:56+00:00"}
+201 {"dispositivo":"camara-01","temperatura_c":6.2,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T11:45:57+00:00"}
+201 {"dispositivo":"camara-01","temperatura_c":6.6,"peso_kg":180.0,"porta_aberta":true,"momento":"2026-11-19T11:45:58+00:00"}
+== 5. pipeline do data lake, com a cópia versionada das fontes públicas e os dados do app
+ Container merenda-smoke-final-dados-run-87d31f0e80ba Creating 
+ Container merenda-smoke-final-dados-run-87d31f0e80ba Created 
 info: etapa baixar-fontes
 aviso: PIPELINE_OFFLINE=1: usando a cópia versionada das fontes públicas
 info: etapa ingerir-app
@@ -255,7 +287,7 @@ info: etapa tratar
 info: etapa refinar
 Resumo do data lake (linhas por camada):
 raw: 142.804 linhas em 9 arquivos
-  app/exportacao-20261119T080901Z.json: 12
+  app/exportacao-20261119T114559Z.json: 12
   publicos/fnde-af/DadosAF2018.xlsx: 4.948
   publicos/fnde-af/ExtracaoAF_201910322_paraenvio.xlsx: 5.548
   publicos/fnde-af/Planilha2020_04_3_24.xlsx: 5.513
@@ -279,17 +311,17 @@ refined: 42.210 linhas em 6 arquivos
   fato_pnae_af.csv: 26.942
   fato_repasse_uf.csv: 108
 refined/merenda_do_vizinho.xlsx: abas fato_pnae_af, fato_repasse_uf, fato_entregas, fato_camara_fria, dim_produto, dim_municipio
-NAME                  IMAGE               COMMAND                  SERVICE   CREATED          STATUS                    PORTS
-merenda-smoke-app-1   merenda-smoke-app   "docker-entrypoint.s…"   app       16 seconds ago   Up 16 seconds (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
-merenda-smoke-ia-1    merenda-smoke-ia    "python -m ia.servid…"   ia        17 seconds ago   Up 16 seconds (healthy)   3001/tcp
+NAME                        IMAGE                     COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+merenda-smoke-final-app-1   merenda-smoke-final-app   "docker-entrypoint.s…"   app       17 seconds ago   Up 16 seconds (healthy)   0.0.0.0:32778->3000/tcp, [::]:32778->3000/tcp
+merenda-smoke-final-ia-1    merenda-smoke-final-ia    "python -m ia.servid…"   ia        17 seconds ago   Up 16 seconds (healthy)   3001/tcp
 SMOKE OK
- Container merenda-smoke-app-1 Stopping 
- Container merenda-smoke-app-1 Stopped 
- Container merenda-smoke-app-1 Removing 
- Container merenda-smoke-app-1 Removed 
- Container merenda-smoke-ia-1 Stopping 
- Container merenda-smoke-ia-1 Stopped 
- Container merenda-smoke-ia-1 Removing 
- Container merenda-smoke-ia-1 Removed 
- Network merenda-smoke_default Removing 
- Network merenda-smoke_default Removed 
+ Container merenda-smoke-final-app-1 Stopping 
+ Container merenda-smoke-final-app-1 Stopped 
+ Container merenda-smoke-final-app-1 Removing 
+ Container merenda-smoke-final-app-1 Removed 
+ Container merenda-smoke-final-ia-1 Stopping 
+ Container merenda-smoke-final-ia-1 Stopped 
+ Container merenda-smoke-final-ia-1 Removing 
+ Container merenda-smoke-final-ia-1 Removed 
+ Network merenda-smoke-final_default Removing 
+ Network merenda-smoke-final_default Removed 
