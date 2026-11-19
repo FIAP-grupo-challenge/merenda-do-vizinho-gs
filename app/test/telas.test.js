@@ -4,6 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { subirApp } = require('./ajuda');
 
 const WEB = path.join(__dirname, '..', 'web');
 const PUBLICA = path.join(__dirname, '..', 'public');
@@ -27,14 +28,29 @@ test('o build gerou cada página de web/, e toda página gerada tem a meta viewp
   }
 });
 
-test('estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e a classe .rolavel', () => {
+test('estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px, a classe .rolavel e a Inter do próprio app', async () => {
   exigirBuild();
   const css = fs.readFileSync(path.join(PUBLICA, 'css', 'estilo.css'), 'utf8');
   assert.match(css, /@media \(min-width: 768px\)/);
   assert.doesNotMatch(css, /@media \(max-width/, 'celular primeiro: só min-width');
   assert.match(css, /min-height: 44px/);
   assert.match(css, /\.rolavel \{[^}]*overflow-x: auto/);
-  assert.match(css, /\.topo :focus-visible \{[^}]*outline-color: #fff/, 'o anel de foco azul some no verde do topo');
+  assert.match(css, /\.topo :focus-visible \{[^}]*outline-color: #fff/, 'o anel de foco escuro some no verde-escuro do topo');
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+
+  // a Inter vem do próprio app, com a licença OFL ao lado: o app roda sem internet no Docker, então nada de CDN
+  assert.doesNotMatch(css, /@import|url\(\s*['"]?(?:https?:)?\/\//, 'o estilo não busca nada fora do app');
+  const fonte = css.match(/@font-face \{[^}]*src: url\('(\/fonts\/[^']+\.woff2)'\)/);
+  assert.ok(fonte, 'a Inter não está no @font-face');
+  assert.ok(fs.existsSync(path.join(PUBLICA, 'fonts', 'OFL.txt')), 'a licença OFL vai junto da fonte');
+  const app = await subirApp();
+  try {
+    const resposta = await fetch(app.url + fonte[1]);
+    assert.equal(resposta.status, 200, 'o servidor não serve a fonte');
+    assert.equal(resposta.headers.get('content-type'), 'font/woff2');
+  } finally {
+    await app.fechar();
+  }
 });
 
 // api.js é um ES module de navegador: roda aqui como módulo (data: URL), com localStorage, location e fetch de mentira.
@@ -152,6 +168,23 @@ test('as telas dizem Colhe e não Merenda do Vizinho', () => {
   assert.match(lerPagina('Entrar.svelte'), /<h1>Colhe<\/h1>\s*<p class="dica">da roça para a merenda<\/p>/, 'a frase vem embaixo do nome');
   for (const nome of fs.readdirSync(WEB, { recursive: true }).filter((arquivo) => fs.statSync(path.join(WEB, arquivo)).isFile())) {
     assert.ok(!fs.readFileSync(path.join(WEB, nome), 'utf8').includes('Merenda do Vizinho'), nome);
+  }
+});
+
+// O logo é o prato do pitch: fileiras de pontos num círculo, com as de baixo, 45% dos pontos, em laranja.
+test('o topo de toda tela tem o prato de pontos ao lado do nome, com 45% dos pontos em laranja', async () => {
+  for (const nome of fs.readdirSync(path.join(WEB, 'src', 'paginas')).filter((arquivo) => arquivo.endsWith('.svelte'))) {
+    assert.match(lerPagina(nome), /<Marca\b[^>]*\/>\s*<h1>Colhe<\/h1>/, nome);
+  }
+  const codigo = fs.readFileSync(path.join(WEB, 'src', 'lib', 'prato.js'), 'utf8');
+  const { prato } = await import(`data:text/javascript,${encodeURIComponent(codigo)}`);
+  for (const fileiras of [3, 7]) {
+    const { r, pontos } = prato(fileiras);
+    const laranja = pontos.filter((ponto) => ponto.laranja);
+    assert.ok(Math.abs(laranja.length / pontos.length - 0.45) < 0.01, `${fileiras} fileiras: ${laranja.length} de ${pontos.length} em laranja`);
+    assert.ok(pontos.every(({ x, y }) => Math.hypot(x, y) + r <= 100 + 1e-9), `${fileiras} fileiras: ponto fora do prato`);
+    const verdeMaisBaixo = Math.max(...pontos.filter((ponto) => !ponto.laranja).map(({ y }) => y));
+    assert.ok(laranja.every(({ y }) => y >= verdeMaisBaixo), `${fileiras} fileiras: o laranja fica embaixo`);
   }
 });
 
