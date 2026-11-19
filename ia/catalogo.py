@@ -18,11 +18,12 @@ def listar_produtos() -> list[dict]:
 
 
 def identificar_produto(texto: str) -> str | None:
-    texto_normalizado = normalizar_texto(texto)
+    # hífen vale espaço, no texto e nos termos: 'Couve- flor', 'couve-flor' e 'couve flor' casam igual
+    texto_normalizado = normalizar_texto(texto.replace('-', ' '))
     melhor_id, melhor_tamanho = None, 0
     for produto in listar_produtos():
         for termo in [produto['nome'], *produto['sinonimos']]:
-            termo_normalizado = normalizar_texto(termo)
+            termo_normalizado = normalizar_texto(termo.replace('-', ' '))
             casa = re.search(rf'\b{re.escape(termo_normalizado)}\b', texto_normalizado)
             if casa and len(termo_normalizado) > melhor_tamanho:
                 melhor_id, melhor_tamanho = produto['id'], len(termo_normalizado)

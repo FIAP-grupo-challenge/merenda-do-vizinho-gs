@@ -18,6 +18,12 @@
     "unidade_padrao": "unidade"
   },
   {
+    "id": "brocolis",
+    "nome": "Brócolis",
+    "sinonimos": [],
+    "unidade_padrao": "unidade"
+  },
+  {
     "id": "repolho",
     "nome": "Repolho",
     "sinonimos": ["repolho roxo"],
@@ -126,6 +132,12 @@
     "unidade_padrao": "maço"
   },
   {
+    "id": "cheiro-verde",
+    "nome": "Cheiro verde",
+    "sinonimos": [],
+    "unidade_padrao": "maço"
+  },
+  {
     "id": "banana",
     "nome": "Banana",
     "sinonimos": ["bananas"],
@@ -200,7 +212,7 @@
   {
     "id": "milho-verde",
     "nome": "Milho verde",
-    "sinonimos": ["espiga de milho"],
+    "sinonimos": ["espiga de milho", "milho"],
     "unidade_padrao": "unidade"
   },
   {
@@ -218,13 +230,13 @@
   {
     "id": "pao-caseiro",
     "nome": "Pão caseiro",
-    "sinonimos": ["pães caseiros"],
+    "sinonimos": ["pães caseiros", "pão enriquecido"],
     "unidade_padrao": "unidade"
   },
   {
     "id": "biscoito-caseiro",
     "nome": "Biscoito caseiro",
-    "sinonimos": ["biscoitos caseiros"],
+    "sinonimos": ["biscoitos caseiros", "biscoito"],
     "unidade_padrao": "kg"
   },
   {

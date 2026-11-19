@@ -22,3 +22,55 @@ class TestCatalogo(unittest.TestCase):
         self.assertEqual(identificar_produto('aipim'), 'mandioca')
         self.assertEqual(identificar_produto('macaxeira'), 'mandioca')
         self.assertEqual(identificar_produto('ovos'), 'ovo')
+
+    def test_identifica_nomes_compostos(self):
+        casos = {
+            'Batata doce': 'batata-doce',
+            'Farinha de mandioca': 'farinha-de-mandioca',
+            'Couve-flor': 'couve-flor',
+            'Biscoito caseiro de queijo': 'biscoito-caseiro',
+            'PAO CASEIRO': 'pao-caseiro',
+            'Abóbora': 'abobora',
+        }
+        for texto, esperado in casos.items():
+            with self.subTest(texto=texto):
+                self.assertEqual(identificar_produto(texto), esperado)
+
+    def test_hifen_vale_espaco(self):
+        for texto in ('Couve- flor', 'couve-flor', 'couve flor'):
+            with self.subTest(texto=texto):
+                self.assertEqual(identificar_produto(texto), 'couve-flor')
+
+    def test_catalogo_integro(self):
+        produtos = listar_produtos()
+        ids = [produto['id'] for produto in produtos]
+        self.assertEqual(len(ids), len(set(ids)))
+        for produto in produtos:
+            self.assertEqual(set(produto), {'id', 'nome', 'sinonimos', 'unidade_padrao'})
+            for termo in [produto['nome'], *produto['sinonimos']]:
+                with self.subTest(termo=termo):
+                    self.assertEqual(identificar_produto(termo), produto['id'])
+
+    def test_identifica_os_itens_do_edital_de_catalao(self):
+        # nomes como aparecem em 04-go-catalao-2026.pdf, o edital da demonstração
+        itens = {
+            'Abóbora Cabotiá': 'abobora',
+            'Abóbora verde': 'abobora',
+            'Alface': 'alface',
+            'Alho': 'alho',
+            'Batata Inglesa': 'batata-inglesa',
+            'Brócolis': 'brocolis',
+            'Cebola': 'cebola',
+            'Cheiro verde': 'cheiro-verde',
+            'Couve': 'couve',
+            'Couve- flor': 'couve-flor',
+            'Mandioca': 'mandioca',
+            'Milho': 'milho-verde',
+            'Pepino Branco': 'pepino',
+            'Tomate': 'tomate',
+            'Pão Enriquecido': 'pao-caseiro',
+            'Biscoito de Queijo': 'biscoito-caseiro',
+        }
+        for nome, esperado in itens.items():
+            with self.subTest(nome=nome):
+                self.assertEqual(identificar_produto(nome), esperado)
