@@ -1,0 +1,32 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<!-- O job merenda-do-vizinho: roda o Jenkinsfile do repositório montado em /repo, no ramo main (o ramo.groovy troca
+     pelo da variável RAMO). O gatilho já vem aqui para a primeira execução também ser sozinha (depois, o triggers do
+     Jenkinsfile mantém o mesmo). -->
+<flow-definition plugin="workflow-job">
+  <description>Merenda do Vizinho: testes, imagens e teste de fumaça a cada commit.</description>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <hudson.triggers.SCMTrigger>
+          <spec>H/2 * * * *</spec>
+        </hudson.triggers.SCMTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git">
+      <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+          <url>/repo</url>
+        </hudson.plugins.git.UserRemoteConfig>
+      </userRemoteConfigs>
+      <branches>
+        <hudson.plugins.git.BranchSpec>
+          <name>*/main</name>
+        </hudson.plugins.git.BranchSpec>
+      </branches>
+    </scm>
+    <scriptPath>Jenkinsfile</scriptPath>
+    <lightweight>false</lightweight>
+  </definition>
+</flow-definition>

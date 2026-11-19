@@ -9,7 +9,8 @@ services:
       context: .
       dockerfile: app/Dockerfile
     ports:
-      - "3000:3000"
+      # PORTA_APP=0 deixa o Docker escolher (o Jenkins usa assim, para não brigar pela 3000 com quem desenvolve)
+      - "${PORTA_APP:-3000}:3000"
     environment:
       PORT: "3000"
       # o app tira o "hoje" (a data de referência) da hora local, e a imagem roda em UTC: sem o TZ, o dia mudava às 21h
