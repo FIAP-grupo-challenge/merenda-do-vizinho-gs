@@ -61,6 +61,18 @@ test('SEMANAS_PADRAO vem do JSON e a variável de ambiente troca', () => {
   assert.throws(() => semanas({ SEMANAS_PADRAO: '0' }), /SEMANAS_PADRAO deve ser/);
 });
 
+test('o npm test ignora a SEMANAS_PADRAO do terminal: test/isolar-ambiente.js a tira, e o script o carrega', () => {
+  const argumentos = ['--require', './test/isolar-ambiente.js', '-p', 'String(process.env.SEMANAS_PADRAO)'];
+  const depoisDoPreload = execFileSync(process.execPath, argumentos, {
+    cwd: path.join(__dirname, '..'),
+    env: { SEMANAS_PADRAO: '36' },
+    encoding: 'utf8',
+    stdio: 'pipe',
+  }).trim();
+  assert.equal(depoisDoPreload, 'undefined');
+  assert.match(require('../package.json').scripts.test, /--require \.\/test\/isolar-ambiente\.js/);
+});
+
 test('prazo mínimo de 20 dias', () => {
   assert.equal(prazoMinimoOk({ data_publicacao: '2026-03-01', prazo_envio: '2026-03-15' }), false);
   assert.equal(prazoMinimoOk({ data_publicacao: '2026-03-01', prazo_envio: '2026-03-20' }), false); // 19 dias
