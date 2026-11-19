@@ -1,0 +1,34 @@
+$ PIPELINE_OFFLINE=1 .venv/bin/python -m dados.pipeline tudo
+info: etapa baixar-fontes
+aviso: PIPELINE_OFFLINE=1: usando a cópia versionada das fontes públicas
+info: etapa ingerir-app
+info: etapa gerar-simulado
+info: etapa tratar
+info: etapa refinar
+Resumo do data lake (linhas por camada):
+raw: 142.817 linhas em 9 arquivos
+  app/exportacao-20261119T094435Z.json: 25
+  publicos/fnde-af/DadosAF2018.xlsx: 4.948
+  publicos/fnde-af/ExtracaoAF_201910322_paraenvio.xlsx: 5.548
+  publicos/fnde-af/Planilha2020_04_3_24.xlsx: 5.513
+  publicos/fnde-af/Planilha2021_04_3_24.xlsx: 5.548
+  publicos/fnde-af/Planilha2022_04_3_24.xlsx: 5.414
+  publicos/ibge/municipios_ibge_nivelado.json: 5.571
+  publicos/repasses/PNAE_Repasses_Alunos_Escolas_Atendidas.txt.gz: 100.682
+  simulado/simulado.json: 9.568
+trusted: 141.864 linhas em 6 arquivos
+  agricultores.csv: 31
+  entregas.csv: 784
+  leituras.csv: 8.775
+  municipios.csv: 5.571
+  pnae_af.csv: 26.942
+  repasses.csv: 99.761
+refined: 42.211 linhas em 6 arquivos
+  dim_municipio.csv: 5.571
+  dim_produto.csv: 45
+  fato_camara_fria.csv: 8.761
+  fato_entregas.csv: 784
+  fato_pnae_af.csv: 26.942
+  fato_repasse_uf.csv: 108
+refined/merenda_do_vizinho.xlsx: abas fato_pnae_af, fato_repasse_uf, fato_entregas, fato_camara_fria, dim_produto, dim_municipio
+(código de saída: 0)

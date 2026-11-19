@@ -3,7 +3,7 @@
 Simulação da câmara fria de uma cooperativa. Um Arduino Uno, montado no TinkerCad, mede temperatura, peso e a porta. Um simulador em Python gera leituras no mesmo formato e as envia à API (`POST /api/leituras`).
 
 - **Link do projeto no TinkerCad:** _(preencher)_
-- **Print do circuito:** _(preencher)_
+- **Print do circuito:** [entrega/prints/tinkercad-circuito.png](../entrega/prints/tinkercad-circuito.png) (também no PDF de evidências, seção IoT)
 - **Ligações (pino, componente, fio):** [camara-fria/ligacoes.md](camara-fria/ligacoes.md)
 - **Sketch:** [camara-fria/camara-fria.ino](camara-fria/camara-fria.ino)
 

@@ -4,6 +4,7 @@ MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos
 
 - **Curso:** Global Solution 2026/2, CitizenTech (FIAP)
 - **Integrantes:** _(preencher)_
+- **Entrega:** o PDF de evidências (`entrega/evidencias.pdf`) e o `.txt` do grupo (`entrega/grupo.txt`) estão na pasta [entrega/](entrega/).
 
 ## O que é, para quem e qual problema resolve
 
@@ -558,6 +559,7 @@ _(preencher: o link do vídeo de até 3 minutos, publicado no Drive ou no YouTub
 - [docs/canvas.md](docs/canvas.md): o Business Model Canvas do projeto.
 - [docs/roteiro-do-pitch.md](docs/roteiro-do-pitch.md): o roteiro do vídeo de pitch.
 - [docs/fontes.md](docs/fontes.md): as chamadas públicas usadas, os dados abertos com a licença, a legislação, as bibliotecas e as referências.
+- [entrega/](entrega/): o PDF de evidências das quatro áreas, o `grupo.txt`, os prints e os scripts que geram o PDF (`gerar-pdf.sh`) e o `.zip` (`empacotar.sh`).
 
 ### Fontes e créditos
 

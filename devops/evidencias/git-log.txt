@@ -1,44 +1,78 @@
-a2db131 chore(devops): smoke completo, com projeto próprio (merenda-smoke) e leituras sempre enviadas
-a939650 fix(devops): a imagem do app leva a pasta semente
-5884aed chore(devops): TZ de São Paulo no app e SEMANAS_PADRAO também na IA
-da64cce chore(devops): .dockerignore barra .env, .git, .venv e os arquivos do banco em qualquer pasta
-74b8864 test(ia): os testes não dependem da variável SEMANAS_PADRAO do ambiente
-d5312d2 fix(ia): inteiro gigante na chamada dá 400, não 500
-cd3c47f fix(app): campos numéricos em texto lidos por lerNumero, formatadores únicos e item certo na entrega
-4477112 fix(app): a entrega guarda a posição do item da proposta
-1dba60b fix(app): teste da rota do agricultor compara a contagem de interesses em vez de esperar zero
-85e122b merge: trilha-camara (T9, T11) na integração
-d181ae4 fix(app): testes da rota da câmara fria, alerta de porta após reinício e fim da consulta sem acesso
-fbc2e60 merge: trilha-telas8 na integração
-f3b1ff6 merge: trilha-avaliacao na integração
-bb023ec merge: desenvolvimento na integração
-e09fece fix(app): aviso do chat, dado barrado em português, sugestão sem apagar edição e números no formato brasileiro
-861a595 feat(app): câmara fria, alertas e entregas
-618bc0c fix(ia): testes das métricas, acerto sem depender do nome e README da avaliação
-ea00d78 fix(ia): chat barra e-mail, telefone e dados bancários; validação de formato e semanas pelo ambiente
-a33bbb1 feat(devops): Docker Compose e teste de fumaça
-a1cc76b feat(app): prefeitura, cooperativa e projeto de venda
-1756bdf feat(app): telas e rotas do agricultor
-f42a759 merge: trilha do app (T6b, T7, T12) na integração
-e2163e4 feat(ia): avaliação em chamadas reais
-4d56231 fix(app): exportação com campos fechados da chamada e das propostas
-bdfd3f6 feat(ia): assistente do agricultor com IA e roteiro
-b67be59 merge: regras do PNAE (T7) na trilha do app
-ad9cdc1 feat(app): exportação pseudonimizada para o data lake
-b8a4842 test(app): arredondamento em centavos travado e guardas de entrada nas regras
-c816d1c fix(ia): data de abertura no prompt e falhas da IA sempre caindo para regras
-d776d26 feat(app): regras do PNAE, casamento, agrupamento e projeto de venda
-0a2dce1 feat(app): telas em Svelte com Vite e a tela de entrar
-3ddcb3e feat(ia): leitura da chamada com Claude e queda para regras
-a69d3f6 fix(app): erros registrados, limite de corpo antes do login e mensagens em português
-9899cd7 feat(app): servidor http, banco, autenticação e validação
-3d73287 fix(ia): lista fixa na simulação, erro de PDF restrito e acentos NFC
-bbc0133 feat(ia): extração por regras e servidor da IA
-80d4404 fix(dados): renda por agricultor com KEEPFILTERS, células vazias de verdade e ajustes no guia
-10b29e5 docs(dados): medidas DAX e guia do Power BI web
-e349a9f fix(dados): download à prova de falha e secretarias estaduais sem município
-deacbb5 feat(dados): pipeline do data lake com dados públicos
-f0f9529 fix(iot): ligações sem ambiguidade, testes das taxas e momento em UTC
-52aefab feat(iot): câmara fria no Arduino e simulador
-4189e5b chore(repo): esqueleto, catálogo de produtos e normalização
-93411d9 chore(repo): inicia o repositório com .gitignore e .env.example
+# git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
+* c35e858 docs(repo): comentários dizem que a chamada de demonstração e os gabaritos foram conferidos por agente de IA
+* 6faf31b docs(repo): plano de testes com 250 testes, saída dos testes refeita e privacidade precisa em segurança
+* 4ce8b3c docs(repo): roteiro do pitch igual ao aprovado em planejamento/pitch
+* 7cb4560 docs(repo): README para quem recebe o .zip, smoke com porta livre e declaração de IA sem atribuir a pessoas
+*   42ad1b9 merge: trilha-jenkins na integração
+|\  
+| * 5a64e62 fix(devops): README do Jenkins com DOCKER_GID, evidências sempre arquivadas e textos de segurança
+| * a7597da feat(devops): Jenkins, plano de testes e segurança
+* |   407c677 merge: trilha-readme na integração
+|\ \  
+| * | 30b1728 docs(repo): README e documentos do projeto
+| |/  
+* | 065e15e chore: o .gitignore barra .env.*, *.db-wal e *.db-shm
+* | 8276f89 test(app): o npm test ignora a SEMANAS_PADRAO exportada no terminal
+* | dbca019 fix(app): o termo de uso do agricultor não repete "aparecem só em parte"
+* | a243682 fix(app): as semanas de fornecimento só aceitam número inteiro de 1 a 53
+* | 2c0a863 fix(dados): a unidade da entrega do app vem do item da proposta, e a exportação leva o item
+|/  
+* a2db131 chore(devops): smoke completo, com projeto próprio (merenda-smoke) e leituras sempre enviadas
+* a939650 fix(devops): a imagem do app leva a pasta semente
+* 5884aed chore(devops): TZ de São Paulo no app e SEMANAS_PADRAO também na IA
+* da64cce chore(devops): .dockerignore barra .env, .git, .venv e os arquivos do banco em qualquer pasta
+* 74b8864 test(ia): os testes não dependem da variável SEMANAS_PADRAO do ambiente
+* d5312d2 fix(ia): inteiro gigante na chamada dá 400, não 500
+* cd3c47f fix(app): campos numéricos em texto lidos por lerNumero, formatadores únicos e item certo na entrega
+* 4477112 fix(app): a entrega guarda a posição do item da proposta
+* 1dba60b fix(app): teste da rota do agricultor compara a contagem de interesses em vez de esperar zero
+*   85e122b merge: trilha-camara (T9, T11) na integração
+|\  
+| * d181ae4 fix(app): testes da rota da câmara fria, alerta de porta após reinício e fim da consulta sem acesso
+| * 861a595 feat(app): câmara fria, alertas e entregas
+| * a1cc76b feat(app): prefeitura, cooperativa e projeto de venda
+* |   fbc2e60 merge: trilha-telas8 na integração
+|\ \  
+| * | e09fece fix(app): aviso do chat, dado barrado em português, sugestão sem apagar edição e números no formato brasileiro
+| * | 1756bdf feat(app): telas e rotas do agricultor
+| |/  
+* |   f3b1ff6 merge: trilha-avaliacao na integração
+|\ \  
+| * | 618bc0c fix(ia): testes das métricas, acerto sem depender do nome e README da avaliação
+| * | e2163e4 feat(ia): avaliação em chamadas reais
+* | |   bb023ec merge: desenvolvimento na integração
+|\ \ \  
+| * | | ea00d78 fix(ia): chat barra e-mail, telefone e dados bancários; validação de formato e semanas pelo ambiente
+* | | | a33bbb1 feat(devops): Docker Compose e teste de fumaça
+* | | |   f42a759 merge: trilha do app (T6b, T7, T12) na integração
+|\ \ \ \  
+| |/ / /  
+|/| | |   
+| * | | 4d56231 fix(app): exportação com campos fechados da chamada e das propostas
+| | |/  
+| |/|   
+| * |   b67be59 merge: regras do PNAE (T7) na trilha do app
+| |\ \  
+| | * | b8a4842 test(app): arredondamento em centavos travado e guardas de entrada nas regras
+| | * | d776d26 feat(app): regras do PNAE, casamento, agrupamento e projeto de venda
+| * | | ad9cdc1 feat(app): exportação pseudonimizada para o data lake
+| * | | 0a2dce1 feat(app): telas em Svelte com Vite e a tela de entrar
+| |/ /  
+* | / bdfd3f6 feat(ia): assistente do agricultor com IA e roteiro
+| |/  
+|/|   
+* | c816d1c fix(ia): data de abertura no prompt e falhas da IA sempre caindo para regras
+* | 3ddcb3e feat(ia): leitura da chamada com Claude e queda para regras
+|/  
+* a69d3f6 fix(app): erros registrados, limite de corpo antes do login e mensagens em português
+* 9899cd7 feat(app): servidor http, banco, autenticação e validação
+* 3d73287 fix(ia): lista fixa na simulação, erro de PDF restrito e acentos NFC
+* bbc0133 feat(ia): extração por regras e servidor da IA
+* 80d4404 fix(dados): renda por agricultor com KEEPFILTERS, células vazias de verdade e ajustes no guia
+* 10b29e5 docs(dados): medidas DAX e guia do Power BI web
+* e349a9f fix(dados): download à prova de falha e secretarias estaduais sem município
+* deacbb5 feat(dados): pipeline do data lake com dados públicos
+* f0f9529 fix(iot): ligações sem ambiguidade, testes das taxas e momento em UTC
+* 52aefab feat(iot): câmara fria no Arduino e simulador
+* 4189e5b chore(repo): esqueleto, catálogo de produtos e normalização
+* 93411d9 chore(repo): inicia o repositório com .gitignore e .env.example

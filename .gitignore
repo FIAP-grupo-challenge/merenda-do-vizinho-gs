@@ -24,3 +24,6 @@ dados/datalake/refined/
 
 # ebooks do curso tem marca d agua com nome e RM: nunca versionar
 ebooks/
+
+# o pacote da entrega, gerado pelo entrega/empacotar.sh
+entrega/*.zip

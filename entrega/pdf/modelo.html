@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="$lang$">
+<head>
+<meta charset="utf-8">
+<title>$pagetitle$</title>
+<link rel="stylesheet" href="pdf/estilo.css">
+</head>
+<body>
+<section class="capa">
+  <p class="capa-rotulo">$evento$</p>
+  <p class="capa-titulo">$title$</p>
+  <p class="capa-subtitulo">$subtitle$</p>
+  <div class="capa-grupo$if(grupo-pendente)$ pendente$endif$">
+    <p class="capa-grupo-titulo">Grupo (cópia do <code>entrega/grupo.txt</code>)</p>
+    $grupo$
+    $if(grupo-pendente)$<p class="capa-aviso">A preencher pelo grupo: complete o <code>entrega/grupo.txt</code> e rode <code>bash entrega/gerar-pdf.sh</code>.</p>$endif$
+  </div>
+  <p class="capa-data">$date$</p>
+</section>
+<nav class="sumario" aria-label="Sumário">
+<p class="sumario-titulo">Sumário</p>
+$table-of-contents$
+</nav>
+<main>
+$body$
+</main>
+</body>
+</html>

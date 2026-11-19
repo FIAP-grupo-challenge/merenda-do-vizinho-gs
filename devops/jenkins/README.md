@@ -32,6 +32,9 @@ O `export` vale só para o terminal em que você o rodou, e **todo** comando que
 `DOCKER_GID`: o Compose confere o arquivo inteiro a cada comando, e sem a variável até o `ps`, o `logs`, o `exec` e o
 `down` falham com "required variable DOCKER_GID is missing a value". Em outro terminal, rode o `export` de novo antes.
 
+A senha (`senha-admin`) só aparece depois que o Jenkins termina de subir: se o último comando disser que o arquivo não
+existe (`No such file or directory`), espere uns segundos e repita.
+
 Abra http://localhost:8080 e entre com o usuário `admin` e a senha que o último comando mostrou. O job
 `merenda-do-vizinho` já vem criado e roda pela primeira vez em até 2 minutos. Depois, cada commit novo dispara uma
 execução, e a tela da execução mostra as etapas verdes ou vermelhas.

@@ -1,0 +1,198 @@
+{
+  "origem": "ia",
+  "modelo": "claude-haiku-5-5",
+  "duracao_ms": 18969,
+  "avisos": [],
+  "chamada": {
+    "numero": "003/2026",
+    "orgao": "Prefeitura Municipal de Catalão",
+    "municipio": "Catalão",
+    "uf": "GO",
+    "data_publicacao": "2026-07-09",
+    "prazo_envio": "2026-07-30",
+    "periodo_fornecimento": "durante o exercício de 2026",
+    "semanas_fornecimento": null,
+    "local_entrega": "Setor Municipal e Alimentação Escolar - SEMAE (Rua Ten- Cel. João C. Neto, nº 1.269, Elias Safatle, Catalão- Goiás), ou outro local previamente indicado pela Secretaria",
+    "documentos_exigidos": [
+      "Cópia do CPF",
+      "Cópia do extrato do CAF Pessoa Física, emitido nos últimos sessenta dias",
+      "Projeto de venda com assinatura do agricultor participante",
+      "Documentação em atendimento aos requisitos higiênico-sanitários, conforme o alimento a ser comercializado, nos termos dos arts. 40 a 42 da Resolução CD/FNDE nº 4, de 26 de fevereiro de 2026",
+      "Declaração de que os alimentos a serem entregues são oriundos de produção própria, relacionada no projeto de venda",
+      "Identificação da condição de gênero da titular da CAF/DAP, para fins de apuração do disposto no item 5.4"
+    ],
+    "criterios_prioridade": [
+      "Grupo de projetos de fornecedores locais",
+      "Grupo de projetos de fornecedores da região geográfica imediata",
+      "Grupo de projetos de fornecedores da região geográfica intermediária",
+      "Grupo de projetos de fornecedores do estado",
+      "Grupo de projetos de fornecedores do País",
+      "Desempate: projetos que contemplem agricultores familiares assentados da reforma agrária, povos indígenas, comunidades quilombolas, e grupos formais e informais compostos por mulheres ou jovens agricultores familiares",
+      "Desempate: projetos que contemplem o fornecimento de alimentos orgânicos ou agroecológicos, comprovados por certificação válida ou outros mecanismos de garantia",
+      "Desempate: projetos organizados como grupos formais, grupos informais, fornecedores individuais e cooperativas centrais, nessa ordem"
+    ],
+    "contato": "Departamento de Licitação e Contratos - (64) 3441-5008 - comissão.licitacao@catalao.go.gov.br",
+    "itens": [
+      {
+        "produto": "Abóbora cabotiá",
+        "produto_id": "abobora",
+        "unidade": "unidade",
+        "quantidade": 390,
+        "preco_unitario": 7,
+        "valor_total": 2730,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "boa qualidade, firme, sem lesões; embalagem adequada ao transporte"
+      },
+      {
+        "produto": "Abóbora verde",
+        "produto_id": "abobora",
+        "unidade": "kg",
+        "quantidade": 1640,
+        "preco_unitario": 6.87,
+        "valor_total": 11266.8,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "boa qualidade, firme, sem lesões; embalagem adequada ao transporte"
+      },
+      {
+        "produto": "Alface",
+        "produto_id": "alface",
+        "unidade": "pç",
+        "quantidade": 2280,
+        "preco_unitario": 7.03,
+        "valor_total": 16028.4,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "primeira qualidade, pé íntegro, folhas sem queimaduras"
+      },
+      {
+        "produto": "Alho",
+        "produto_id": "alho",
+        "unidade": "kg",
+        "quantidade": 1276,
+        "preco_unitario": 38.16,
+        "valor_total": 48692.16,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "bulbo inteiriço, boa qualidade, sem lesões; embalagem adequada"
+      },
+      {
+        "produto": "Batata inglesa",
+        "produto_id": "batata-inglesa",
+        "unidade": "kg",
+        "quantidade": 5218,
+        "preco_unitario": 6.04,
+        "valor_total": 31516.72,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "boa qualidade, firme, sem lesões; embalagem adequada ao transporte"
+      },
+      {
+        "produto": "Brócolis",
+        "produto_id": "brocolis",
+        "unidade": "pç",
+        "quantidade": 300,
+        "preco_unitario": 12.74,
+        "valor_total": 3822,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "primeira qualidade, firme, intacto; conforme RDC 272/05, verificado na entrega"
+      },
+      {
+        "produto": "Cebola",
+        "produto_id": "cebola",
+        "unidade": "kg",
+        "quantidade": 7540,
+        "preco_unitario": 7.05,
+        "valor_total": 53157,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "tipo branca, tamanho médio, sem réstia; embalagem plástica de 5 a 20 kg"
+      },
+      {
+        "produto": "Cheiro verde",
+        "produto_id": "cheiro-verde",
+        "unidade": "fx",
+        "quantidade": 2210,
+        "preco_unitario": 8.1,
+        "valor_total": 17901,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "feixe íntegro, folhas verdes sem queimaduras, primeira qualidade"
+      },
+      {
+        "produto": "Couve",
+        "produto_id": "couve",
+        "unidade": "pç",
+        "quantidade": 1269,
+        "preco_unitario": 7.37,
+        "valor_total": 9352.53,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "primeira qualidade, pé íntegro, folhas sem queimaduras"
+      },
+      {
+        "produto": "Couve-flor",
+        "produto_id": "couve-flor",
+        "unidade": "un",
+        "quantidade": 300,
+        "preco_unitario": 15.44,
+        "valor_total": 4632,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "primeira qualidade, firme, intacto; conforme RDC 272/05, verificado na entrega"
+      },
+      {
+        "produto": "Mandioca",
+        "produto_id": "mandioca",
+        "unidade": "kg",
+        "quantidade": 2800,
+        "preco_unitario": 11.71,
+        "valor_total": 32788,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "descascada e congelada, em embalagem própria, sem manchas"
+      },
+      {
+        "produto": "Milho",
+        "produto_id": "milho-verde",
+        "unidade": "atilho",
+        "quantidade": 1056,
+        "preco_unitario": 7.69,
+        "valor_total": 8120.64,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "fresco, primeira qualidade, firme; conforme RDC 272/05, verificado na entrega"
+      },
+      {
+        "produto": "Pepino branco",
+        "produto_id": "pepino",
+        "unidade": "kg",
+        "quantidade": 1502,
+        "preco_unitario": 9.25,
+        "valor_total": 13893.5,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "boa qualidade, firme, sem lesões; embalagem adequada ao transporte"
+      },
+      {
+        "produto": "Tomate",
+        "produto_id": "tomate",
+        "unidade": "kg",
+        "quantidade": 1768,
+        "preco_unitario": 12.04,
+        "valor_total": 21286.72,
+        "entrega": "até 05 dias após a solicitação, conforme cronograma semanal",
+        "observacoes": "odor agradável, firme, sem perfurações, maturação adequada"
+      },
+      {
+        "produto": "Pão enriquecido",
+        "produto_id": "pao-caseiro",
+        "unidade": "kg",
+        "quantidade": 6350,
+        "preco_unitario": 48.84,
+        "valor_total": 310134,
+        "entrega": null,
+        "observacoes": "unidade de 70 g; sem farelos nem corantes; produção no máximo 1 dia antes da entrega"
+      },
+      {
+        "produto": "Biscoito de queijo",
+        "produto_id": "biscoito-caseiro",
+        "unidade": "kg",
+        "quantidade": 5800,
+        "preco_unitario": 50.09,
+        "valor_total": 290522,
+        "entrega": null,
+        "observacoes": "embalagem de 1 kg; sem conservantes, corantes ou aditivos"
+      }
+    ]
+  }
+}
