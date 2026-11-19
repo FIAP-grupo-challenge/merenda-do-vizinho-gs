@@ -4,9 +4,11 @@ import os
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from ia.assistente.servico import responder_assistente
 from ia.cliente_claude import criar_cliente_claude
 from ia.config import MODELO_PADRAO
 from ia.extrair.servico import PdfIlegivel, extrair_chamada
+from ia.privacidade import contem_dados_pessoais, tem_cpf_no_texto
 
 LIMITE_CORPO = 10 * 1024 * 1024  # 10 MB
 
@@ -27,9 +29,30 @@ def extrair(servidor, corpo):
         return 400, {'erro': 'não consegui ler o PDF'}
 
 
+def assistente(servidor, corpo):
+    chamada, perfil, mensagens = corpo.get('chamada'), corpo.get('perfil'), corpo.get('mensagens')
+    if not (isinstance(chamada, dict) and isinstance(chamada.get('itens'), list)
+            and isinstance(perfil, dict) and isinstance(perfil.get('produtos'), list)
+            and isinstance(mensagens, list) and all(_mensagem_ok(mensagem) for mensagem in mensagens)
+            and (not mensagens or mensagens[-1]['papel'] == 'agricultor')):  # a IA responde ao agricultor
+        return 400, {'erro': 'envie chamada, perfil e mensagens; a última mensagem é do agricultor'}
+    campos = set(contem_dados_pessoais(corpo))  # com dado pessoal, nada chega à IA
+    if any(tem_cpf_no_texto(mensagem['texto']) for mensagem in mensagens):
+        campos.add('cpf')
+    if campos:
+        return 400, {'erro': 'dados pessoais não são aceitos', 'campos': sorted(campos)}
+    return 200, responder_assistente(chamada, perfil, mensagens, servidor.cliente, servidor.modelo)
+
+
+def _mensagem_ok(mensagem):
+    return (isinstance(mensagem, dict) and mensagem.get('papel') in ('agricultor', 'assistente')
+            and isinstance(mensagem.get('texto'), str) and mensagem['texto'].strip() != '')
+
+
 ROTAS = {
     ('GET', '/saude'): saude,
     ('POST', '/extrair-chamada'): extrair,
+    ('POST', '/assistente'): assistente,
 }
 
 
