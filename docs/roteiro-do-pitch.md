@@ -147,7 +147,7 @@ Estes pontos existem por causa do vídeo. Confira cada um quando o app estiver d
 - linha da meta de 45% no ranking do Power BI. Depende de como o grupo monta o painel (`dados/powerbi/guia-do-painel.md`); o roteiro usa a faixa de cumprimento;
 - a caixa de fonte na página 1 e o selo "dados simulados" na página 2 do Power BI: são caixas de texto que você põe no relatório.
 
-**O tempo de leitura da IA aparece na tela.** Logo depois de ler o PDF, a tela da prefeitura mostra a origem, o modelo e o tempo, como em "Lida pela IA (claude-haiku-5-5): lido em 19 s" (`app/web/src/paginas/Prefeitura.svelte`; o print 2 do PDF de evidências mostra isso). A frase só aparece na leitura feita naquela hora, não numa chamada que já estava publicada. Ao cortar a espera na edição, deixe essa linha visível.
+**O tempo de leitura da IA aparece na tela.** Logo depois de ler o PDF, a tela da prefeitura mostra a origem, o modelo e o tempo, como em "Lida pela IA (claude-haiku-5-5): lido em 17 s" (`app/web/src/paginas/Prefeitura.svelte`; o print 2 do PDF de evidências mostra isso). A frase só aparece na leitura feita naquela hora, não numa chamada que já estava publicada. Ao cortar a espera na edição, deixe essa linha visível.
 
 ## 3. Números usados
 
