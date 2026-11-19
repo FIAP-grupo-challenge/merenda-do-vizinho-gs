@@ -5,7 +5,7 @@ const { ErroHttp } = require('./http-util');
 const TEMPO_LIMITE_MS = 120_000;
 
 // Cada função devolve o JSON da IA. Se der errado, lança ErroHttp: o 4xx da IA (PDF ilegível,
-// corpo inválido) volta igual, com a mensagem dela; IA fora do ar, lenta ou com erro vira 502.
+// corpo inválido) volta igual, com a mensagem dela (e os `campos`, quando ela diz); IA fora do ar, lenta ou com erro vira 502.
 function criarClienteIa(baseUrl) {
   async function chamar(caminho, corpo) {
     let resposta;
@@ -23,7 +23,10 @@ function criarClienteIa(baseUrl) {
     }
     if (resposta.ok) return dados;
     const status = resposta.status >= 400 && resposta.status < 500 ? resposta.status : 502;
-    throw new ErroHttp(status, (dados && dados.erro) || 'O serviço de IA deu erro.');
+    const erro = new ErroHttp(status, (dados && dados.erro) || 'O serviço de IA deu erro.');
+    // O 400 do chat diz quais dados pessoais barrou em `campos` ('cpf', 'email', 'telefone', 'banco'): quem chamou traduz para a tela.
+    if (Array.isArray(dados?.campos)) erro.campos = dados.campos;
+    throw erro;
   }
 
   return {

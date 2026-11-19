@@ -32,7 +32,8 @@ function oportunidades({
       capacidade.set(item.produto_id, arredondar(capacidade.get(item.produto_id) - quantidade_max));
       const { produto_id, produto, unidade, preco_unitario } = item;
       const ganho_estimado = arredondar(quantidade_max * preco_unitario);
-      itens.push({ produto_id, produto, unidade, quantidade_max, preco_unitario, ganho_estimado });
+      // quantidade_pedida: o que o edital pede (o cartão do agricultor mostra)
+      itens.push({ produto_id, produto, unidade, quantidade_pedida: item.quantidade, quantidade_max, preco_unitario, ganho_estimado });
     }
     if (itens.length === 0) continue;
 

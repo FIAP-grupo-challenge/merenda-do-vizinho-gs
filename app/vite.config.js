@@ -20,6 +20,8 @@ module.exports = defineConfig({
       // Página nova: web/<pagina>.html entra aqui, senão o build não a gera.
       input: {
         index: path.join(WEB, 'index.html'),
+        agricultor: path.join(WEB, 'agricultor.html'),
+        chamada: path.join(WEB, 'chamada.html'),
       },
     },
   },
