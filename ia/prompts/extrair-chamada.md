@@ -2,7 +2,7 @@ Você recebe o edital de uma chamada pública do PNAE, a compra de alimentos da 
 
 Regras:
 1. Extraia só o que está escrito no edital. Não complete com o que você sabe de outros editais.
-2. Campo que o edital não traz fica null. Lista sem nada fica [].
+2. Campo que o edital não traz fica null. Lista sem nada fica []. Só orgao, produto e unidade não aceitam null: se faltar, texto vazio ("").
 3. Datas no formato AAAA-MM-DD.
 4. Números como número, lidos no formato brasileiro: "1.200" é 1200 e "1.200,50" é 1200.5.
 5. Preços em reais, como número, sem "R$".
@@ -15,7 +15,7 @@ Campos da chamada:
 - numero: número da chamada pública, como "003/2026".
 - orgao: quem publica a chamada, como "Prefeitura Municipal de Catalão".
 - municipio e uf: o município e a sigla do estado (duas letras maiúsculas) de quem publica.
-- data_publicacao: data de publicação do edital.
+- data_publicacao: a data em que o edital abre o recebimento dos projetos de venda (início do período de recebimento) e, se o edital não disser esse início, a data de publicação que o próprio edital declara; data de assinatura, de portaria ou de homologação NÃO vale; se nada disso estiver escrito, null.
 - prazo_envio: último dia para entregar o projeto de venda. Se o edital der um período, a data final.
 - periodo_fornecimento: período de fornecimento dos alimentos, como está escrito.
 - semanas_fornecimento: número de semanas de fornecimento, só se o edital disser.

@@ -1,4 +1,5 @@
 import base64
+import logging
 import time
 
 from pypdf.errors import PyPdfError
@@ -9,6 +10,8 @@ from ia.config import MODELO_PADRAO
 from ia.extrair.claude import extrair_com_claude
 from ia.extrair.regras import extrair_por_regras
 from ia.extrair.texto_pdf import texto_do_pdf
+
+log = logging.getLogger(__name__)
 
 
 class PdfIlegivel(Exception):
@@ -26,6 +29,7 @@ def extrair_chamada(entrada: dict, cliente=None, modelo: str = MODELO_PADRAO, ti
             chamada = extrair_com_claude(entrada['pdf_base64'], cliente, modelo, timeout_s)
         except ErroIA as erro:
             avisos.append(f'IA indisponível ({erro}); usei o modo de regras')
+            log.warning('IA indisponível (%s); causa: %r', erro, erro.__cause__)  # só a causa: nunca o corpo nem a chave
         else:
             for item in chamada['itens']:  # o id sai sempre do catálogo, nunca do modelo
                 item['produto_id'] = identificar_produto(item['produto'])
