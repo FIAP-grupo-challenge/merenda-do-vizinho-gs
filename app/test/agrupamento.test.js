@@ -50,6 +50,80 @@ test('a sobra vai primeiro para quem tem mais prioridade', () => {
   assert.deepEqual([terco.total, terco.falta], [100, 0]);
 });
 
+test('Catalão: a alface em pç sai em números inteiros entre os cooperados da semente, e em kg seguiria com centésimos', () => {
+  // Ana, Carla, Elisa e Fábio plantam alface; o Fábio só tem R$ 2.000 de limite (284,49 pés a R$ 7,03)
+  const alfaces = [
+    { agricultor_id: 'ana', capacidade: 1000, limite_restante_reais: 40000, prioridade: 6 },
+    { agricultor_id: 'carla', capacidade: 800, limite_restante_reais: 40000, prioridade: 7 },
+    { agricultor_id: 'elisa', capacidade: 600, limite_restante_reais: 40000, prioridade: 8 },
+    { agricultor_id: 'fabio', capacidade: 600, limite_restante_reais: 2000, prioridade: 11 },
+  ];
+  const pedido = { quantidade: 2280, preco_unitario: 7.03 };
+  const emKg = dividirItem({ ...pedido, unidade: 'kg' }, alfaces);
+  assert.deepEqual(emKg.alocacoes.map((x) => x.quantidade), [855.51, 570, 570, 284.49]);
+  const emPeca = dividirItem({ ...pedido, unidade: 'pç' }, alfaces);
+  // o Fábio leva 284 (R$ 1.996,52), e os 286 que sobram vão todos para a Ana, que tem a maior prioridade
+  assert.deepEqual(emPeca.alocacoes.map((x) => x.quantidade), [856, 570, 570, 284]);
+  assert.deepEqual([emPeca.total, emPeca.falta], [2280, 0]);
+
+  // montarPropostaConjunta aplica a regra item a item, pela unidade de cada um (escrita como o edital a escreve): a abóbora
+  // Cabotiá (unidade) é inteira, a verde (kg) mantém os centésimos, e o que sobra da capacidade do Davi (1000,5) passa de um
+  // item para o outro
+  const chamada = {
+    itens: [
+      { produto: 'Abóbora Cabotiá', produto_id: 'abobora', unidade: 'Unidade', quantidade: 390, preco_unitario: 7 },
+      { produto: 'Abóbora verde', produto_id: 'abobora', unidade: 'kg', quantidade: 1640, preco_unitario: 6.87 },
+      { produto: 'Alface', produto_id: 'alface', unidade: 'Pç', quantidade: 2280, preco_unitario: 7.03 },
+    ],
+  };
+  const cooperados = [
+    { agricultor_id: 'davi', nome: 'Davi', prioridade: 7, limite_restante_reais: 40000, capacidades: { abobora: 1000.5 } },
+    ...alfaces.map(({ agricultor_id, capacidade, ...resto }) => ({
+      agricultor_id,
+      nome: agricultor_id,
+      ...resto,
+      capacidades: { alface: capacidade },
+    })),
+  ];
+  const { itens } = montarPropostaConjunta(chamada, cooperados);
+  assert.deepEqual(itens[0].alocacoes, [{ agricultor_id: 'davi', quantidade: 390 }]);
+  assert.deepEqual(itens[1].alocacoes, [{ agricultor_id: 'davi', quantidade: 610.5 }]);
+  assert.deepEqual(itens[2].alocacoes.map((x) => x.quantidade), [856, 570, 570, 284]);
+});
+
+test('em unidade inteira a sobra também é repartida em inteiros, por prioridade, e o pedido fracionado deixa o resto como falta', () => {
+  const quem = (prioridade, capacidade = 1000, limite = SEM_LIMITE) => ({ capacidade, limite_restante_reais: limite, prioridade });
+  const dividir = (quantidade, candidatos, unidade = 'pç', preco_unitario = 2) =>
+    dividirItem({ quantidade, preco_unitario, unidade }, candidatos.map((c, i) => ({ agricultor_id: i, ...c })));
+  const quantidades = (resultado) => resultado.alocacoes.map((x) => x.quantidade);
+
+  // 100 pç em 3 partes: a que sobra vai para o primeiro da lista; em kg seriam centésimos
+  assert.deepEqual(quantidades(dividir(100, [quem(0), quem(0), quem(0)])), [34, 33, 33]);
+  assert.deepEqual(quantidades(dividir(100, [quem(0), quem(0), quem(0)], 'kg')), [33.34, 33.33, 33.33]);
+  // a sobra de 2 em 1001 pç se reparte entre os dois do nível de maior prioridade, e o terceiro fica com a parte igual
+  assert.deepEqual(quantidades(dividir(1001, [quem(0), quem(0), quem(5)])), [334, 334, 333]);
+  // quem chega ao teto na parte igual deixa a sobra para os outros, na ordem da prioridade: 901 = 300 + 300 + 100 + 201
+  assert.deepEqual(quantidades(dividir(901, [quem(5, 100), quem(0), quem(3)])), [100, 501, 300]);
+  // o teto também é inteiro: a capacidade de 10,9 vale 10, e R$ 100 a R$ 6 valem 16 pç (16,66 em kg)
+  assert.deepEqual(quantidades(dividir(50, [quem(0, 10.9)])), [10]);
+  assert.deepEqual(quantidades(dividir(50, [quem(0, 100, 100)], 'pç', 6)), [16]);
+  assert.deepEqual(quantidades(dividir(50, [quem(0, 100, 100)], 'kg', 6)), [16.66]);
+  // quem não chega a 1 pç de capacidade fica de fora, com zero
+  assert.deepEqual(dividir(10, [quem(0, 0.9), quem(1)]), {
+    alocacoes: [{ agricultor_id: 0, quantidade: 0 }, { agricultor_id: 1, quantidade: 10 }],
+    total: 10,
+    falta: 0,
+  });
+  // pedido de 12,5 pç: só dá para entregar 12, e o 0,5 continua faltando (total + falta = pedido)
+  const meio = dividir(12.5, [quem(0), quem(1)]);
+  assert.deepEqual(quantidades(meio), [6, 6]);
+  assert.deepEqual([meio.total, meio.falta], [12, 0.5]);
+  assert.equal(dividir(100.3, [quem(0)]).falta, 0.3); // 100,3 - 100 dá 0.2999999999999972 sem o arredondamento
+  // sem folga de verdade, a falta é inteira: 100 pç pedidas, 30 de capacidade
+  const curto = dividir(100, [quem(0, 30)]);
+  assert.deepEqual([curto.total, curto.falta], [30, 70]);
+});
+
 test('informa falta quando ninguém tem capacidade', () => {
   const r = dividirItem({ quantidade: 500, preco_unitario: 2 }, [
     { agricultor_id: 'a', capacidade: 100, limite_restante_reais: SEM_LIMITE, prioridade: 0 },
@@ -70,25 +144,33 @@ test('informa falta quando ninguém tem capacidade', () => {
 test('nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios)', () => {
   let semente = 1;
   const sorteio = (maximo) => (semente = (semente * 48271) % 2147483647) % maximo; // sempre a mesma sequência
-  for (let rodada = 0; rodada < 500; rodada++) {
-    const pedido = { quantidade: sorteio(200000) / 100, preco_unitario: (1 + sorteio(9999)) / 100 };
-    const candidatos = Array.from({ length: sorteio(6) }, (_, i) => ({
-      agricultor_id: i,
-      capacidade: sorteio(100000) / 100,
-      limite_restante_reais: sorteio(500000) / 100,
-      prioridade: sorteio(12),
-    }));
-    const { alocacoes, total, falta } = dividirItem(pedido, candidatos);
-    alocacoes.forEach(({ quantidade }, i) => {
-      const { capacidade, limite_restante_reais } = candidatos[i];
-      assert.equal(Math.round(quantidade * 100) / 100, quantidade, 'duas casas');
-      assert.ok(quantidade <= capacidade, 'capacidade');
-      assert.ok(quantidade * pedido.preco_unitario <= limite_restante_reais + 1e-9, 'limite em reais');
-      // só falta quando ninguém tem folga: cada um está a menos de 1 centésimo do próprio teto
-      if (falta > 0) assert.ok(Math.min(capacidade, limite_restante_reais / pedido.preco_unitario) - quantidade < 0.01, 'folga');
-    });
-    assert.ok(total <= pedido.quantidade, 'pedido');
-    assert.equal(Math.round((total + falta) * 100), Math.round(pedido.quantidade * 100), 'total + falta = pedido');
+  // 500 sorteios em kg (2 casas) e 500 em pç (unidade inteira: só números inteiros, e o passo da folga é 1 em vez de 0,01)
+  for (const [unidade, inteira] of [['kg', false], ['pç', true]]) {
+    const passo = inteira ? 1 : 0.01;
+    for (let rodada = 0; rodada < 500; rodada++) {
+      const pedido = { quantidade: inteira ? sorteio(2000) : sorteio(200000) / 100, preco_unitario: (1 + sorteio(9999)) / 100, unidade };
+      const candidatos = Array.from({ length: sorteio(6) }, (_, i) => ({
+        agricultor_id: i,
+        capacidade: sorteio(100000) / 100, // com centésimos também em pç: o teto é a parte inteira
+        limite_restante_reais: sorteio(500000) / 100,
+        prioridade: sorteio(12),
+      }));
+      const { alocacoes, total, falta } = dividirItem(pedido, candidatos);
+      const onde = `${unidade}, sorteio ${rodada}`;
+      alocacoes.forEach(({ quantidade }, i) => {
+        const { capacidade, limite_restante_reais } = candidatos[i];
+        assert.ok(inteira ? Number.isInteger(quantidade) : Math.round(quantidade * 100) / 100 === quantidade, `${onde}: casas`);
+        assert.ok(quantidade >= 0 && quantidade <= capacidade, `${onde}: capacidade`);
+        assert.ok(quantidade * pedido.preco_unitario <= limite_restante_reais + 1e-9, `${onde}: limite em reais`);
+        // só falta quando ninguém tem folga: cada um está a menos de um passo do próprio teto
+        if (falta > 0) {
+          const teto = Math.min(capacidade, limite_restante_reais / pedido.preco_unitario);
+          assert.ok(teto - quantidade < passo, `${onde}: folga`);
+        }
+      });
+      assert.ok(total <= pedido.quantidade, `${onde}: pedido`);
+      assert.equal(Math.round((total + falta) * 100), Math.round(pedido.quantidade * 100), `${onde}: total + falta = pedido`);
+    }
   }
 });
 

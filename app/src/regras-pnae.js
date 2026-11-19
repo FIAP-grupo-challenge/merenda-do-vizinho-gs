@@ -73,6 +73,26 @@ function capacidadeNoPeriodo(quantidadeSemana, semanas) {
   return arredondar(quantidadeSemana * (semanas ?? SEMANAS_PADRAO));
 }
 
+// Itens contados em unidade inteira: pé de alface, maço, dúzia, bandeja e caixa não se dividem, então a divisão da proposta
+// e a edição dela só trabalham com números inteiros. kg, g, l, litro, ml (e o que não está na lista) seguem com centésimos.
+// Compara sem maiúsculas, sem acento e sem o ponto final ("Un."), como a IA lê as unidades do edital.
+const UNIDADES_INTEIRAS = new Set(
+  [
+    'pç', 'pc', 'peça', 'unidade', 'un', 'unid', 'maço', 'molho', 'fx', 'feixe', 'atilho',
+    'dz', 'dúzia', 'duzia', 'bandeja', 'cx', 'caixa', 'pct', 'pacote',
+    'und', 'mlh', 'pact', 'pcte', // und, mlh e pact aparecem nas chamadas reais da avaliação; pcte é a outra forma de pacote
+  ].map(normalizarUnidade),
+);
+
+function normalizarUnidade(unidade) {
+  return String(unidade).normalize('NFD').replace(/\p{Mn}/gu, '').toLowerCase().trim().replace(/\.$/, '');
+}
+
+function unidadeInteira(unidade) {
+  const nome = normalizarUnidade(unidade);
+  return UNIDADES_INTEIRAS.has(nome) || UNIDADES_INTEIRAS.has(nome.replace(/s$/, '')); // plural: maços, unidades, pçs
+}
+
 // Dinheiro e quantidades têm 2 casas. O toPrecision(15) tira o ruído do ponto flutuante antes de arredondar:
 // em JavaScript, 1.005 * 100 dá 100.49999999999999.
 function centesimos(valor) {
@@ -95,6 +115,7 @@ module.exports = {
   versaoRegra,
   limiteRestanteReais,
   capacidadeNoPeriodo,
+  unidadeInteira,
   centesimos,
   arredondar,
 };

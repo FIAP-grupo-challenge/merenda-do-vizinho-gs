@@ -15,6 +15,7 @@ const {
   limiteRestanteReais,
   capacidadeNoPeriodo,
   arredondar,
+  unidadeInteira,
 } = require('../src/regras-pnae');
 
 test('minimoDoAno: 30% até 2025 e 45% a partir de 2026', () => {
@@ -110,4 +111,21 @@ test('versaoRegra pela data do edital', () => {
   assert.equal(versaoRegra({ data_publicacao: '2026-10-22' }), 'res4-original');
   assert.equal(versaoRegra({ data_publicacao: '2026-10-23' }), 'res17');
   assert.equal(versaoRegra({ data_publicacao: null }), 'res17');
+});
+
+test('unidadeInteira: pé, maço, dúzia e bandeja não se dividem; kg, g, l e ml seguem com centésimos', () => {
+  const inteiras = [
+    'pç', 'pc', 'peça', 'unidade', 'un', 'unid', 'maço', 'molho', 'fx', 'feixe', 'atilho',
+    'dz', 'dúzia', 'duzia', 'bandeja', 'cx', 'caixa', 'pct', 'pacote',
+    'und', 'mlh', 'pact', 'pcte', 'UND', 'Und.', 'maços', 'Unidades', 'pçs', 'Dúzias',
+  ];
+  for (const unidade of inteiras) assert.equal(unidadeInteira(unidade), true, unidade);
+  // sem maiúsculas e sem acento, como a IA lê as unidades do edital; o ponto e o espaço da tabela não contam
+  for (const unidade of ['Pç', 'PÇ', 'PC', 'Peca', 'UNIDADE', 'Un.', ' un ', 'Maco', 'MAÇO', 'Dúzia', 'DUZIA', 'pc\u0327']) {
+    assert.equal(unidadeInteira(unidade), true, unidade);
+  }
+  // o que não está na lista (e o que falta) continua com centésimos
+  for (const unidade of ['kg', 'Kg', 'g', 'l', 'L', 'litro', 'Litro', 'ml', 'mL', 'tonelada', '', null, undefined]) {
+    assert.equal(unidadeInteira(unidade), false, String(unidade));
+  }
 });

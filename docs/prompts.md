@@ -89,10 +89,10 @@ O agrupamento divide cada item do edital entre os cooperados que produzem aquele
 1. **Teto de cada cooperado.** Para cada item, o teto é o menor valor entre a capacidade do cooperado naquele produto e o limite restante em reais dividido pelo preço unitário.
 2. **Partes iguais.** O pedido é dividido em partes iguais entre os cooperados com teto maior que zero. Cada um recebe no máximo o seu teto.
 3. **Sobra por prioridade.** O que sobra vai primeiro para quem tem a menor prioridade numérica. A prioridade é `(5 − pontos do RITS) × 2`, mais 1 se a produção não é orgânica. Os pontos do RITS são mulher titular, jovem de 15 a 29 anos, assentado, indígena e quilombola, um ponto cada (até 5). Na prática: mais pontos vêm antes, e a produção orgânica decide o empate.
-4. **Centavos.** A conta é feita em centésimos, com o pedido e o teto arredondados para baixo. O resultado nunca passa do pedido nem do teto.
+4. **Centavos e unidades inteiras.** A conta é feita em centésimos, com o pedido e o teto arredondados para baixo. O resultado nunca passa do pedido nem do teto. Itens contados em peça, unidade, maço, molho, feixe, atilho, dúzia, bandeja, caixa ou pacote (`unidadeInteira`, em `app/src/regras-pnae.js`, que compara a unidade sem maiúsculas e sem acento) não se dividem: a conta é feita em unidades inteiras, com o pedido e o teto também arredondados para baixo, e a sobra sai em unidades inteiras, repartida na mesma ordem: ninguém recebe 855,51 pés de alface. kg, g, l e ml seguem com centésimos.
 5. **Depois de cada item.** O que o cooperado recebeu sai do limite em reais dele e da capacidade do produto, para os itens seguintes.
 6. **O que falta.** O que nenhum cooperado conseguiu cobrir aparece como falta, item a item.
-7. **Edição.** A cooperativa pode mudar a divisão. Ao salvar, o servidor confere de novo as quantidades, o limite em reais e a capacidade de cada cooperado (`app/src/rotas/cooperativa.js`, rota `PUT /api/cooperativa/propostas/:id`).
+7. **Edição.** A cooperativa pode mudar a divisão. Ao salvar, o servidor confere de novo as quantidades, o limite em reais e a capacidade de cada cooperado (`app/src/rotas/cooperativa.js`, rota `PUT /api/cooperativa/propostas/:id`). Num item de unidade inteira, uma quantidade fracionada dá erro 400 ("Alface: a quantidade de Ana Souza precisa ser um número inteiro (o item é contado em pç).").
 
 **Limites conhecidos das regras:**
 
