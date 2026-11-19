@@ -1,6 +1,6 @@
 # Arquitetura
 
-O diagrama mostra os módulos, como eles conversam e por onde passam os dados pessoais. É o mesmo diagrama da seção de arquitetura do white paper, com duas diferenças: a IA aparece como **Claude Haiku 5.5**, que é o modelo do código (a figura do white paper ainda diz Opus 5.5 e precisa ser corrigida), e o caminho de produção (Kafka, NiFi e Spark) está desenhado e marcado como **não implementado**.
+O diagrama mostra os módulos, como eles conversam e por onde passam os dados pessoais. É o diagrama da seção de arquitetura do white paper, com duas diferenças: o caminho de produção (Kafka, NiFi e Spark) está desenhado e marcado como **não implementado**, e os módulos mostram a porta, com os rótulos mais curtos e quebrados em linhas para caber na imagem.
 
 ```mermaid
 flowchart TB
@@ -89,8 +89,9 @@ Kafka, NiFi e Spark estão no diagrama para mostrar onde a ingestão entraria em
 
 ## Onde os dados pessoais param
 
-- A IA nunca recebe nome, CPF, CAF, e-mail, telefone, dados bancários nem os critérios do RITS.
+- Os dados cadastrados do agricultor (nome, CPF, CAF, e-mail, telefone, dados bancários e os critérios do RITS) nunca vão para a IA. Do perfil vão só os produtos e as quantidades, os meses de safra, o município, a UF, se a produção é orgânica e se há prioridade no RITS (sim ou não).
+- No chat do assistente, o serviço recusa (erro 400) CPF, e-mail, telefone e dados bancários digitados. Um nome digitado não dá para detectar, e por isso a tela pede para não escrever o nome.
 - O data lake recebe os agricultores só com pseudônimo (12 caracteres, HMAC-SHA256 do id).
 - Os segredos (`ANTHROPIC_API_KEY`, `JWT_SEGREDO`, `CHAVE_SERVICO` e `CHAVE_DISPOSITIVO`) ficam só no `.env`, fora do Git.
 
-A seção Privacidade do README traz a regra completa.
+A seção Privacidade do README traz a mesma regra.

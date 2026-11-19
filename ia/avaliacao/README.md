@@ -63,8 +63,8 @@ Duas chamadas da pesquisa ficaram fora do repositório porque o contrato-modelo 
 
 Há um `gabarito/<mesmo nome do PDF>.json` por chamada, com `municipio`, `uf`, `prazo_envio`, `notas` e os `itens` (`produto`, `produto_id`, `unidade`, `quantidade` e `preco_unitario`).
 
-- **Leitura:** cada PDF foi lido à mão com `pdftotext -layout`. O Anexo I da Bahia, de colunas estreitas, também foi lido com `pdftotext -raw`.
-- **Conferência:** em cada linha, quantidade × preço tem de dar o total impresso no edital, e a soma das linhas tem de dar o valor total declarado. Dos 228 itens, só não passam 4 linhas em que o próprio edital se contradiz.
+- **Leitura:** um agente de IA (Claude Code) leu o texto de cada PDF, extraído com `pdftotext -layout`, e montou o gabarito. O Anexo I da Bahia, de colunas estreitas, também foi lido com `pdftotext -raw`.
+- **Conferência (também feita por agentes de IA):** em cada linha, quantidade × preço tem de dar o total impresso no edital, e a soma das linhas tem de dar o valor total declarado. Dos 228 itens, só não passam 4 linhas em que o próprio edital se contradiz. Depois, um agente revisor separado conferiu dois gabaritos item a item contra os PDFs e não achou erro, e a quantidade e o preço de cada um dos 228 itens aparecem no texto do PDF correspondente. O que as pessoas do grupo conferiram por conta própria fica no README da raiz, em "Uso de IA generativa".
 - **Contradições do edital:** o gabarito segue a quantidade e o preço impressos na tabela principal de itens e anota a contradição nas `notas`:
   - Bahia, item 01: a quantidade é 666.766 na tabela e 665.766 no total da linha e no Anexo VI;
   - Santos Dumont, item 01: o preço é R$ 6,48 na tabela 1.1 e R$ 6,84 no total da linha e no Anexo I;

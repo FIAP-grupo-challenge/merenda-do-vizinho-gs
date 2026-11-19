@@ -4,7 +4,7 @@ Este documento lista de onde vêm os dados, as regras e as ferramentas do projet
 
 ## 1. Chamadas públicas reais (conjunto de teste)
 
-São as 8 chamadas do conjunto de teste que estão no repositório, em `ia/avaliacao/chamadas/`. O link de origem é o do índice da pesquisa, em que cada PDF foi baixado de um site oficial e conferido por amostra. Os itens são os do gabarito montado à mão (`ia/avaliacao/gabarito/`).
+São as 8 chamadas do conjunto de teste que estão no repositório, em `ia/avaliacao/chamadas/`. O link de origem é o do índice da pesquisa, em que cada PDF foi baixado de um site oficial e conferido por amostra. Os itens são os do gabarito (`ia/avaliacao/gabarito/`), montado por um agente de IA a partir do texto dos PDFs e conferido contra eles; um agente revisor separado conferiu dois gabaritos item a item (detalhes em `ia/avaliacao/README.md`).
 
 | Arquivo | Entidade | Município (UF) | Ano | Nº da chamada | Link de origem | Itens no gabarito |
 |:--|:--|:--|:--|:--|:--|--:|
@@ -17,18 +17,18 @@ São as 8 chamadas do conjunto de teste que estão no repositório, em `ia/avali
 | `08-pr-manfrinopolis-2026.pdf` | Prefeitura Municipal de Manfrinópolis | Manfrinópolis (PR) | 2026 | Edital de Chamamento Público / Chamada Pública nº 1/2026 (processo 4/2026) | https://manfrinopolis.pr.gov.br/wp-content/uploads/2026/01/CHAMAMENTO-PUBLICO-01-2026.pdf | 43 |
 | `10-rs-sao-borja-2025.pdf` | Prefeitura Municipal de São Borja | São Borja (RS) | 2025 | Chamada Pública nº 02/2025 | https://saoborja.rs.gov.br/images/conteudo/Licitacoes/2024/CPP_02_2025.pdf | 10 |
 
-Duas chamadas da pesquisa ficaram fora do repositório: Santarém/PA e Carnaúba dos Dantas/RN. O contrato-modelo de cada uma traz o CPF de um agente público, e o repositório não guarda CPF. As chamadas são atos oficiais, sem proteção de direito autoral (Lei 9.610/98, art. 8º, IV).
+Duas chamadas da pesquisa ficaram fora do repositório: Santarém/PA e Carnaúba dos Dantas/RN. O contrato-modelo de cada uma traz o CPF de um agente público, e o repositório não guarda CPF completo. O edital de Goiânia, que está nele, traz o CPF da secretária já mascarado pelo Diário Oficial, só com parte dos dígitos. As chamadas são atos oficiais, sem proteção de direito autoral (Lei 9.610/98, art. 8º, IV).
 
 ## 2. Dados abertos
 
 | Fonte | O que o projeto usa | Licença e citação | Onde está |
 |:--|:--|:--|:--|
-| FNDE: Dados Agricultura Familiar (planilhas) | compra da agricultura familiar por entidade executora, de 2018 a 2022 (`fnde-af/`), com cópia versionada | CC BY-ND 3.0, citar "FNDE" | [gov.br/fnde](https://www.gov.br/fnde/pt-br/acesso-a-informacao/acoes-e-programas/programas/pnae/consultas/dados-agricultura-familiar-planilhas) |
+| FNDE: Dados Agricultura Familiar (planilhas) | compra da agricultura familiar por entidade executora, de 2018 a 2022 (`fnde-af/`), com cópia versionada | CC BY-ND 3.0, indicada no site do FNDE; citar "FNDE" | [gov.br/fnde](https://www.gov.br/fnde/pt-br/acesso-a-informacao/acoes-e-programas/programas/pnae/consultas/dados-agricultura-familiar-planilhas) |
 | FNDE: PNAE, repasses, alunos e escolas atendidas, 2009 a 2026 | repasses do PNAE por entidade (`repasses/`); 2026 é parcial, com o arquivo de 08/04/2026 | CC-BY, citar "FNDE" | [dados.gov.br](https://dados.gov.br/dados/conjuntos-dados/programa-nacional-de-alimentacao-escolar-pnae) e [Plataforma Antonieta de Barros, produto 82](https://www.fnde.gov.br/plataforma-antonieta-de-barros/dados/produtos-de-dados/visualizar/82) |
 | IBGE: API de localidades, municípios (nivelado) | os 5.571 municípios, com UF, região, região intermediária e imediata (`ibge/`) | uso livre, citando o IBGE | [servicodados.ibge.gov.br](https://servicodados.ibge.gov.br/api/v1/localidades/municipios?view=nivelado) |
 | Dados do app e histórico simulado | exportação do app e uma cooperativa fictícia de Catalão (GO), gerada pelo próprio projeto | não se aplica | `dados/etapas/gerar_simulado.py` |
 
-As planilhas do FNDE são tratadas pelo pipeline (`dados/etapas/tratar.py`): a coluna de percentual da planilha não é usada, e o percentual é recalculado. Anos de 2020 a 2022 são preliminares, segundo o próprio FNDE.
+O repositório guarda só cópias sem alteração das planilhas (`dados/datalake/raw/publicos/`); as camadas trusted e refined, que o pipeline gera a partir delas, ficam fora do Git. As planilhas do FNDE são tratadas pelo pipeline (`dados/etapas/tratar.py`): a coluna de percentual da planilha não é usada, e o percentual é recalculado. Anos de 2020 a 2022 são preliminares, segundo o próprio FNDE.
 
 ## 3. Legislação e normas
 

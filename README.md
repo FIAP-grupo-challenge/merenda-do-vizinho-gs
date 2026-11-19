@@ -40,7 +40,7 @@ O diagrama, os contratos entre os módulos e o caminho de produção estão em [
 
 **Caminho de produção (Kafka, NiFi e Spark): não implementado.** Está desenhado no diagrama, tracejado, para mostrar onde a ingestão entraria em escala. No MVP, o pipeline em Python faz esse caminho.
 
-**Svelte 5 e Vite nas telas:** é uma escolha do grupo, fora do conteúdo do curso. A stack do resto segue o conteúdo das fases 1 a 7.
+**Conexão com o curso.** O edital pede o conteúdo do curso até a fase 7. O Claude é conteúdo do curso: aparece na F4C07 (seção 4.6) e na F1C08. A chamada à IA segue o padrão da F7C07, em que um cliente de LLM em Python manda o pedido e recebe a resposta. No projeto, esse cliente é o SDK da Anthropic, no lugar do da OpenAI que o curso usa, e o curso não ensina o SDK da Anthropic. Por isso o modo de regras, em Python com `pypdf`, funciona sem o Claude. **Svelte 5 e Vite nas telas** são a exceção declarada do grupo: escolha do grupo, fora do conteúdo do curso. O mapa de cada tecnologia para um capítulo está na seção "Conexão com o curso" do white paper.
 
 ### Privacidade
 
@@ -51,7 +51,8 @@ O diagrama, os contratos entre os módulos e o caminho de produção estão em [
 
 ## Pré-requisitos
 
-- **Git**, para clonar o repositório.
+- **Git** (opcional), só para clonar o repositório: o `.zip` já traz o código e a pasta `.git`.
+- **Internet na primeira execução:** o Docker baixa as imagens e, sem Docker, o `npm ci` e o `pip install` baixam os pacotes.
 - **Para rodar com Docker:** Docker com o plugin Compose (testado com Docker 29.9 e Compose 5.7), ou **Podman sem root** com `podman-compose` (testado com Podman 6.2 e podman-compose 1.6).
 - **Para rodar sem Docker:** Node.js 24 ou mais novo (o app pede a versão 24 ou mais nova) e Python 3.12 ou mais novo (testado com 3.12 e 3.14).
 - **Chave da API da Anthropic (opcional):** sem ela, o app roda no **modo de regras**: a leitura do PDF e o assistente funcionam sem IA, com regras fixas. Com a chave, a leitura e o assistente usam o Claude Haiku 5.5.
@@ -59,11 +60,21 @@ O diagrama, os contratos entre os módulos e o caminho de produção estão em [
 
 ## Como rodar (com Docker e sem Docker)
 
-Clone o repositório e entre na pasta, na branch com a versão final do projeto:
+Primeiro, pegue o código e entre na pasta dele, a que tem o `README.md` e o `docker-compose.yml`. Os comandos abaixo valem a partir dela.
+
+**Se você recebeu o `.zip`:** descompacte e entre na pasta `merenda-do-vizinho`.
 
 ```bash
-git clone git@github.com:FIAP-grupo-challenge/merenda-do-vizinho-gs.git
+unzip merenda-do-vizinho.zip
+cd merenda-do-vizinho
+```
+
+**Se for pelo Git:** use o endereço HTTPS, que não pede chave SSH. A versão final está na `main` (o grupo faz o merge nela antes de entregar).
+
+```bash
+git clone https://github.com/FIAP-grupo-challenge/merenda-do-vizinho-gs.git
 cd merenda-do-vizinho-gs
+git checkout main
 ```
 
 Os dois caminhos começam pelo `.env`.
@@ -83,7 +94,9 @@ EOF
 chmod 600 .env
 ```
 
-Rode esse bloco só se ainda não existe `.env`: ele cria o arquivo do zero. Se o arquivo já existe, abra-o num editor e preencha os três segredos com valores aleatórios (`openssl rand -hex 32` gera um).
+Rode esse bloco só se ainda não existe `.env`: ele cria o arquivo do zero. Sem o `openssl`, troque cada `$(openssl rand -hex 32)` por `$(python3 -c 'import secrets; print(secrets.token_hex(32))')`.
+
+Outro jeito é copiar o modelo, `cp .env.example .env`, e editar. O modelo traz os três segredos como `troque-este-valor` (troque cada um por um valor aleatório, como os que o bloco gera) e a `DATA_REFERENCIA` vazia (escreva `DATA_REFERENCIA=2026-07-15`; o motivo está em "Usuários de demonstração e data de referência"). Se o `.env` já existe, abra-o num editor e confira esses mesmos pontos.
 
 Para usar a IA com o Claude, cole a chave da API em `ANTHROPIC_API_KEY=`. Sem a chave, tudo funciona no modo de regras.
 
@@ -107,7 +120,7 @@ Com o `.env` pronto, na raiz do repositório:
 docker compose up --build
 ```
 
-Deixe esse terminal aberto. Em outro terminal, confira que os dois serviços estão `healthy`:
+Deixe esse terminal aberto (a primeira vez demora, porque o Docker baixa as imagens e monta tudo). Em outro terminal, confira que os dois serviços estão `healthy`:
 
 ```bash
 docker compose ps
@@ -137,9 +150,20 @@ docker compose --profile tarefas run --rm -e PIPELINE_OFFLINE=1 dados
 
 **Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios e sem chave da API.
 
+O app do smoke também quer a porta 3000 do computador. Com a pilha do `docker compose up` ainda no ar, o smoke falha com `Bind for 0.0.0.0:3000 failed: port is already allocated`. Há dois jeitos de evitar isso. O primeiro é parar a pilha antes (o banco fica guardado):
+
 ```bash
-devops/smoke.sh
+docker compose down
+bash devops/smoke.sh
 ```
+
+O segundo é deixar a pilha no ar e pedir ao Docker uma porta livre qualquer para o app do smoke, com `PORTA_APP=0` (o smoke fala com o app pela rede do Compose, e não pela porta do computador; testado com Docker):
+
+```bash
+PORTA_APP=0 bash devops/smoke.sh
+```
+
+O `bash` na frente vale mesmo que o `.zip` tenha perdido a permissão de execução do script.
 
 **Com Podman sem root**, use o `podman-compose` com a opção que faz o usuário 1000 do contêiner ser você:
 
@@ -148,17 +172,17 @@ COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000"
 $COMPOSE up --build
 ```
 
-Sem essa opção, o pipeline não grava em `./dados/datalake`. O mesmo vale para o smoke: `COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000" devops/smoke.sh`. O perfil `tarefas` também precisa estar ligado nos comandos `run`, como acima.
+Sem essa opção, o pipeline não grava em `./dados/datalake`. O mesmo vale para o smoke: `COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000" bash devops/smoke.sh`. Nas tarefas, use o mesmo `$COMPOSE` no lugar de `docker compose`, sempre com `--profile tarefas` (o `podman-compose` só roda um serviço de perfil com o perfil ligado).
 
-**No Linux, com um usuário que não é o uid 1000** (confira com `id -u`): os contêineres gravam como uid 1000. Sem permissão, o pipeline falha com `PermissionError` ao gravar em `./dados/datalake`. Dê a permissão com:
+**No Linux, com um usuário que não é o uid 1000** (confira com `id -u`): os contêineres gravam como uid 1000. Sem permissão, o pipeline falha com `PermissionError` ao gravar em `./dados/datalake`. Dê a permissão com o comando abaixo (se a pasta não for sua, ponha `sudo` na frente):
 
 ```bash
-sudo chown -R 1000:1000 dados/datalake
+chmod -R a+rwX dados/datalake
 ```
 
 ### 2B. Sem Docker
 
-Na raiz do repositório, uma vez:
+Na raiz do repositório, uma vez (precisa de internet: baixa os pacotes do Python e do Node):
 
 ```bash
 python3 -m venv .venv
@@ -172,7 +196,7 @@ Cada terminal que roda as partes em Python precisa carregar o `.env` no shell pr
 set -a; . ./.env; set +a
 ```
 
-Abra um terminal para cada parte.
+Abra um terminal para cada parte. Cada terminal começa na pasta em que você o abriu: entre na raiz do repositório (a pasta do `README.md`) antes de rodar os comandos abaixo.
 
 **Terminal 1, o app** (o `npm start` gera as telas com Vite antes de subir, em `app/public/`):
 
@@ -193,6 +217,8 @@ set -a; . ./.env; set +a
 
 Saída esperada: `IA na porta 3001, modo regras` (ou `modo ia`, com a chave no `.env`).
 
+**Cuidado:** sem Docker, a IA escuta em todas as interfaces do computador e não tem login (no Docker ela não é publicada). Quem alcança a porta 3001 pela rede usa a IA e, com a chave no `.env`, gasta a sua chave. Rode essa parte numa máquina de confiança, fora de redes abertas.
+
 **Terminal 3, a câmara fria e o pipeline** (com o app no ar):
 
 ```bash
@@ -203,9 +229,10 @@ PIPELINE_OFFLINE=1 .venv/bin/python -m dados.pipeline tudo
 
 Para parar, aperte `Ctrl+C` em cada terminal.
 
-**Se algo não sobe:**
+**Se algo não sobe** (vale para os dois caminhos):
 
 - `EADDRINUSE` ou "porta em uso": outro programa usa a porta 3000 ou 3001. Feche esse programa e rode o comando de novo.
+- `port is already allocated` ao subir com Docker: outro programa usa a porta 3000. Feche-o, ou suba o app em outra porta, como `PORTA_APP=3100 docker compose up --build`, e abra http://localhost:3100. As tarefas da seção 2A não mudam: elas falam com o app pela rede do Compose.
 - `falta JWT_SEGREDO no .env` (ou outra chave): o `.env` não tem o segredo, ou não está na raiz. Confira com `cat .env`, sem colar o conteúdo em lugar nenhum.
 - `SEMANAS_PADRAO deve ser um número maior que zero`: a variável tem um valor inválido. Apague a linha ou ponha um número, como `40`.
 - `npm: command not found` ou `engines`: instale o Node.js 24 ou mais novo.
@@ -225,9 +252,9 @@ A senha de **todos** os usuários de demonstração é `demo1234`. Eles são fic
 | Agricultor | `elisa@demo.br` | Elisa Martins | brócolis, couve-flor e alface |
 | Agricultor | `fabio@demo.br` | Fábio Alves | alface e mandioca; já vendeu R$ 38 mil no ano, perto do limite de R$ 40 mil |
 
-Os seis agricultores são cooperados da cooperativa de demonstração. A cada subida do app, a semente cria os usuários que faltam (os que já existem não são mexidos) e publica a chamada de Catalão, já lida e conferida à mão, com o interesse dos agricultores. Para recomeçar do zero: `docker compose down -v` (com Docker) ou apague `app/merenda.db` (sem Docker).
+Os seis agricultores são cooperados da cooperativa de demonstração. A cada subida do app, a semente cria os usuários que faltam (os que já existem não são mexidos) e publica a chamada de Catalão, já lida, com o interesse dos agricultores. Essa leitura (`app/semente/chamada-demo.json`) começou de uma extração do Claude, e um agente de IA conferiu os 16 itens contra o PDF e ajustou alguns campos de texto. Para recomeçar do zero: `docker compose down -v` (com Docker) ou apague `app/merenda.db` (sem Docker).
 
-**Por que `DATA_REFERENCIA=2026-07-15`.** A chamada pública de Catalão (nº 003/2026) recebeu projetos de 09/07 a 30/07/2026 e já fechou. O app mostra como oportunidades só as chamadas com prazo a partir da data de referência, que é o "hoje" dele. Sem essa data, o app usa a data do computador, a chamada aparece como encerrada, e a agricultora de demonstração (Ana) não vê nenhuma oportunidade. Por isso o `.env` do exemplo já traz `DATA_REFERENCIA=2026-07-15`.
+**Por que `DATA_REFERENCIA=2026-07-15`.** A chamada pública de Catalão (nº 003/2026) recebeu projetos de 09/07 a 30/07/2026 e já fechou. O app mostra como oportunidades só as chamadas com prazo a partir da data de referência, que é o "hoje" dele. Sem essa data, o app usa a data do computador, a chamada aparece como encerrada, e a agricultora de demonstração (Ana) não vê nenhuma oportunidade. Por isso o bloco da seção 1 já grava `DATA_REFERENCIA=2026-07-15` no `.env`. Se você copiou o `.env.example`, essa linha vem vazia: escreva a data nela.
 
 ## Como rodar cada área e o que deve aparecer
 
@@ -239,7 +266,7 @@ Abra http://localhost:3000 e entre com um dos usuários acima (aba "Entrar"; a a
 
 1. **Prefeitura** (`prefeitura@demo.br`), tela **Chamadas**. Em "Suas chamadas" aparece a chamada 003/2026 de Catalão, **publicada**. Para ver a leitura da IA, em "Nova chamada" escolha o PDF `ia/avaliacao/chamadas/04-go-catalao-2026.pdf` e toque em **Ler o PDF**. Aparece a tabela com os 16 itens da chamada e a origem da leitura (`regras` sem chave, `ia` com chave). A leitura vira um rascunho; não é preciso publicar, porque a chamada de Catalão já está publicada.
 
-2. **Agricultora** (`ana@demo.br`), tela **Chamadas abertas para você**. Aparece o cartão da chamada de Catalão, com o selo "Na sua cidade", **"Você pode ganhar até R$ 21.082,00"** e, em cada item que ela planta, o que a prefeitura pede (alface: 2.280 pç; mandioca: 2.800 kg). O cartão diz até quando entregar o projeto de venda (30/07/2026). O aviso "Seleção anterior, sem RITS" aparece porque o edital saiu até 22/10/2026. Toque no cartão: a tela da chamada tem o **assistente**. Escreva, por exemplo, `Posso entregar 50 de alface por semana?` e toque em **Enviar**. A resposta diz quanto dá (2.000 pç em 40 semanas) e lista os documentos. Sem chave, a resposta vem do roteiro (origem `regras`). O botão **Quero participar** grava o interesse dela para a cooperativa.
+2. **Agricultora** (`ana@demo.br`), tela **Chamadas abertas para você**. Aparece o cartão da chamada de Catalão, com o selo "Na sua cidade: quem é da cidade tem prioridade", **"Você pode ganhar até R$ 21.082,00"** e, em cada item que ela planta, o que a prefeitura pede (alface: 2.280 pç; mandioca: 2.800 kg). O cartão diz até quando entregar o projeto de venda (30/07/2026). O aviso "Seleção anterior, sem RITS" aparece porque o edital saiu até 22/10/2026. Toque em **Ver a chamada e o assistente**: a tela da chamada tem o **assistente**. Escreva, por exemplo, `Posso entregar 50 de alface por semana?` e toque em **Enviar**. A resposta diz quanto dá (2.000 pç em 40 semanas) e lista os documentos. Sem chave, a resposta vem do roteiro (origem `regras`). O botão **Quero participar** grava o interesse dela para a cooperativa.
 
 3. **Cooperativa** (`cooperativa@demo.br`), tela **Cooperativa**. Em "Chamadas abertas no seu estado", toque em **Montar a proposta conjunta** na chamada de Catalão. Aparece a **proposta conjunta**: cada item dividido entre os cooperados que o produzem (por exemplo, a alface entre Ana, Carla, Elisa e Fábio), o que falta em cada item e o total. Itens que nenhum cooperado produz (alho, batata, cebola, pão e biscoito) ficam com o pedido inteiro como falta. Depois, **Salvar a divisão** grava uma edição, e **Gerar projeto de venda** abre o projeto no modelo do FNDE, com **Imprimir**.
 
@@ -270,7 +297,7 @@ O PDF de entrada é o edital real de Catalão, com 15 páginas. Trecho da págin
   2   Abóbora verde: de boa qualidade, firme e …     Kg        1.640   R$ 6,87   R$ 11.266,80
 ```
 
-A saída, com a IA desligada (`origem` = `regras`), traz a chamada e os itens. Trecho (o JSON completo tem os 16 itens):
+A saída, com a IA desligada (`origem` = `regras`), traz a chamada e os itens. Trecho, com os campos nulos omitidos (`entrega` e `observacoes`, que cada item traz) e só os 3 primeiros dos 16 itens. O `duracao_ms` muda a cada execução.
 
 ```json
 {
@@ -358,7 +385,7 @@ O `--recontar` não lê PDF, não chama a API e não altera os resultados: refaz
 
 São 228 itens, medidos numa única execução (n = 1), em 19/11/2026. Os detalhes estão em [ia/avaliacao/README.md](ia/avaliacao/README.md).
 
-**Cuidado:** rodar `ia.avaliacao.rodar` **sem** `--recontar` lê os PDFs de novo e chama a API uma vez por PDF, com a chave do `.env`: custa cerca de US$ 0,64 pelas 8 chamadas. Sem a chave, o mesmo comando regrava os resultados só com as regras; para voltar aos resultados com IA, use `git checkout -- ia/avaliacao/resultados`.
+**Cuidado:** rodar `ia.avaliacao.rodar` **sem** `--recontar` lê os PDFs de novo. Se a chave da Anthropic estiver no ambiente (por exemplo, depois de `set -a; . ./.env; set +a`), ele chama a API uma vez por PDF e custa cerca de US$ 0,64 pelas 8 chamadas. Sem a chave no ambiente, o mesmo comando regrava os resultados só com as regras; para voltar aos resultados com IA, use `git checkout -- ia/avaliacao/resultados`, que precisa do Git instalado (o `.zip` traz a pasta `.git`).
 
 ## Mapa do código
 
@@ -375,7 +402,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `app/src/http-util.js` | leitura do corpo JSON com limite de tamanho, respostas JSON e arquivos estáticos |
 | `app/src/db.js` | banco SQLite (`node:sqlite`): tabelas, migração e transações |
 | `app/src/semente.js` | cria os usuários de demonstração e publica a chamada de Catalão com o interesse dos agricultores |
-| `app/semente/chamada-demo.json` | a chamada 003/2026 de Catalão, lida do PDF e conferida à mão |
+| `app/semente/chamada-demo.json` | a chamada 003/2026 de Catalão: começou de uma extração do Claude, e um agente de IA a conferiu contra o PDF |
 | `app/src/auth.js` | senhas com scrypt, token JWT (HS256, válido por 8 h) e checagem de papel (401 e 403) |
 | `app/src/validacao.js` | validação de entrada, CPF, CAF, e-mail e as máscaras das telas |
 | `app/src/regras-pnae.js` | as regras do PNAE em um só lugar, com a fonte: mínimo do ano, limite de R$ 40 mil, 20 dias, RITS, prioridade e capacidade |
@@ -467,28 +494,28 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `app/Dockerfile`, `ia/Dockerfile`, `dados/Dockerfile`, `iot/Dockerfile` | as imagens: o app em dois estágios (Node 24), os demais em Python 3.12; todas rodam com o usuário de uid 1000 |
 | `.dockerignore` | o que fica de fora das imagens: `.env`, `.git`, bancos e dados gerados |
 | `devops/smoke.sh` | o teste de fumaça do Compose, com `SMOKE OK` no fim (`devops/evidencias/smoke.txt` tem uma execução completa) |
-| `Jenkinsfile`, `devops/jenkins/`, `devops/plano-de-testes.md`, `devops/seguranca.md` | a integração contínua no Jenkins, o plano de testes (10 casos) e o documento de segurança |
+| `Jenkinsfile`, `devops/jenkins/`, `devops/plano-de-testes.md`, `devops/seguranca.md` | a integração contínua no Jenkins (como subir: `devops/jenkins/README.md`), o plano de testes (15 casos) e o documento de segurança |
 | `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, o roteiro do pitch e as fontes |
 
 ## Testes
 
-Da raiz do repositório, cada área tem os seus testes. Nenhum usa a chave da Anthropic: a IA é testada com servidores falsos.
+Da raiz do repositório, cada área tem os seus testes. Eles precisam da preparação da seção 2B (o `.venv` com as dependências e o `npm ci` no `app/`), mas não do Docker. Nenhum usa a chave da Anthropic: a IA é testada com servidores falsos.
 
 ```bash
-# app: 119 testes (roda o build das telas antes)
+# app: 122 testes (roda o build das telas antes)
 (cd app && npm test)
 
 # IA: 86 testes
 .venv/bin/python -m unittest discover -s ia/tests -t .
 
-# data lake: 24 testes
+# data lake: 27 testes
 .venv/bin/python -m unittest discover -s dados/tests -t .
 
 # câmara fria: 15 testes
 .venv/bin/python -m unittest discover -s iot -t .
 ```
 
-Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK`. O plano de testes, com 10 casos, cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md).
+Essas contagens são de 19/11/2026, na versão final (250 testes, todos passando); se um teste for acrescentado, vale o resumo que o próprio comando imprime. Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`bash devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK` (a seção 2A explica o que fazer se a porta 3000 estiver em uso). O plano de testes, com 15 casos (CT01 a CT15), cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md). O `Jenkinsfile` roda os testes, o build das imagens e o smoke a cada commit; como subir o Jenkins local está em [devops/jenkins/README.md](devops/jenkins/README.md), e as evidências de segurança, em [devops/seguranca.md](devops/seguranca.md).
 
 ## Uso de IA generativa
 
@@ -499,21 +526,24 @@ O grupo usou IA generativa em duas frentes: para **construir** o projeto, com o 
 | Onde | Ferramenta e modelo | Para quê |
 |:--|:--|:--|
 | Planejamento | Claude Code com Claude Fable 5.2 | desenho do MVP, plano técnico e plano de ação |
-| Tarefas simples | Claude Code com Claude Haiku 5.5 | esqueleto do repositório, sketch e simulador da câmara fria, exportação, README e pacote de entrega |
-| Tarefas médias e grandes | Claude Code com Claude Opus 5.5 | IA, app, regras do PNAE, pipeline, DAX, Docker, Jenkins e o white paper |
+| Tarefas simples | Claude Code com Claude Haiku 5.5 | esqueleto do repositório, sketch e simulador da câmara fria, exportação e a primeira versão do README |
+| Tarefas médias e grandes | Claude Code com Claude Opus 5.5 | IA, app, regras do PNAE, pipeline, DAX, Docker, Jenkins, o white paper e o pacote de entrega |
 | Revisões | Claude Code com Claude Sonnet 5.5 | revisar e corrigir cada tarefa |
 
 Cada tarefa foi revisada por um agente separado (o Sonnet), e as correções foram feitas antes de cada entrega. As revisões dos agentes não substituem a revisão do grupo: o grupo define o escopo, aprova os documentos e revisa o código de cada área. O edital não aceita código gerado sem entendimento, e o mapa do código acima existe para isso.
 
 - **Revisado por pessoas:** _(preencher: quem revisou cada área do projeto e o que conferiu)_.
-- **Fontes conferidas:** as regras do PNAE foram conferidas nas fontes oficiais, listadas em [docs/fontes.md](docs/fontes.md).
+- **Conferido por agentes de IA** (o que as pessoas do grupo conferiram por conta própria entra na linha acima):
+  - as regras e os números do PNAE vêm das fontes oficiais listadas em [docs/fontes.md](docs/fontes.md); a pesquisa e a leitura das normas foram feitas por agentes;
+  - os gabaritos da avaliação (`ia/avaliacao/gabarito/`) foram montados por um agente a partir do texto dos 8 PDFs e conferidos contra eles; um agente revisor separado conferiu dois deles item a item (detalhes em [ia/avaliacao/README.md](ia/avaliacao/README.md));
+  - a chamada de demonstração (`app/semente/chamada-demo.json`) começou de uma extração do Claude, e um agente conferiu os 16 itens contra o PDF.
 
 **Dentro do produto**, o Claude Haiku 5.5 (`claude-haiku-5-5`, o modelo mais barato da Anthropic) é chamado pela API, com o SDK da Anthropic para Python:
 
 - **leitura da chamada:** recebe o PDF do edital e devolve os dados no formato JSON fixo (esforço `medium`). Os prompts estão em [docs/prompts.md](docs/prompts.md);
 - **assistente do agricultor:** responde em frases curtas, sugere quantidades e lista os documentos (esforço `low`).
 
-Sem a chave, ou se a IA falhar, recusar ou demorar, o produto usa o modo de regras, e a resposta sempre informa a origem. Os dados que a IA recebe são os da seção [Privacidade](#privacidade), que é a mesma regra descrita acima. Num teste com 8 chamadas reais, a IA acertou 95,6% dos itens, contra 56,1% do modo de regras; a medida é de uma execução só (n = 1) e está em `ia/avaliacao/resultados/resultados.md`.
+Sem a chave, ou se a IA falhar, recusar ou demorar, o produto usa o modo de regras, e a resposta sempre informa a origem. Os dados cadastrados do agricultor (nome, CPF, CAF, e-mail, telefone, dados bancários e os critérios do RITS) nunca vão para a IA: do perfil vão só os produtos e as quantidades, os meses de safra, o município, a UF, se a produção é orgânica e se há prioridade no RITS (sim ou não). No chat do assistente, o serviço recusa CPF, e-mail, telefone e dados bancários digitados; um nome digitado não dá para detectar, e por isso a tela pede para não escrevê-lo (veja a seção [Privacidade](#privacidade)). Num teste com 8 chamadas reais, a IA acertou 95,6% dos itens, contra 56,1% do modo de regras; a medida é de uma execução só (n = 1) e está em `ia/avaliacao/resultados/resultados.md`.
 
 ## Pitch, fontes e créditos
 
@@ -532,7 +562,7 @@ _(preencher: o link do vídeo de até 3 minutos, publicado no Drive ou no YouTub
 ### Fontes e créditos
 
 - **Chamadas públicas do PNAE:** oito editais reais, de cinco estados (Bahia, Goiás, Minas Gerais, Paraná e Rio Grande do Sul), com os links de origem em [docs/fontes.md](docs/fontes.md). Os editais são atos oficiais.
-- **FNDE:** as planilhas de compra da agricultura familiar (2018 a 2022) e os repasses do PNAE (2009 a 2026), com citação ao FNDE. As planilhas têm licença CC BY-ND 3.0 e os repasses, CC-BY.
+- **FNDE:** as planilhas de compra da agricultura familiar (2018 a 2022) e os repasses do PNAE (2009 a 2026), com citação ao FNDE. O site do FNDE indica a licença CC BY-ND 3.0 para as planilhas; o repositório guarda só cópias sem alteração, e as camadas trusted e refined, geradas a partir delas, ficam fora do Git. Os repasses são CC-BY.
 - **IBGE:** a lista de municípios, pela API de localidades, com uso livre citando o IBGE.
 - **Legislação:** Lei 11.947/2009, art. 14, na redação da Lei 15.226/2025; Resoluções CD/FNDE nº 4/2026 e nº 17/2026.
 - **Bibliotecas e ferramentas:** Node.js; `jsonwebtoken` (login); Svelte 5 e Vite, com `@sveltejs/vite-plugin-svelte` (telas); Python, com `anthropic` (SDK da Anthropic), `pypdf` (leitura do PDF), `pandas` e `openpyxl` (data lake); Docker, Podman e Compose; Power BI web; Arduino e TinkerCad.
