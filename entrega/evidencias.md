@@ -308,7 +308,7 @@ Um uso completo, com os usuários de demonstração e a chamada real de Catalão
 
 ![**Print 10.** O projeto de venda gerado no modelo do FNDE (parte II, os agricultores e os alimentos de cada um), pronto para imprimir.](prints/10-projeto-venda.png)
 
-![**Print 12.** A prefeitura acompanha a meta do ano, a proposta recebida e a entrega. O repasse de 2026 informado na tela, R$ 385.989,50, é o que o FNDE repassou a Catalão em 2026 até 08/04/2026, nos dados abertos. A faixa cinza marca um corte do print: a tabela da chamada, igual à do print 4, ficou de fora.](prints/12-prefeitura-acompanhamento.png)
+![**Print 12.** A prefeitura acompanha a meta do ano, a proposta recebida e a entrega. O percentual conta só as entregas registradas neste app, e a tela diz isso. O repasse de 2026 informado na tela, R$ 385.989,50, é o que o FNDE repassou a Catalão em 2026 até 08/04/2026, nos dados abertos. A faixa cinza marca um corte do print: a tabela da chamada, igual à do print 4, ficou de fora.](prints/12-prefeitura-acompanhamento.png)
 
 ## Arquitetura (1 ponto)
 
