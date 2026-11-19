@@ -1,0 +1,30 @@
+{
+  "municipio": null,
+  "uf": "BA",
+  "prazo_envio": "2026-02-20",
+  "notas": [
+    "Órgão estadual: Secretaria da Educação do Estado da Bahia (sede em Salvador), para os 27 NTEs. O gabarito deixa município null porque a chamada não é de um município; quem lê \"Salvador\" leu a sede (ambíguo).",
+    "Itens: Anexo I, \"Especificação dos gêneros alimentícios\" (págs. 12 a 18), 16 itens. As unidades são embalagens (1 und de 20 g, 250 g, 500 g, 200 g, 200 ml, 1 kg, dúzia). O item 07 (ovos) é só para os NTEs 04 e 10.",
+    "Contradição: no item 01 (barrinha de cereais) o Anexo I imprime 666.766, mas o total da linha (R$ 2.663.064,00 = 665.766 x 4,00) e a linha TOTAL do Anexo VI dizem 665.766. O gabarito segue o número impresso no Anexo I (666.766).",
+    "O item 11 (massa de aipim) traz a quantidade \"23;394\" (ponto e vírgula); vale 23.394, que o total da linha e o Anexo VI confirmam.",
+    "Prazo: \"até 20/02/2026, impreterivelmente, até às 18h00min\", no protocolo da Secretaria."
+  ],
+  "itens": [
+    {"produto": "Barrinha de cereais", "produto_id": null, "unidade": "1 und (20g)", "quantidade": 666766, "preco_unitario": 4.0},
+    {"produto": "Café torrado e moído", "produto_id": null, "unidade": "250g", "quantidade": 399765, "preco_unitario": 23.33},
+    {"produto": "Aipim palito corte caseiro", "produto_id": "mandioca", "unidade": "1kg", "quantidade": 116971, "preco_unitario": 12.33},
+    {"produto": "Flocão de milho", "produto_id": "milho-verde", "unidade": "500g", "quantidade": 249540, "preco_unitario": 5.58},
+    {"produto": "Farinha de mandioca", "produto_id": "farinha-de-mandioca", "unidade": "1kg", "quantidade": 81197, "preco_unitario": 10.35},
+    {"produto": "Polpa de fruta", "produto_id": null, "unidade": "1kg", "quantidade": 389906, "preco_unitario": 15.8},
+    {"produto": "Ovos caipira", "produto_id": "ovo", "unidade": "1duzia", "quantidade": 7960, "preco_unitario": 17.27},
+    {"produto": "Feijão", "produto_id": "feijao", "unidade": "1kg", "quantidade": 124770, "preco_unitario": 13.73},
+    {"produto": "Leite em pó", "produto_id": "leite", "unidade": "200g", "quantidade": 665766, "preco_unitario": 10.17},
+    {"produto": "Cacau em pó", "produto_id": null, "unidade": "200g", "quantidade": 266306, "preco_unitario": 20.25},
+    {"produto": "Massa de aipim", "produto_id": "mandioca", "unidade": "1kg", "quantidade": 23394, "preco_unitario": 12.27},
+    {"produto": "Iogurte", "produto_id": null, "unidade": "200ml", "quantidade": 1331532, "preco_unitario": 3.77},
+    {"produto": "Filé de tilápia", "produto_id": null, "unidade": "1kg", "quantidade": 66577, "preco_unitario": 51.0},
+    {"produto": "Mel", "produto_id": "mel", "unidade": "1kg", "quantidade": 6991, "preco_unitario": 42.33},
+    {"produto": "Tapioca granulada", "produto_id": null, "unidade": "500g", "quantidade": 186414, "preco_unitario": 11.85},
+    {"produto": "Carne de cordeiro", "produto_id": null, "unidade": "1kg", "quantidade": 46603, "preco_unitario": 69.5}
+  ]
+}

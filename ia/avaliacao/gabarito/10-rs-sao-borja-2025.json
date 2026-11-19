@@ -1,0 +1,21 @@
+{
+  "municipio": "São Borja",
+  "uf": "RS",
+  "prazo_envio": "2025-04-09",
+  "notas": [
+    "Itens: tabela do item 1.1 (10 itens, gêneros de agroindústrias); a tabela do item 7.1 (cronograma) repete os itens sem preço. A soma confere com o total declarado (\"R$ 240,850,00\", com vírgula no lugar do ponto).",
+    "Prazo: \"até 09 de abril de 2025, às 12 horas\". O item 6.1 dá \"até dia 14 de abril de 2023\" para as amostras (ano errado no edital), que não é o prazo de envio; o preâmbulo fala em início em \"abril de 2024\" (também errado)."
+  ],
+  "itens": [
+    {"produto": "Bolo simples", "produto_id": null, "unidade": "kg", "quantidade": 800, "preco_unitario": 20.0},
+    {"produto": "Cuca", "produto_id": null, "unidade": "kg", "quantidade": 800, "preco_unitario": 20.0},
+    {"produto": "Doce de leite", "produto_id": "leite", "unidade": "un", "quantidade": 600, "preco_unitario": 18.0},
+    {"produto": "Frango tipo colonial picado", "produto_id": "frango", "unidade": "kg", "quantidade": 600, "preco_unitario": 35.0},
+    {"produto": "Mandioca descascada congelada e embalada", "produto_id": "mandioca", "unidade": "kg", "quantidade": 1500, "preco_unitario": 16.0},
+    {"produto": "Mel natural de abelhas", "produto_id": "mel", "unidade": "kg", "quantidade": 400, "preco_unitario": 30.0},
+    {"produto": "Ovos in natura tipo caipira", "produto_id": "ovo", "unidade": "dúzia", "quantidade": 3000, "preco_unitario": 14.5},
+    {"produto": "Queijo colonial", "produto_id": "queijo", "unidade": "kg", "quantidade": 1000, "preco_unitario": 55.67},
+    {"produto": "Requeijão cremoso", "produto_id": null, "unidade": "un", "quantidade": 2000, "preco_unitario": 11.17},
+    {"produto": "Suco integral", "produto_id": null, "unidade": "litros (lt)", "quantidade": 1000, "preco_unitario": 19.54}
+  ]
+}

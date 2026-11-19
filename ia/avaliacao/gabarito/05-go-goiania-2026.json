@@ -1,0 +1,28 @@
+{
+  "municipio": "Goiânia",
+  "uf": "GO",
+  "prazo_envio": "2026-02-20",
+  "notas": [
+    "Recorte do Diário Oficial do Município (DOM nº 8708, de 26/01/2026); órgão: Prefeitura de Goiânia, Secretaria Municipal de Educação. A minuta de contrato traz o CPF da secretária já mascarado pelo DOM (com asteriscos no lugar dos primeiros e dos últimos dígitos).",
+    "Itens: Anexo II, \"Dos valores médios\" (16 itens). O Anexo I repete os itens com especificação e total; quantidade x preço = total em todos e a soma dá o total, R$ 24.598.015,00. O item 13 (polpa de frutas) é um item só, com quatro sabores. Unidades fora do padrão: iogurte natural em potes de 140 g e ovo em embalagens (cartelas de 30 unidades).",
+    "Prazo: entrega dos envelopes de 26/01/2026 (8h30) até 20/02/2026 (8h30); a sessão pública é em 23/02/2026. O item 5.1.3 ainda traz \"XX/XX/2026\" (marcador esquecido)."
+  ],
+  "itens": [
+    {"produto": "Banana prata", "produto_id": "banana", "unidade": "kg", "quantidade": 202000, "preco_unitario": 13.96},
+    {"produto": "Batata inglesa orgânica", "produto_id": "batata-inglesa", "unidade": "kg", "quantidade": 48000, "preco_unitario": 17.11},
+    {"produto": "Beterraba", "produto_id": "beterraba", "unidade": "kg", "quantidade": 19000, "preco_unitario": 10.9},
+    {"produto": "Carne em cubos congelada", "produto_id": null, "unidade": "kg", "quantidade": 67000, "preco_unitario": 49.11},
+    {"produto": "Cebola", "produto_id": "cebola", "unidade": "kg", "quantidade": 53500, "preco_unitario": 13.61},
+    {"produto": "Frango congelado corte peito", "produto_id": "frango", "unidade": "kg", "quantidade": 100000, "preco_unitario": 18.34},
+    {"produto": "Iogurte integral natural", "produto_id": null, "unidade": "potes de 140 g", "quantidade": 80000, "preco_unitario": 7.8},
+    {"produto": "Iogurte com polpa de frutas", "produto_id": null, "unidade": "kg", "quantidade": 90000, "preco_unitario": 17.52},
+    {"produto": "Laranja", "produto_id": "laranja", "unidade": "kg", "quantidade": 190000, "preco_unitario": 12.54},
+    {"produto": "Mandioca descascada congelada", "produto_id": "mandioca", "unidade": "kg", "quantidade": 21000, "preco_unitario": 11.4},
+    {"produto": "Manteiga de leite", "produto_id": "leite", "unidade": "kg", "quantidade": 19000, "preco_unitario": 62.05},
+    {"produto": "Ovo de galinha", "produto_id": "ovo", "unidade": "embalagens (cartelas contendo 30 unidades)", "quantidade": 15000, "preco_unitario": 33.8},
+    {"produto": "Polpa de frutas", "produto_id": null, "unidade": "kg", "quantidade": 112000, "preco_unitario": 42.08},
+    {"produto": "Queijo muçarela", "produto_id": "queijo", "unidade": "kg", "quantidade": 28000, "preco_unitario": 67.5},
+    {"produto": "Repolho verde", "produto_id": "repolho", "unidade": "kg", "quantidade": 39000, "preco_unitario": 12.4},
+    {"produto": "Tomate", "produto_id": "tomate", "unidade": "kg", "quantidade": 94000, "preco_unitario": 13.85}
+  ]
+}
