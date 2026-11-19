@@ -61,6 +61,18 @@ class TestRegras(unittest.TestCase):
         self.assertEqual([(i['produto_id'], i['unidade']) for i in itens],
                          [('alface', 'pç'), ('cheiro-verde', 'maço'), ('ovo', 'dúzia')])
 
+    def test_nome_da_prefeitura_com_espacos_demais_e_lido_em_tempo_linear(self):
+        # o texto vem do PDF de quem sobe a chamada: 16 mil espaços no nome levavam quase 1 s, e o tempo crescia com o quadrado
+        for texto in ('Prefeitura Municipal de Catalão' + ' ' * 100_000 + 'x', 'Prefeitura Municipal de Catalão' + '\t' * 100_000 + 'x',
+                      'Prefeitura Municipal de' + ' ' * 100_000 + ',', 'Prefeitura Municipal de' + ' ' * 100_000):
+            with self.subTest(texto=texto[:35]):
+                inicio = time.perf_counter()
+                extrair_por_regras(texto)
+                self.assertLess(time.perf_counter() - inicio, 0.5)
+        # o nome e a UF saem como antes, mesmo com a sequência longa de espaços no meio do texto
+        c = extrair_por_regras('Prefeitura Municipal de Santos Dumont' + ' ' * 100_000 + '- MG, Chamada Pública nº 001/2025')
+        self.assertEqual((c['municipio'], c['uf'], c['numero']), ('Santos Dumont', 'MG', '001/2025'))
+
     def test_texto_sem_tabela_devolve_itens_vazios_e_aviso(self):
         r = extrair_chamada({'texto': 'Edital sem tabela de itens.'})
         self.assertEqual(r['origem'], 'regras'); self.assertEqual(r['chamada']['itens'], [])

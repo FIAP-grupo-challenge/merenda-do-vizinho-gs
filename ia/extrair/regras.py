@@ -12,7 +12,9 @@ UNIDADES = r'kg|g|l|litro|un|unid|unidade|ma[cç]o|dz|d[uú]zia|pct|pacote|bande
 NUMERO = r'(?:R\$\s*)?\d[\d.]*(?:,\d+)?'
 LINHA_ITEM = re.compile(rf'^(.*?)\b({UNIDADES})\.?\s+({NUMERO}(?:\s+{NUMERO}){{1,2}})\s*$', re.IGNORECASE)
 NUMERO_DO_ITEM = re.compile(r'\s*\d{1,3}\b')
-PREFEITURA = re.compile(r'(?i:prefeitura municipal de)\s+([^\n,.;]+?)(?:\s*[-–/]\s*([A-Z]{2})\b|\s*(?:[\n,.;]|$))')
+# O nome começa e termina em caractere que não é espaço (o lookahead e o último caractere do grupo): sem isso, uma sequência
+# longa de espaços no nome faria o \s* do fim ser tentado em cada espaço, e o tempo cresceria com o quadrado do tamanho.
+PREFEITURA = re.compile(r'(?i:prefeitura municipal de)\s+(?=[^\s,.;])([^\n,.;]*?[^\s,.;])(?:\s*[-–/]\s*([A-Z]{2})\b|\s*(?:[\n,.;]|$))')
 NUMERO_CHAMADA = re.compile(r'(?i:chamada p[uú]blica\s*n[º°o.]*)\s*(\d+/\d{4})')
 PRAZO = re.compile(r'(?i:at[eé]\s+(?:o\s+)?(?:dia\s+)?)(\d{1,2})/(\d{1,2})/(\d{4})')
 
