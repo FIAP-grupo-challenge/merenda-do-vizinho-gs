@@ -183,6 +183,32 @@ test('porta aberta por mais de 2 minutos gera alerta de porta', async (t) => {
   assert.equal(contar(outro, 'alertas'), 0);
 });
 
+test('porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  const porta = async (porta_aberta, momento) => tipos(await enviar(app, leitura({ porta_aberta, momento })));
+  assert.deepEqual(await porta(true, '2026-11-18T22:00:00Z'), []);
+  assert.deepEqual(await porta(false, '2026-11-18T22:01:00Z'), []);
+  assert.deepEqual(await porta(true, '2026-11-18T22:10:00Z'), [], 'reabriu: a conta recomeça');
+  assert.deepEqual(await porta(true, '2026-11-18T22:13:00Z'), ['porta']);
+});
+
+test('depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve', async (t) => {
+  const app = await subirApp();
+  t.after(app.fechar);
+  // o que um reinício deixa: o alerta aberto no banco e a conta da porta (o Map) vazia
+  app.db
+    .prepare('INSERT INTO alertas (dispositivo, tipo, mensagem, momento) VALUES (?, ?, ?, ?)')
+    .run('camara-01', 'porta', 'A porta de camara-01 está aberta há mais de 2 minutos.', '2026-11-18T22:03:00.000Z');
+  const resolvidos = () => alertasGravados(app).map((a) => a.resolvido);
+  assert.deepEqual(tipos(await enviar(app, leitura({ porta_aberta: true, momento: '2026-11-18T22:04:00Z' }))), [], 'a conta recomeçou');
+  assert.deepEqual(resolvidos(), [0], 'a porta continua aberta: o alerta fica');
+  assert.deepEqual(tipos(await enviar(app, leitura({ porta_aberta: true, momento: '2026-11-18T22:07:00Z' }))), ['porta']);
+  assert.deepEqual(resolvidos(), [0], 'o alerta que já estava aberto, sem outro igual');
+  await enviar(app, leitura({ porta_aberta: false, momento: '2026-11-18T22:08:00Z' }));
+  assert.deepEqual(resolvidos(), [1], 'a porta fechou: resolve');
+});
+
 test('alerta não se repete a cada leitura e é resolvido quando volta ao normal', async (t) => {
   const app = await subirApp();
   t.after(app.fechar);
@@ -215,6 +241,21 @@ test('porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve qua
   assert.deepEqual(estado(), [['temperatura', 0], ['porta', 1]]);
   await enviar(app, leitura({ porta_aberta: false, temperatura_c: 7, momento: '2026-11-18T22:10:00Z' }));
   assert.deepEqual(estado(), [['temperatura', 1], ['porta', 1]]);
+});
+
+test('os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET', async (t) => {
+  const app = await subirApp({ env: { LIMITE_TEMP_C: '8', MINUTOS_PORTA_ABERTA: '1' } });
+  t.after(app.fechar);
+  const quente = await enviar(app, leitura({ temperatura_c: 8.5, porta_aberta: true }));
+  assert.deepEqual(tipos(quente), ['temperatura'], '8,5 °C passa do limite de 8');
+  assert.match(quente.corpo.alertas[0].mensagem, /8 °C/);
+  const porta = await enviar(app, leitura({ porta_aberta: true, momento: '2026-11-18T22:01:01Z' }));
+  assert.deepEqual(tipos(porta), ['porta'], '1 min 1 s passa do limite de 1 minuto');
+  assert.match(porta.corpo.alertas[0].mensagem, /1 minuto\b/);
+  const token = await app.entrar('cooperativa@demo.br');
+  const { corpo } = await app.pedir('GET', '/api/cooperativa/camara-fria', { token });
+  assert.equal(corpo.limite_temp_c, 8);
+  assert.equal(corpo.minutos_porta_aberta, 1);
 });
 
 test('GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos', async (t) => {

@@ -47,7 +47,8 @@ function registrar(roteador, { db, config }) {
         const alerta = alertas.find((a) => a.tipo === tipo);
         const aberto = buscarAberto.get(dispositivo, tipo);
         if (alerta && !aberto) inserirAlerta.run(dispositivo, tipo, alerta.mensagem, momento);
-        if (!alerta && aberto) resolver.run(aberto.id);
+        // porta ainda aberta não resolve: depois de um reinício a conta recomeça do zero, mas o alerta aberto continua valendo
+        if (!alerta && aberto && !(tipo === 'porta' && porta_aberta)) resolver.run(aberto.id);
       }
     });
     portaAbertaDesde.set(dispositivo, desde);

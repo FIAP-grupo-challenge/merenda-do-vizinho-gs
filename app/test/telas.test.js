@@ -39,7 +39,7 @@ test('estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e 
 
 // api.js é um ES module de navegador: roda aqui como módulo (data: URL), com localStorage, location e fetch de mentira.
 // Cada arquivo de teste roda no seu processo, então trocar estes globais não vaza para os outros testes.
-test('api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor', async () => {
+test('api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status', async () => {
   const codigo = fs.readFileSync(path.join(WEB, 'src', 'lib', 'api.js'), 'utf8');
   const { api } = await import(`data:text/javascript,${encodeURIComponent(codigo)}`);
   Object.assign(globalThis, { localStorage: { getItem: () => null, removeItem() {} }, location: {} });
@@ -48,11 +48,13 @@ test('api() troca a falha de rede por uma mensagem em português e repassa o err
     throw new TypeError('Failed to fetch');
   };
   await assert.rejects(api('GET', '/api/eu'), { message: 'Sem conexão com o servidor. Confira a internet e tente de novo.' });
+  // sem status: a tela da câmara fria para de consultar com 401 ou 403, mas com a rede fora continua tentando
+  await assert.rejects(api('GET', '/api/eu'), (erro) => erro.status === undefined);
 
   globalThis.fetch = async () => ({ ok: false, status: 400, json: async () => ({ erro: 'Confira o e-mail.' }) });
-  await assert.rejects(api('POST', '/api/cadastro', {}), { message: 'Confira o e-mail.' });
+  await assert.rejects(api('POST', '/api/cadastro', {}), { message: 'Confira o e-mail.', status: 400 });
   globalThis.fetch = async () => ({ ok: false, status: 500, json: async () => Promise.reject(new Error('não é JSON')) });
-  await assert.rejects(api('GET', '/api/eu'), { message: 'Não deu certo. Tente de novo.' });
+  await assert.rejects(api('GET', '/api/eu'), { message: 'Não deu certo. Tente de novo.', status: 500 });
 });
 
 // Texto do servidor (e dos PDFs) entra na tela só por interpolação {...}, que o Svelte escapa.

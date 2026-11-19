@@ -1,6 +1,7 @@
 // Comum a todas as telas: chamar a API do app com o token da sessão.
 // Uso: import { api, sair } from '../lib/api.js'; const dados = await api('POST', '/api/login', { email, senha });
-// Se a resposta for um erro, lança Error com a mensagem do servidor (o campo "erro").
+// Se a resposta for um erro, lança Error com a mensagem do servidor (o campo "erro") e o status HTTP em erro.status
+// (a falha de rede não tem status).
 export async function api(metodo, caminho, corpo) {
   const token = localStorage.getItem('token');
   const cabecalhos = {};
@@ -20,7 +21,7 @@ export async function api(metodo, caminho, corpo) {
   const dados = await resposta.json().catch(() => ({}));
   // sessão vencida (8 h) ou inválida: volta para a tela de entrar
   if (resposta.status === 401 && token) sair();
-  if (!resposta.ok) throw new Error(dados.erro || 'Não deu certo. Tente de novo.');
+  if (!resposta.ok) throw Object.assign(new Error(dados.erro || 'Não deu certo. Tente de novo.'), { status: resposta.status });
   return dados;
 }
 

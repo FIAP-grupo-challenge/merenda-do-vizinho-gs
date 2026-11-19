@@ -28,13 +28,18 @@
       : '',
   );
 
-  // A cada 3 s, contados depois da resposta anterior: os pedidos nunca se acumulam. Sem conexão, avisa e tenta de novo.
+  // 401 ou 403: a sessão não vale ou a conta não é de cooperativa. Tentar de novo não adianta.
+  const semAcesso = (falha) => falha.status === 401 || falha.status === 403;
+
+  // A cada 3 s, contados depois da resposta anterior: os pedidos nunca se acumulam. Sem conexão, avisa e tenta de novo;
+  // sem acesso, avisa e para.
   async function atualizar() {
     try {
       camara = await api('GET', '/api/cooperativa/camara-fria');
       erroCamara = '';
     } catch (falha) {
       erroCamara = falha.message;
+      if (semAcesso(falha)) return;
     }
     setTimeout(atualizar, 3000);
   }
@@ -59,7 +64,8 @@
       propostas = await api('GET', '/api/cooperativa/propostas');
       propostaId = propostas[0]?.id ?? null;
     } catch (falha) {
-      erroEntrega = falha.message;
+      // sem acesso, a mesma mensagem já aparece em "Agora na câmara": uma vez só
+      if (!semAcesso(falha)) erroEntrega = falha.message;
     }
   }
   carregarPropostas();
