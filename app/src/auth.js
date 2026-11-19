@@ -21,6 +21,13 @@ function conferirSenha(senha, armazenado) {
   return esperado.length === calculado.length && crypto.timingSafeEqual(esperado, calculado);
 }
 
+// A chave de um cabeçalho (X-Chave-Servico, X-Chave-Dispositivo) contra a do .env. Compara os SHA-256, que têm sempre
+// 32 bytes: o tempo da comparação não revela quantos bytes bateram nem o tamanho da chave. Sem cabeçalho, não confere.
+function chaveConfere(recebida, esperada) {
+  const digest = (texto) => crypto.createHash('sha256').update(texto).digest();
+  return typeof recebida === 'string' && crypto.timingSafeEqual(digest(recebida), digest(esperada));
+}
+
 function emitirToken({ id, papel }, segredo) {
   return jwt.sign({ id, papel }, segredo, { algorithm: 'HS256', expiresIn: '8h' });
 }
@@ -51,4 +58,4 @@ function exigirPapel(...papeis) {
   };
 }
 
-module.exports = { hashSenha, conferirSenha, emitirToken, exigirLogin, exigirPapel };
+module.exports = { hashSenha, conferirSenha, chaveConfere, emitirToken, exigirLogin, exigirPapel };

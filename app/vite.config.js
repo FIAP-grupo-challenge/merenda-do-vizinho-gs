@@ -23,6 +23,7 @@ module.exports = defineConfig({
         prefeitura: path.join(WEB, 'prefeitura.html'),
         cooperativa: path.join(WEB, 'cooperativa.html'),
         'projeto-venda': path.join(WEB, 'projeto-venda.html'),
+        'camara-fria': path.join(WEB, 'camara-fria.html'),
       },
     },
   },
