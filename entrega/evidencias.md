@@ -273,7 +273,7 @@ A câmara fria da cooperativa é simulada de dois jeitos, com o mesmo formato de
 - **Arduino Uno no TinkerCad** (`iot/camara-fria/camara-fria.ino` e `iot/camara-fria/ligacoes.md`), com **três sensores**: temperatura (TMP36, no pino A0), peso (um potenciômetro no lugar do sensor de peso, no A1) e porta (uma chave deslizante, no D2). O LED (D13) e o buzzer (D8) formam o alarme, que liga com a temperatura acima de 10 °C ou com a porta aberta por mais de 2 minutos. A cada 2 s, o Monitor Serial mostra uma linha JSON, como `{"dispositivo":"camara-01","temperatura_c":6.4,"peso_kg":182.0,"porta_aberta":false}`.
 - **Simulador em Python** (`iot/simulador.py`, só com a biblioteca padrão), que manda as leituras para a API do app (`POST /api/leituras`, com a chave do dispositivo), nos cenários `normal`, `porta-aberta`, `entrega` e `colheita`.
 
-**Link do projeto no TinkerCad:** <https://www.tinkercad.com/things/7p2YmcBCG4E>
+**Link do projeto no TinkerCad:** <https://www.tinkercad.com/things/7p2YmcBCG4E-camara-fria-pnae?sharecode=wPjrXlihhXMCQCk6bQZHyF2sJ6PP0AdU33NmhdCIkd4>
 
 ![**TinkerCad 1.** O circuito montado.](prints/tinkercad-circuito.png)
 

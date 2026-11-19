@@ -368,7 +368,7 @@ Os arquivos ficam em `dados/datalake/` (as camadas, fora do Git, exceto as fonte
 
 O circuito é um Arduino Uno montado no TinkerCad, com um sensor de temperatura (TMP36), um potenciômetro no lugar do sensor de peso e uma chave deslizante como porta. As ligações estão em [iot/camara-fria/ligacoes.md](iot/camara-fria/ligacoes.md), e o sketch em [iot/camara-fria/camara-fria.ino](iot/camara-fria/camara-fria.ino).
 
-- **Link do projeto no TinkerCad:** <https://www.tinkercad.com/things/7p2YmcBCG4E>
+- **Link do projeto no TinkerCad:** <https://www.tinkercad.com/things/7p2YmcBCG4E-camara-fria-pnae?sharecode=wPjrXlihhXMCQCk6bQZHyF2sJ6PP0AdU33NmhdCIkd4>
 - Na simulação, o Monitor Serial a 9600 baud mostra uma linha JSON a cada 2 s, como `{"dispositivo":"camara-01","temperatura_c":6.4,"peso_kg":182.0,"porta_aberta":false}`.
 - O alarme (LED e buzzer) liga com a temperatura acima de 10 °C ou com a porta aberta por mais de 2 minutos.
 
