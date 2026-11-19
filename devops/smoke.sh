@@ -2,11 +2,14 @@
 # Teste de fumaça do Docker Compose: sobe o app e a IA, confere os dois, manda leituras do simulador,
 # roda o pipeline de dados e derruba os serviços. No fim imprime SMOKE OK; qualquer falha sai com código 1.
 # Uso: devops/smoke.sh
+# O projeto do Compose é o merenda-smoke, e não o nome da pasta: o smoke não rebuilda, reinicia nem derruba a pilha que
+# você usa no dia a dia. Para outro nome: COMPOSE_PROJECT_NAME=outro devops/smoke.sh
 # Com o Podman sem root, o usuário 1000 dos contêineres tem de ser você para o pipeline gravar em ./dados/datalake:
 #   COMPOSE="podman-compose --podman-run-args=--userns=keep-id:uid=1000,gid=1000" devops/smoke.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
 COMPOSE="${COMPOSE:-docker compose}"
+export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-merenda-smoke}"
 
 echo '== 1. .env, build e subida'
 # Sem .env, cria um de teste com segredos aleatórios (o .env fica fora do Git). Sem chave da Anthropic, a IA
@@ -58,14 +61,10 @@ esperar http://ia:3001/saude
 esperar http://localhost:3000/
 
 echo '== 3. 5 leituras do simulador com a porta aberta'
-# O simulador sai com código 1 se algum status não for 201. SMOKE_SEM_LEITURAS=1 pula só este passo.
+# O simulador sai com código 1 se algum status não for 201.
 # --profile tarefas nos run: o podman-compose só roda um serviço de perfil com o perfil ligado.
-if [ "${SMOKE_SEM_LEITURAS:-}" = 1 ]; then
-  echo 'pulei as leituras (SMOKE_SEM_LEITURAS=1)'
-else
-  $COMPOSE --profile tarefas run --rm -T iot python iot/simulador.py --cenario porta-aberta --quantidade 5 \
-    --intervalo 1 --url http://app:3000/api/leituras
-fi
+$COMPOSE --profile tarefas run --rm -T iot python iot/simulador.py --cenario porta-aberta --quantidade 5 \
+  --intervalo 1 --url http://app:3000/api/leituras
 
 echo '== 4. pipeline do data lake, com a cópia versionada das fontes públicas e os dados do app'
 $COMPOSE --profile tarefas run --rm -T -e PIPELINE_OFFLINE=1 dados python -m dados.pipeline tudo
