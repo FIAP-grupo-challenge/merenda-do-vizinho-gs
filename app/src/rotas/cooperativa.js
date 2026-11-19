@@ -144,7 +144,7 @@ function registrar(roteador, { db }) {
           throw new ErroHttp(400, `${item.produto}: a quantidade de ${membro.nome} precisa ser um número, zero ou mais.`);
         }
         if (unidadeInteira(item.unidade) && !Number.isInteger(a.quantidade)) {
-          throw new ErroHttp(400, `${item.produto} é contada em ${item.unidade}: use número inteiro.`);
+          throw new ErroHttp(400, `${item.produto}: a quantidade de ${membro.nome} precisa ser um número inteiro (o item é contado em ${item.unidade}).`);
         }
         const quantidade = arredondar(a.quantidade);
         membro.reais = arredondar(membro.reais + arredondar(quantidade * item.preco_unitario));

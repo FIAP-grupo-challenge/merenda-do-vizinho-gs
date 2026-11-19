@@ -92,7 +92,7 @@ O agrupamento divide cada item do edital entre os cooperados que produzem aquele
 4. **Centavos e unidades inteiras.** A conta é feita em centésimos, com o pedido e o teto arredondados para baixo. O resultado nunca passa do pedido nem do teto. Itens contados em peça, unidade, maço, molho, feixe, atilho, dúzia, bandeja, caixa ou pacote (`unidadeInteira`, em `app/src/regras-pnae.js`, que compara a unidade sem maiúsculas e sem acento) não se dividem: a conta é feita em unidades inteiras, com o pedido e o teto também arredondados para baixo, e a sobra sai em unidades inteiras, repartida na mesma ordem: ninguém recebe 855,51 pés de alface. kg, g, l e ml seguem com centésimos.
 5. **Depois de cada item.** O que o cooperado recebeu sai do limite em reais dele e da capacidade do produto, para os itens seguintes.
 6. **O que falta.** O que nenhum cooperado conseguiu cobrir aparece como falta, item a item.
-7. **Edição.** A cooperativa pode mudar a divisão. Ao salvar, o servidor confere de novo as quantidades, o limite em reais e a capacidade de cada cooperado (`app/src/rotas/cooperativa.js`, rota `PUT /api/cooperativa/propostas/:id`). Num item de unidade inteira, uma quantidade fracionada dá erro 400 ("Alface é contada em pç: use número inteiro.").
+7. **Edição.** A cooperativa pode mudar a divisão. Ao salvar, o servidor confere de novo as quantidades, o limite em reais e a capacidade de cada cooperado (`app/src/rotas/cooperativa.js`, rota `PUT /api/cooperativa/propostas/:id`). Num item de unidade inteira, uma quantidade fracionada dá erro 400 ("Alface: a quantidade de Ana Souza precisa ser um número inteiro (o item é contado em pç).").
 
 **Limites conhecidos das regras:**
 

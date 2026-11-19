@@ -612,18 +612,20 @@ test('alocação fracionada num item contado em unidade inteira devolve 400 em p
   const editar = (corpo) => app.pedir('PUT', `/api/cooperativa/propostas/${proposta.id}`, { token, corpo });
 
   const recusas = [
-    ['Alface', 'Ana', 855.5, 'Alface é contada em pç: use número inteiro.'],
-    ['Abóbora Cabotiá', 'Davi', 389.5, 'Abóbora Cabotiá é contada em unidade: use número inteiro.'],
-    ['Cheiro verde', 'Carla', 1199.99, 'Cheiro verde é contada em fx: use número inteiro.'],
-    ['Couve-flor', 'Elisa', 299.5, 'Couve-flor é contada em un: use número inteiro.'],
-    ['Milho', 'Davi', 599.01, 'Milho é contada em atilho: use número inteiro.'],
-    ['Alface', 'Fábio', 0.5, 'Alface é contada em pç: use número inteiro.'], // até meio pé
-    ['Alface', 'Carla', 570.004, 'Alface é contada em pç: use número inteiro.'], // nem o que o arredondamento a 2 casas apagaria
+    ['Alface', 'Ana', 855.5, 'pç'],
+    ['Abóbora Cabotiá', 'Davi', 389.5, 'unidade'],
+    ['Cheiro verde', 'Carla', 1199.99, 'fx'],
+    ['Couve-flor', 'Elisa', 299.5, 'un'],
+    ['Milho', 'Davi', 599.01, 'atilho'],
+    ['Alface', 'Fábio', 0.5, 'pç'], // até meio pé
+    ['Alface', 'Carla', 570.004, 'pç'], // nem o que o arredondamento a 2 casas apagaria
   ];
-  for (const [produto, nome, quantidade, erro] of recusas) {
+  for (const [produto, nome, quantidade, unidade] of recusas) {
     const resposta = await editar(trocar(produto, nome, quantidade));
     assert.equal(resposta.status, 400, `${produto} ${quantidade}`);
-    assert.equal(resposta.corpo.erro, erro);
+    // diz o item, quem e a unidade, numa frase que serve para produto masculino ou feminino
+    const esperado = new RegExp(`^${produto}: a quantidade de ${nome}[^:]* precisa ser um número inteiro \\(o item é contado em ${unidade}\\)\\.$`);
+    assert.match(resposta.corpo.erro, esperado);
   }
   assert.equal(guardada(), antes, 'nada mudou');
 

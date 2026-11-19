@@ -80,7 +80,7 @@ const UNIDADES_INTEIRAS = new Set(
   [
     'pç', 'pc', 'peça', 'unidade', 'un', 'unid', 'maço', 'molho', 'fx', 'feixe', 'atilho',
     'dz', 'dúzia', 'duzia', 'bandeja', 'cx', 'caixa', 'pct', 'pacote',
-    'und', 'mlh', 'pact', 'pcte', // abreviações que aparecem nas chamadas reais da avaliação
+    'und', 'mlh', 'pact', 'pcte', // und, mlh e pact aparecem nas chamadas reais da avaliação; pcte é a outra forma de pacote
   ].map(normalizarUnidade),
 );
 
@@ -89,7 +89,8 @@ function normalizarUnidade(unidade) {
 }
 
 function unidadeInteira(unidade) {
-  return UNIDADES_INTEIRAS.has(normalizarUnidade(unidade));
+  const nome = normalizarUnidade(unidade);
+  return UNIDADES_INTEIRAS.has(nome) || UNIDADES_INTEIRAS.has(nome.replace(/s$/, '')); // plural: maços, unidades, pçs
 }
 
 // Dinheiro e quantidades têm 2 casas. O toPrecision(15) tira o ruído do ponto flutuante antes de arredondar:
