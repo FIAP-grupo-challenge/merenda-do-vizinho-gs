@@ -293,7 +293,7 @@ Um uso completo, com os usuários de demonstração e a chamada real de Catalão
 1. **A prefeitura publica a chamada.** Ela envia o PDF do edital, a IA lê (prints 2 e 3, na seção 3.1), ela confere e publica. A chamada 003/2026 publicada, com os 16 itens, é a do print 4: no app de demonstração ela já vem publicada de antes, e a tela a marca como "Leitura já conferida antes (cache)". A leitura que a IA fez na hora é a dos prints 2 e 3.
 2. **A agricultora acha a oportunidade.** A Ana entra e vê a chamada da cidade dela, com quanto pode ganhar: até R$ 21.082,00 (print 5).
 3. **O assistente ajuda a decidir.** Ela pergunta se pode entregar 50 de alface por semana, e a resposta faz a conta (print 6, na seção 3.1) e preenche o campo. Ela toca em "Quero participar", e o interesse vai para a cooperativa (print 7).
-4. **A cooperativa monta a proposta.** O app divide cada item entre os cooperados que plantam, respeitando o que cada um produz e o limite de R$ 40 mil por ano. A cooperativa ajusta a alface para números inteiros e salva a divisão (print 9).
+4. **A cooperativa monta a proposta.** O app divide cada item entre os cooperados que plantam, respeitando o que cada um produz e o limite de R$ 40 mil por ano. O que se conta em unidade (a alface em pç, o maço, a dúzia) sai em números inteiros, e o kg segue com centésimos. A divisão aparece pronta, do jeito que o app a calcula, sem edição (print 9); a cooperativa pode mudá-la e salvar, e o app confere de novo.
 5. **O projeto de venda sai pronto.** "Gerar projeto de venda" preenche o modelo do FNDE com cada agricultor, os itens e os valores; o que o app não guarda fica em branco, para escrever à mão (print 10).
 6. **A câmara fria guarda os alimentos.** As leituras chegam a cada segundo, e quando a temperatura passa de 10 °C a faixa vermelha avisa (print 11, na seção 5.2).
 7. **A entrega é registrada, e a prefeitura acompanha.** A cooperativa registra a entrega de 300 kg de mandioca (R$ 3.513,00). A prefeitura vê a proposta recebida, a entrega e quanto falta para a meta do ano (print 12).
@@ -304,7 +304,7 @@ Um uso completo, com os usuários de demonstração e a chamada real de Catalão
 
 ![**Print 7.** A sugestão do assistente foi para o campo da alface; com "Quero participar", a cooperativa passa a ver o que a Ana quer vender.](prints/07-quero-participar.png){width=95mm}
 
-![**Print 9.** Trecho da tela da cooperativa, a proposta conjunta: cada item dividido entre os cooperados, com a oferta e a falta. O Fábio fica com pouca alface porque está perto do limite de R$ 40 mil no ano. A divisão foi ajustada para números inteiros e salva.](prints/09-cooperativa-proposta.png)
+![**Print 9.** Trecho da tela da cooperativa, a proposta conjunta, como o app a monta sozinho, sem nenhuma edição: cada item dividido entre os cooperados, com a oferta e a falta. A alface (em pç) sai em números inteiros, 856, 570, 570 e 284, porque um pé de alface não se divide; o kg segue com centésimos (a mandioca do Fábio, 0,29 kg). O Fábio fica com pouca alface e quase nenhuma mandioca porque está perto do limite de R$ 40 mil no ano.](prints/09-cooperativa-proposta.png)
 
 ![**Print 10.** O projeto de venda gerado no modelo do FNDE (parte II, os agricultores e os alimentos de cada um), pronto para imprimir.](prints/10-projeto-venda.png)
 
@@ -388,7 +388,7 @@ A saída dos comandos, em `devops/evidencias/seguranca.txt`:
 | CT14 | teste de fumaça com o Docker Compose | passou |
 | CT15 | pipeline de ponta a ponta no Jenkins | passou |
 
-**A execução:** 250 testes automatizados, todos passando: 122 no app (`node --test`), 86 na IA, 27 nos dados e 15 no simulador (`unittest`). Nenhum chama a API da Anthropic. Resumo de `devops/evidencias/testes.txt`, que traz a saída completa, teste a teste:
+**A execução:** 255 testes automatizados, todos passando: 127 no app (`node --test`), 86 na IA, 27 nos dados e 15 no simulador (`unittest`). Nenhum chama a API da Anthropic. Resumo de `devops/evidencias/testes.txt`, que traz a saída completa, teste a teste:
 
 ```{.text incluir="../devops/evidencias/testes.txt" comeca="# ;$ ;ℹ tests;ℹ pass;ℹ fail;Ran ;OK;FAILED;(código de saída"}
 ```
