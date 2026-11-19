@@ -339,6 +339,15 @@ class TestPipelineTudo(unittest.TestCase):
             self.assertEqual(gerar_simulado(Path(pasta)).read_bytes(),
                              (self.datalake / 'raw' / 'simulado' / 'simulado.json').read_bytes())
 
+    def test_simulado_bate_com_os_numeros_da_pagina_2_do_guia_do_painel(self):
+        # dados/powerbi/guia-do-painel.md, "Página 2": o catálogo pode crescer sem mudar o histórico simulado
+        entregas = pd.read_csv(self.refined / 'fato_entregas.csv')
+        simulado = entregas[entregas['origem'] == 'simulado']
+        self.assertEqual(len(simulado), 783)
+        self.assertEqual(simulado['no_prazo'].sum(), 694)
+        self.assertEqual(simulado['kg'].sum(), 12799)
+        self.assertAlmostEqual(simulado['valor'].sum(), 160379.40, places=2)
+
     def test_camara_fria_por_hora_de_brasilia_com_minutos_acima_de_10_graus(self):
         camara = pd.read_csv(self.refined / 'fato_camara_fria.csv')
         app = camara[camara['origem'] == 'app']

@@ -4,11 +4,9 @@ import os
 import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-from pypdf.errors import PyPdfError
-
 from ia.cliente_claude import criar_cliente_claude
 from ia.config import MODELO_PADRAO
-from ia.extrair.servico import extrair_chamada
+from ia.extrair.servico import PdfIlegivel, extrair_chamada
 
 LIMITE_CORPO = 10 * 1024 * 1024  # 10 MB
 
@@ -25,7 +23,7 @@ def extrair(servidor, corpo):
         return 400, {'erro': 'pdf_base64 não é um PDF'}
     try:
         return 200, extrair_chamada(corpo, servidor.cliente, servidor.modelo)
-    except (ValueError, PyPdfError):  # base64 quebrado ou PDF corrompido
+    except PdfIlegivel:  # base64 quebrado ou PDF corrompido; qualquer outro erro vai para o 500 de _atender
         return 400, {'erro': 'não consegui ler o PDF'}
 
 

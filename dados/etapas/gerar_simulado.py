@@ -11,11 +11,21 @@ CATALOGO = Path(__file__).resolve().parents[2] / 'compartilhado' / 'catalogo-pro
 INICIO = datetime.date(2025, 7, 1)  # 12 meses, de julho de 2025 a junho de 2026: antes dos dados reais do app
 DIAS = 365
 ESCOLAS = [f'Escola {numero:02d}' for numero in range(1, 13)]
+# A cooperativa fictícia vende uma lista fixa: os 43 produtos que o catálogo tinha quando o histórico foi gerado, na
+# ordem de então. Com o catálogo inteiro, cada produto novo mudaria o sorteio da semente e os números do guia do painel.
+PRODUTOS_SIMULADOS = [
+    'alface', 'couve', 'couve-flor', 'repolho', 'cenoura', 'beterraba', 'chuchu', 'abobora', 'abobrinha',
+    'quiabo', 'pepino', 'pimentao', 'cebola', 'alho', 'batata-inglesa', 'batata-doce', 'mandioca', 'tomate',
+    'cebolinha', 'salsa', 'coentro', 'banana', 'laranja', 'mexerica', 'mamao', 'melancia', 'abacaxi',
+    'maracuja', 'goiaba', 'limao', 'manga', 'feijao', 'arroz', 'milho-verde', 'fuba', 'farinha-de-mandioca',
+    'pao-caseiro', 'biscoito-caseiro', 'mel', 'ovo', 'leite', 'queijo', 'frango',
+]
 
 
 def gerar_simulado(raw: Path, semente: int = 42) -> Path:
     aleatorio = random.Random(semente)
-    produtos = json.loads(CATALOGO.read_text(encoding='utf-8'))
+    catalogo = {produto['id']: produto for produto in json.loads(CATALOGO.read_text(encoding='utf-8'))}
+    produtos = [catalogo[id_produto] for id_produto in PRODUTOS_SIMULADOS]  # a unidade_padrao vem do catálogo
     precos = {produto['id']: round(aleatorio.uniform(3, 15), 2) for produto in produtos}  # R$ por unidade_padrao
     agricultores = [
         {'pseudonimo': f'{aleatorio.getrandbits(48):012x}', 'municipio': 'Catalão', 'uf': 'GO',

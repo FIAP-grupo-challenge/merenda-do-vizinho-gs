@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import threading
@@ -43,6 +44,23 @@ class TestServidor(unittest.TestCase):
             with self.subTest(corpo=corpo):
                 status, resposta = self.pedir('/extrair-chamada', corpo)
                 self.assertEqual((status, list(resposta)), (400, ['erro']))
+
+    def test_pdf_corrompido_devolve_400(self):
+        pdf = base64.b64encode(b'%PDF-1.4\ngarbage').decode()
+        with self.assertLogs('pypdf', 'WARNING'):  # o aviso "EOF marker not found" do pypdf fica aqui, não no stderr
+            resposta = self.pedir('/extrair-chamada', {'pdf_base64': pdf})
+        self.assertEqual(resposta, (400, {'erro': 'não consegui ler o PDF'}))
+
+    def test_base64_quebrado_devolve_400(self):
+        resposta = self.pedir('/extrair-chamada', {'pdf_base64': 'JVBERi0xLjQ'})  # '%PDF-1.4' sem o '=' do fim
+        self.assertEqual(resposta, (400, {'erro': 'não consegui ler o PDF'}))
+
+    def test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400(self):
+        # a T3 lê a resposta do Claude dentro de extrair_chamada: JSON malformado é falha nossa, não do arquivo enviado
+        with mock.patch('ia.servidor.extrair_chamada', side_effect=json.JSONDecodeError('x', '', 0)), \
+                mock.patch.object(Manipulador, 'log_error'):
+            resposta = self.pedir('/extrair-chamada', {'texto': 'edital'})
+        self.assertEqual(resposta, (500, {'erro': 'erro interno da IA'}))
 
     def test_extrair_chamada_por_texto(self):
         status, resposta = self.pedir('/extrair-chamada', {'texto': FIXTURE.read_text(encoding='utf-8')})

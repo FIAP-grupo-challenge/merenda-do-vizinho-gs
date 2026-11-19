@@ -170,7 +170,7 @@ O app é novo e ainda não tem histórico. Para o painel de entregas e da câmar
 
 - 25 agricultores, só com pseudônimo: 30% orgânicos e 60% que já venderam ao PNAE;
 - 12 escolas ("Escola 01" a "Escola 12");
-- 12 meses de entregas, de julho de 2025 a junho de 2026, antes dos dados reais do app: três escolas por dia útil, produtos do catálogo na `unidade_padrao`, preços simulados e 90% no prazo;
+- 12 meses de entregas, de julho de 2025 a junho de 2026, antes dos dados reais do app: três escolas por dia útil, 43 produtos do catálogo na `unidade_padrao` (a lista fixa `PRODUTOS_SIMULADOS`: o catálogo pode crescer sem mudar o histórico), preços simulados e 90% no prazo;
 - uma leitura por hora da câmara fria: de 4 a 7 °C, com a porta esquecida aberta em 2% das horas, quando a temperatura vai a 10,5 a 14 °C.
 
 Toda linha simulada tem `origem = simulado` no trusted e no refined.

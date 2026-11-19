@@ -1,5 +1,6 @@
 """Modo de regras: lê a chamada sem IA, por heurística de tabela. É também a queda quando a IA falha."""
 import re
+import unicodedata
 from datetime import date
 
 from ia.catalogo import identificar_produto
@@ -17,6 +18,7 @@ PRAZO = re.compile(r'(?i:at[eé]\s+(?:o\s+)?(?:dia\s+)?)(\d{1,2})/(\d{1,2})/(\d{
 
 
 def extrair_por_regras(texto: str) -> dict:
+    texto = unicodedata.normalize('NFC', texto)  # 'Pç' chega às vezes como 'c' + U+0327, que [cç] e [uú] não casam
     municipio, uf = _municipio_e_uf(texto)
     numero = NUMERO_CHAMADA.search(texto)
     # o que a heurística não procura fica None ou []: a prefeitura confere e completa o rascunho

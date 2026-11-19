@@ -52,6 +52,14 @@ class TestRegras(unittest.TestCase):
         self.assertEqual(next(i for i in c['itens'] if i['produto_id'] == 'ovo')['unidade'], 'dz')
         self.assertEqual((c['municipio'], c['uf'], c['prazo_envio']), ('Vale Verde', 'SP', '2026-03-20'))
 
+    def test_acentos_decompostos_nao_derrubam_itens(self):
+        # 'Pç' também chega como 'c' + U+0327 (cedilha solta), comum em texto copiado de PDF e de Word
+        texto = ('Alface Pc\u0327 2.280 7,03 16.028,40\nCheiro verde Mac\u0327o 100 2,00 200,00\n'
+                 'Ovos du\u0301zia 600 12,00 7.200,00')
+        itens = extrair_por_regras(texto)['itens']
+        self.assertEqual([(i['produto_id'], i['unidade']) for i in itens],
+                         [('alface', 'pç'), ('cheiro-verde', 'maço'), ('ovo', 'dúzia')])
+
     def test_texto_sem_tabela_devolve_itens_vazios_e_aviso(self):
         r = extrair_chamada({'texto': 'Edital sem tabela de itens.'})
         self.assertEqual(r['origem'], 'regras'); self.assertEqual(r['chamada']['itens'], [])
