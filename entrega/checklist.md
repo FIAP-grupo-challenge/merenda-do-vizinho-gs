@@ -16,7 +16,7 @@ Prazo: **19/11/2026, até 23h55, na plataforma** (sem prorrogação). Uma entreg
 
   Copie também o link público do projeto no TinkerCad.
 - [ ] **Corte o que identifica pessoa:** antes de salvar cada print do Power BI e do TinkerCad, corte (ou tape) o nome da conta, o e-mail e a foto de perfil que aparecem no canto da tela. O PDF e o `.zip` vão para a plataforma.
-- [ ] **Textos** (procure por `PREENCHER` e por `_(preencher`; o `gerar-pdf.sh` e o `empacotar.sh` listam o que ainda falta, com o número da linha):
+- [ ] **Textos** (procure por `PREENCHER` e por `_(preencher`; o `gerar-pdf.sh` e o `empacotar.sh` listam o que ainda falta, e o `empacotar.sh` diz também o número da linha):
   - [ ] `entrega/grupo.txt`: o nome do grupo; uma linha `RM - Nome` para **cada** integrante (até 5; apague as linhas que sobrarem); e o link do pitch;
   - [ ] `README.md`: os integrantes, o link do TinkerCad, "Revisado por pessoas" (quem do grupo revisou cada área e o que conferiu) e o link do pitch (o edital pede o link do pitch no `.txt` **e** no README);
   - [ ] `iot/README.md`: o link do TinkerCad;
@@ -31,7 +31,7 @@ Prazo: **19/11/2026, até 23h55, na plataforma** (sem prorrogação). Uma entreg
 
 ## 3. Na `main`: gerar o PDF e fazer o commit
 
-- [ ] `bash entrega/gerar-pdf.sh` (precisa do `pandoc` e do `weasyprint`). O fim da saída deve dizer `nenhuma pendência do grupo no PDF`. Se der erro, o `entrega/evidencias.pdf` anterior é mantido: leia a mensagem e rode de novo.
+- [ ] `bash entrega/gerar-pdf.sh` (precisa do `pandoc`, do `weasyprint` e do `pdfinfo`, que vem no pacote `poppler` no Arch e no `poppler-utils` no Ubuntu e no Debian). O fim da saída deve dizer `nenhuma pendência do grupo no PDF`. Se der erro, o `entrega/evidencias.pdf` anterior é mantido: leia a mensagem e rode de novo.
 - [ ] Abra o `entrega/evidencias.pdf` e confira: os 4 prints novos no lugar, nenhum quadro "A preencher pelo grupo" e nenhum nome de conta ou e-mail aparecendo.
 - [ ] Faça o commit, na `main`, do `entrega/evidencias.pdf` e do `devops/evidencias/git-log.txt` (a primeira linha dele diz de que ramo o histórico foi tirado: tem de dizer `main`).
 - [ ] `git push origin main` de novo, para o commit do PDF chegar ao GitHub, e confira na janela anônima que o último commit é esse.

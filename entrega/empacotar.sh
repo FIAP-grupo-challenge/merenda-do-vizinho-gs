@@ -42,7 +42,6 @@ mudancas="$(git -C "$raiz" status --porcelain --untracked-files=no | grep -v -E 
 [ -z "$mudancas" ] || avisos+=("há mudanças sem commit na pasta de trabalho, e elas NÃO entram no .zip:"$'\n'"$mudancas")
 soltos="$(git -C "$raiz" ls-files --others --exclude-standard -- entrega/prints)"
 [ -z "$soltos" ] || avisos+=("há prints fora do Git, que NÃO entram no .zip (faça o commit):"$'\n'"$soltos")
-echo "commit $(git -C "$pasta" log -1 --format='%h %s')"
 
 echo '== 2. .zip'
 problemas=()
@@ -146,5 +145,7 @@ if [ "${#problemas[@]}" -gt 0 ]; then
 fi
 mv "$tmp/pacote.zip" "$saida"
 echo "PRONTO: entrega/merenda-do-vizinho.zip ($(du -h "$saida" | cut -f1)), do ramo $ramo, sem problema de segurança."
+# o assunto do commit só aparece aqui, depois da conferência de chaves: um segredo escrito nele não sai no terminal antes
+echo "commit $(git -C "$pasta" log -1 --format='%h %s')"
 [ "$ramo" = main ] || echo "ATENÇÃO: este .zip é só de TESTE (ramo $ramo). Não envie: para a entrega, rode bash entrega/empacotar.sh main"
 [ "${#pendencias[@]}" -eq 0 ] || echo "ATENÇÃO: ainda há ${#pendencias[@]} pendência(s) do grupo (lista acima)."

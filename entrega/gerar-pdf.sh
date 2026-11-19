@@ -11,14 +11,19 @@ for programa in git pandoc weasyprint pdfinfo; do
   command -v "$programa" >/dev/null || { echo "falta o programa $programa: instale e rode de novo" >&2; exit 1; }
 done
 
-# o histórico do Git é a evidência de versionamento (seção 6.1 do PDF)
+# o histórico do Git é a evidência de versionamento (seção 6.1 do PDF). O PDF lê este arquivo na hora de gerar; se algo
+# falhar daqui até o fim, o git-log.txt anterior volta (o trap), e o evidencias.pdf anterior nem chega a ser trocado.
+log=../devops/evidencias/git-log.txt
+log_anterior="$(mktemp)"
+novo="evidencias.$$.pdf"
+ok=
+trap '[ -n "$ok" ] || cp "$log_anterior" "$log"; rm -f "$novo" "$log_anterior"' EXIT
+cp "$log" "$log_anterior"
 {
   echo "# git log --oneline --graph do ramo $(git rev-parse --abbrev-ref HEAD), em $(date +%F). O .git do .zip tem o histórico todo."
   git log --oneline --graph
-} > ../devops/evidencias/git-log.txt
+} > "$log"
 
-novo="evidencias.$$.pdf"
-trap 'rm -f "$novo"' EXIT
 # sem tex_math_dollars: "R$ 40" é dinheiro, não fórmula
 pandoc evidencias.md --from markdown-tex_math_dollars --to html5 --standalone --template pdf/modelo.html \
   --lua-filter pdf/filtro.lua --toc --toc-depth 2 --number-sections --wrap none \
@@ -27,6 +32,7 @@ pandoc evidencias.md --from markdown-tex_math_dollars --to html5 --standalone --
 paginas=$(pdfinfo "$novo" 2>/dev/null | awk '/^Pages:/ {print $2}' || true)
 [ "${paginas:-0}" -ge 30 ] || { echo "o PDF novo não abriu ou tem só ${paginas:-0} páginas (o certo é 30 ou mais): o entrega/evidencias.pdf anterior foi mantido" >&2; exit 1; }
 mv "$novo" evidencias.pdf
+ok=1
 echo "PDF pronto: entrega/evidencias.pdf ($paginas páginas)"
 
 pendencias=0
