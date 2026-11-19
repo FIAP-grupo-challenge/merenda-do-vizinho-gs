@@ -74,8 +74,10 @@ curl -s -w ' -> HTTP %{http_code}\n' -X POST $APP/api/leituras -H "X-Chave-Dispo
   `.gitignore` deixa fora do Git e o `.dockerignore` deixa fora das imagens. Sem os três primeiros, o app não sobe; a
   `ANTHROPIC_API_KEY` é opcional (sem ela, a IA responde pelas regras).
 - O agricultor aceita o termo de uso dos dados antes de salvar o perfil. CPF e CAF aparecem mascarados na tela.
-- A IA nunca recebe nome, CPF, CAF, e-mail, telefone nem dados bancários: o app manda só município, UF, produtos,
-  orgânico e se há prioridade, e barra CPF, CAF ou e-mail escritos no chat antes de chamar a IA.
+- Os dados cadastrados do agricultor (nome, CPF, CAF, e-mail, telefone, dados bancários e os critérios do RITS)
+  nunca vão para a IA: o app manda só município, UF, produtos, orgânico e se há prioridade. No chat, o serviço recusa
+  CPF, e-mail, telefone e dados bancários digitados. Um nome digitado não dá para detectar, e por isso a tela pede para
+  não escrevê-lo.
 - A exportação para o data lake exige a chave de serviço e troca o agricultor por um pseudônimo (HMAC-SHA256 do id).
 
 ```bash

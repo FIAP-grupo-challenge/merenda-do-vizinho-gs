@@ -1,4 +1,4 @@
-# Testes automatizados do Merenda do Vizinho, rodados em 2026-11-19T05:42:36-03:00 na raiz do repositório, sem ANTHROPIC_API_KEY.
+# Testes automatizados do Merenda do Vizinho, rodados em 2026-11-19T06:25:49-03:00 na raiz do repositório, sem ANTHROPIC_API_KEY.
 # Node 24.13.1 no app e Python 3.14.10 (o .venv do projeto) na IA, nos dados e no simulador.
 # No Jenkins, os mesmos testes rodam a cada commit no Node 24 (node:24-alpine) e no Python 3.12 (python:3.12-slim).
 
@@ -19,7 +19,7 @@ computing gzip size...
 public/index.html                            0.52 kB │ gzip:  0.32 kB
 public/chamada.html                          0.83 kB │ gzip:  0.39 kB
 public/agricultor.html                       0.84 kB │ gzip:  0.39 kB
-public/projeto-venda.html                    0.85 kB │ gzip:  0.40 kB
+public/projeto-venda.html                    0.85 kB │ gzip:  0.39 kB
 public/prefeitura.html                       1.00 kB │ gzip:  0.42 kB
 public/cooperativa.html                      1.00 kB │ gzip:  0.42 kB
 public/camara-fria.html                      1.00 kB │ gzip:  0.43 kB
@@ -32,150 +32,153 @@ public/assets/projeto-venda-DhlLwqvV.css     1.10 kB │ gzip:  0.45 kB
 public/assets/agricultor-ISK4klkl.css        1.15 kB │ gzip:  0.46 kB
 public/assets/prefeitura-DNlHOFn6.css        1.48 kB │ gzip:  0.53 kB
 public/assets/rolldown-runtime-B8xr6ykz.js   0.18 kB │ gzip:  0.14 kB
-public/assets/CaixaRolavel-Cdpq6ikx.js       0.39 kB │ gzip:  0.29 kB
+public/assets/CaixaRolavel-BoXeghVm.js       0.39 kB │ gzip:  0.29 kB
 public/assets/formato-DTf2Ygg2.js            1.02 kB │ gzip:  0.62 kB
-public/assets/CampoNumero-B6mlf7w6.js        1.29 kB │ gzip:  0.74 kB
-public/assets/index-0b5qeU-j.js              5.37 kB │ gzip:  2.19 kB
-public/assets/camara-fria-C7iNdX01.js        8.28 kB │ gzip:  3.51 kB
-public/assets/chamada-u3ptNiLP.js            9.10 kB │ gzip:  3.94 kB
-public/assets/cooperativa-C2uK3JtW.js        9.13 kB │ gzip:  3.71 kB
-public/assets/projeto-venda-BYGJhXs3.js     10.03 kB │ gzip:  3.76 kB
-public/assets/agricultor-Dlc0Ciga.js        14.05 kB │ gzip:  5.70 kB
-public/assets/prefeitura-BVUco72O.js        18.82 kB │ gzip:  6.75 kB
-public/assets/Ouvir-CVfdKE30.js             56.82 kB │ gzip: 21.99 kB
+public/assets/CampoNumero-Bpn684Z4.js        1.29 kB │ gzip:  0.74 kB
+public/assets/index-BHeSdzNZ.js              5.37 kB │ gzip:  2.19 kB
+public/assets/camara-fria-Dnb7m7-w.js        8.28 kB │ gzip:  3.51 kB
+public/assets/chamada-CrZrol1c.js            9.10 kB │ gzip:  3.94 kB
+public/assets/cooperativa-DqfyeMvf.js        9.13 kB │ gzip:  3.71 kB
+public/assets/projeto-venda-BXYUUdBC.js     10.03 kB │ gzip:  3.76 kB
+public/assets/agricultor-CDInkzWR.js        14.02 kB │ gzip:  5.69 kB
+public/assets/prefeitura-BZSgsxLD.js        18.85 kB │ gzip:  6.77 kB
+public/assets/Ouvir-6ViQiPh0.js             56.82 kB │ gzip: 21.99 kB
 
-✓ built in 242ms
+✓ built in 231ms
 
 > merenda-do-vizinho-app@1.0.0 test
-> node --disable-warning=ExperimentalWarning --test "test/**/*.test.js"
+> node --disable-warning=ExperimentalWarning --require ./test/isolar-ambiente.js --test "test/**/*.test.js"
 
-✔ perfil com CPF inválido ou sem aceite devolve 400 (145.533284ms)
-✔ PUT perfil valida UF, catálogo, meses, quantidade, vendido e grupos, e grava produtos e critérios (87.341393ms)
-✔ GET perfil devolve CPF e CAF mascarados; cooperativa inexistente devolve 400 (85.367779ms)
-✔ oportunidades mostra chamada publicada da mesma UF com alface (70.138574ms)
-✔ vendido_no_ano_reais de 39000 limita o ganho a R$ 1000 (67.307968ms)
-✔ com DATA_REFERENCIA=2026-07-15, a chamada de Catalão aparece para a agricultora de demonstração (120.534184ms)
-✔ perfilParaIa: só município, UF, produtos, orgânico e se há prioridade, sem dado pessoal nem critério do RITS (0.296927ms)
-✔ assistente não envia dados pessoais para a IA (59.511208ms)
-✔ assistente: CPF ou e-mail no texto e mensagens fora do formato dão 400 sem chamar a IA; chamada não publicada 404 (72.890743ms)
-✔ assistente com a IA fora do ar devolve 502 com mensagem em português (82.469134ms)
-✔ assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo (110.252814ms)
-✔ a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404 (90.572698ms)
-✔ interesse grava, substitui o anterior e recusa item fora da chamada (140.88069ms)
-✔ prefeitura não acessa rota de agricultor (403) (120.370255ms)
-✔ divide igualmente e respeita capacidade (2.4238ms)
-✔ respeita limite em reais (0.569001ms)
-✔ a sobra vai primeiro para quem tem mais prioridade (0.493749ms)
-✔ informa falta quando ninguém tem capacidade (1.47629ms)
-✔ nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios) (8.214452ms)
-✔ o limite anual vale para a soma dos itens (1.567658ms)
-✔ o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo) (0.300041ms)
-✔ o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º (0.205251ms)
-✔ a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º (0.239266ms)
-✔ a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item (2.672269ms)
-✔ hash de senha confere e rejeita senha errada (224.205079ms)
-✔ cadastro com e-mail inválido devolve 400; login errado 401; /api/eu sem token 401 e com token 200 (219.391035ms)
-✔ cadastro: 201 com token e a linha do papel; e-mail repetido 409; senha curta, papel ou CNPJ inválido 400 (126.743459ms)
-✔ exigirPapel responde 403 para outro papel e a lista de manipuladores para ali (0.704347ms)
-✔ token vencido e token de outro algoritmo recebem 401; o certo recebe 200 (59.994332ms)
-✔ exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar (0.800012ms)
-✔ GET /api/catalogo exige login e devolve o catálogo (60.396958ms)
-✔ semear: rodar duas vezes não duplica nada e os usuários de demonstração entram com demo1234 (276.331012ms)
-✔ chamada de outra UF, vencida ou só com itens que ele não produz não aparece (2.920227ms)
-✔ mesma cidade primeiro e ganho = min(capacidade, pedido) × preço (0.68821ms)
-✔ ganho respeita limite restante (0.365958ms)
-✔ a capacidade vale para a soma dos itens do mesmo produto (0.568794ms)
-✔ o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante (1.624591ms)
-✔ a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2) (0.297727ms)
-✔ sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN (0.682813ms)
-✔ emTransacao desfaz tudo quando lança, confirma quando dá certo e recusa corpo async (2.806391ms)
-✔ migrar acrescenta entregas.item a um banco antigo, guarda as entregas e pode rodar de novo (2.796637ms)
-✔ pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e por segredo (1.952918ms)
-✔ GET /api/exportar: 401 sem a chave ou com outra (igual, mais curta, mais longa ou vazia); com a certa, 200 (125.36335ms)
-✔ a exportação não traz nome, CPF, CAF, e-mail, telefone, grupo prioritário nem id de agricultor (62.385223ms)
-✔ as chaves de cada coleção são as da fixture, e os pseudônimos batem com o HMAC do id (52.604042ms)
-✔ chamadas.dados sai com as 8 chaves da fixture e itens de 5, o contato nulo e o que falta nulo, mesmo com as 13 chaves da IA (52.372526ms)
-✔ uma proposta no formato da T7 (quantidade_pedida, total e falta) sai com as seis chaves do contrato (52.702578ms)
-✔ um item de proposta sem alocacoes não derruba a exportação, e a alocação sem agricultor_id é pulada (49.027403ms)
-✔ desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400 (61.584487ms)
-✔ validarLeitura confere cada campo, nos limites de cada faixa (3.291988ms)
-✔ avaliarLeitura: temperatura acima do limite e porta aberta há mais dos minutos da config; porta fechada zera a conta (11.940075ms)
-✔ chave errada devolve 401 (122.069439ms)
-✔ leitura absurda devolve 400 e não alerta (57.562243ms)
-✔ momento gravado em UTC: com fuso vira UTC; sem momento, vale a hora do servidor (48.970844ms)
-✔ temperatura acima de 10 °C gera alerta de temperatura (34.05562ms)
-✔ porta aberta por mais de 2 minutos gera alerta de porta (64.171459ms)
-✔ porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam (34.86646ms)
-✔ depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve (47.734923ms)
-✔ alerta não se repete a cada leitura e é resolvido quando volta ao normal (58.668521ms)
-✔ porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve quando o seu volta ao normal (55.168819ms)
-✔ os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET (97.954477ms)
-✔ GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos (179.422946ms)
-✔ entrega com quantidade negativa devolve 400 (98.218414ms)
-✔ entrega registra o item da proposta pela posição: as duas abóboras de Catalão têm preços diferentes (122.009917ms)
-✔ entrega: só a cooperativa dona da proposta registra (110.367544ms)
-✔ o build gera a tela da câmara fria (0.241398ms)
-✔ agricultor não acessa rota de prefeitura (403) (267.50437ms)
-✔ prefeitura envia texto, recebe rascunho e publica (220.073987ms)
-✔ prefeitura inclui um item à mão num rascunho sem itens e publica (124.532921ms)
-✔ IA fora do ar devolve 502 com erro legível (154.193822ms)
-✔ prazo menor que 20 dias gera aviso no rascunho (86.279124ms)
-✔ prefeitura vê as propostas e as entregas da chamada (86.762032ms)
-✔ proposta conjunta nunca passa do pedido (90.757611ms)
-✔ alocação acima do teto, ou total do agricultor acima do limite restante, devolve 400 (76.186011ms)
-✔ projeto de venda tem totais certos (83.267384ms)
-✔ agricultor gera o projeto de venda individual a partir do interesse (53.713534ms)
-✔ a chamada semeada de Catalão está publicada e aparece em oportunidades() de ana@demo.br com hoje 2026-07-15 (53.733084ms)
-✔ resumo da meta do ano e PUT /api/prefeitura/repasse (106.884279ms)
-✔ o build gera as telas da prefeitura, da cooperativa e do projeto de venda (0.161768ms)
-✔ projeto de venda soma quantidade × preço (2.395539ms)
-✔ projeto de venda avisa quando a família não tem mulher titular (0.648278ms)
-✔ cada linha sai em centavos e os totais somam as linhas arredondadas (0.426707ms)
-✔ a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20) (0.267061ms)
-✔ minimoDoAno: 30% até 2025 e 45% a partir de 2026 (1.335268ms)
-✔ minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio (0.640133ms)
-✔ constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos (0.980355ms)
-✔ limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN (0.307953ms)
-✔ SEMANAS_PADRAO vem do JSON e a variável de ambiente troca (137.471893ms)
-✔ prazo mínimo de 20 dias (0.252495ms)
-✔ lerGruposPrioritarios aceita o texto JSON do SQLite ou uma lista e ignora o que não conhece (0.294005ms)
-✔ pontos RITS e prioridade (0.27864ms)
-✔ versaoRegra pela data do edital (0.208633ms)
-✔ roteador casa parâmetros e para quando a resposta termina (2.645912ms)
-✔ estático nega ../ (84.22063ms)
-✔ corpo acima do limite devolve 413 e JSON quebrado devolve 400 (160.242492ms)
-✔ Content-Length declarado acima do limite devolve 413 na hora, sem ler o corpo, e a conexão fecha (52.538944ms)
-✔ corpo em pedaços acima do limite: 413, o servidor para de ler e fecha a conexão (48.088049ms)
-✔ corpo: 256 KB por padrão, e só POST /api/prefeitura/chamadas aceita até 10 MB (199.09609ms)
-✔ cliente que desiste no meio do envio não vira erro no log (47.305754ms)
-✔ erro inesperado vira 500 sem pilha para o cliente e fica no log (46.162966ms)
-✔ erros dos manipuladores: sempre no log; resposta já enviada chega inteira; a pela metade é cortada; a muda vira 500 (111.973456ms)
-✔ rota cuja lista não responde lança erro em vez de deixar a requisição pendurada (0.664248ms)
-✔ cliente da IA devolve o JSON, repassa o 4xx da IA e troca o resto por 502 (7.06283ms)
-✔ o build gerou cada página de web/, e toda página gerada tem a meta viewport e carrega /css/estilo.css (3.370789ms)
-✔ estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e a classe .rolavel (7.350989ms)
-✔ api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status (5.410484ms)
-✔ nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src (2.173019ms)
-✔ lerNumero entende o número do jeito brasileiro e recusa o que não é número, com a mensagem em português (21.356223ms)
-✔ nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero (1.892272ms)
-✔ os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes (2.122289ms)
-✔ o termo de uso diz que o CPF e o CAF aparecem só em parte no projeto de venda e que o número completo se escreve à mão (0.264123ms)
-✔ o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão (0.376184ms)
-✔ a tela diz o que vai para a IA: município, UF, produtos, orgânico e se tem prioridade (sim ou não), e não escrever dado pessoal no chat (0.489313ms)
-✔ perto do limite anual o cartão só mostra o que a prefeitura pede, nunca a capacidade como se coubesse no limite (0.209671ms)
-✔ os botões que enviam não ficam disabled enquanto enviam (o foco se perderia): um guarda ignora o segundo toque (0.404747ms)
-✔ validarCpf (1.320393ms)
-✔ validarCaf, validarEmail e as máscaras (0.480195ms)
-✔ config sem JWT_SEGREDO lança erro (1.05739ms)
-✔ config usa DATA_REFERENCIA e, vazia, usa hoje (1.271334ms)
-ℹ tests 119
+✔ perfil com CPF inválido ou sem aceite devolve 400 (193.329947ms)
+✔ PUT perfil valida UF, catálogo, meses, quantidade, vendido e grupos, e grava produtos e critérios (127.129338ms)
+✔ GET perfil devolve CPF e CAF mascarados; cooperativa inexistente devolve 400 (104.545121ms)
+✔ oportunidades mostra chamada publicada da mesma UF com alface (93.409291ms)
+✔ vendido_no_ano_reais de 39000 limita o ganho a R$ 1000 (91.685663ms)
+✔ com DATA_REFERENCIA=2026-07-15, a chamada de Catalão aparece para a agricultora de demonstração (174.163172ms)
+✔ perfilParaIa: só município, UF, produtos, orgânico e se há prioridade, sem dado pessoal nem critério do RITS (0.434585ms)
+✔ assistente não envia dados pessoais para a IA (87.791091ms)
+✔ assistente: CPF ou e-mail no texto e mensagens fora do formato dão 400 sem chamar a IA; chamada não publicada 404 (100.91084ms)
+✔ assistente com a IA fora do ar devolve 502 com mensagem em português (83.660258ms)
+✔ assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo (79.659951ms)
+✔ a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404 (51.908009ms)
+✔ interesse grava, substitui o anterior e recusa item fora da chamada (83.063049ms)
+✔ prefeitura não acessa rota de agricultor (403) (78.574719ms)
+✔ divide igualmente e respeita capacidade (2.318009ms)
+✔ respeita limite em reais (0.652651ms)
+✔ a sobra vai primeiro para quem tem mais prioridade (0.461242ms)
+✔ informa falta quando ninguém tem capacidade (0.364717ms)
+✔ nunca passa do pedido, da capacidade nem do limite em reais (500 sorteios) (11.83966ms)
+✔ o limite anual vale para a soma dos itens (0.651471ms)
+✔ o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo) (0.343211ms)
+✔ o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º (0.255554ms)
+✔ a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º (0.400826ms)
+✔ a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item (0.41224ms)
+✔ hash de senha confere e rejeita senha errada (214.159129ms)
+✔ cadastro com e-mail inválido devolve 400; login errado 401; /api/eu sem token 401 e com token 200 (179.414094ms)
+✔ cadastro: 201 com token e a linha do papel; e-mail repetido 409; senha curta, papel ou CNPJ inválido 400 (124.10506ms)
+✔ exigirPapel responde 403 para outro papel e a lista de manipuladores para ali (0.692319ms)
+✔ token vencido e token de outro algoritmo recebem 401; o certo recebe 200 (59.328298ms)
+✔ exigirPapel só aceita papéis em texto: sem os parênteses, ou com lista, falha alto em vez de deixar passar (0.851148ms)
+✔ GET /api/catalogo exige login e devolve o catálogo (57.536852ms)
+✔ semear: rodar duas vezes não duplica nada e os usuários de demonstração entram com demo1234 (261.569035ms)
+✔ chamada de outra UF, vencida ou só com itens que ele não produz não aparece (2.712524ms)
+✔ mesma cidade primeiro e ganho = min(capacidade, pedido) × preço (0.563624ms)
+✔ ganho respeita limite restante (0.299126ms)
+✔ a capacidade vale para a soma dos itens do mesmo produto (1.604633ms)
+✔ o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante (0.387099ms)
+✔ a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2) (0.280929ms)
+✔ sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN (0.645152ms)
+✔ emTransacao desfaz tudo quando lança, confirma quando dá certo e recusa corpo async (2.673195ms)
+✔ migrar acrescenta entregas.item a um banco antigo, guarda as entregas e pode rodar de novo (2.651352ms)
+✔ pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e por segredo (1.824419ms)
+✔ GET /api/exportar: 401 sem a chave ou com outra (igual, mais curta, mais longa ou vazia); com a certa, 200 (118.359655ms)
+✔ a exportação não traz nome, CPF, CAF, e-mail, telefone, grupo prioritário nem id de agricultor (60.741443ms)
+✔ as chaves de cada coleção são as da fixture, e os pseudônimos batem com o HMAC do id (49.073226ms)
+✔ chamadas.dados sai com as 8 chaves da fixture e itens de 5, o contato nulo e o que falta nulo, mesmo com as 13 chaves da IA (47.349235ms)
+✔ uma proposta no formato da T7 (quantidade_pedida, total e falta) sai com as seis chaves do contrato (47.78463ms)
+✔ um item de proposta sem alocacoes não derruba a exportação, e a alocação sem agricultor_id é pulada (47.600432ms)
+✔ a entrega sai com o item, a posição do item na proposta; a entrega de antes da coluna sai com item nulo (47.988676ms)
+✔ desde: sem ele vem tudo; com ele, só o que tem momento a partir dele; data inválida devolve 400 (59.244862ms)
+✔ validarLeitura confere cada campo, nos limites de cada faixa (3.03297ms)
+✔ avaliarLeitura: temperatura acima do limite e porta aberta há mais dos minutos da config; porta fechada zera a conta (15.911999ms)
+✔ chave errada devolve 401 (94.21268ms)
+✔ leitura absurda devolve 400 e não alerta (37.946366ms)
+✔ momento gravado em UTC: com fuso vira UTC; sem momento, vale a hora do servidor (35.14219ms)
+✔ temperatura acima de 10 °C gera alerta de temperatura (31.49233ms)
+✔ porta aberta por mais de 2 minutos gera alerta de porta (61.843019ms)
+✔ porta fechada zera a conta: ao reabrir, os 2 minutos recomeçam (35.698842ms)
+✔ depois de um reinício, porta ainda aberta não resolve o alerta de porta: só a porta fechada resolve (44.839071ms)
+✔ alerta não se repete a cada leitura e é resolvido quando volta ao normal (54.915973ms)
+✔ porta aberta e calor juntos: um alerta de cada tipo, e cada um resolve quando o seu volta ao normal (54.744865ms)
+✔ os limites vêm da config: LIMITE_TEMP_C e MINUTOS_PORTA_ABERTA valem na rota, na mensagem e no GET (94.988424ms)
+✔ GET /api/cooperativa/camara-fria: as últimas leituras e só os alertas abertos (188.827163ms)
+✔ entrega com quantidade negativa devolve 400 (94.154312ms)
+✔ entrega registra o item da proposta pela posição: as duas abóboras de Catalão têm preços diferentes (119.004254ms)
+✔ entrega: só a cooperativa dona da proposta registra (102.721608ms)
+✔ o build gera a tela da câmara fria (0.146961ms)
+✔ agricultor não acessa rota de prefeitura (403) (202.828725ms)
+✔ prefeitura envia texto, recebe rascunho e publica (131.164478ms)
+✔ semanas de fornecimento: número inteiro de 1 a 53, ou em branco; o resto dá 400 e a chamada não muda (79.322955ms)
+✔ prefeitura inclui um item à mão num rascunho sem itens e publica (84.238417ms)
+✔ IA fora do ar devolve 502 com erro legível (113.772336ms)
+✔ prazo menor que 20 dias gera aviso no rascunho (58.929964ms)
+✔ prefeitura vê as propostas e as entregas da chamada (87.453633ms)
+✔ proposta conjunta nunca passa do pedido (87.290794ms)
+✔ alocação acima do teto, ou total do agricultor acima do limite restante, devolve 400 (76.028138ms)
+✔ projeto de venda tem totais certos (79.659763ms)
+✔ agricultor gera o projeto de venda individual a partir do interesse (52.394904ms)
+✔ a chamada semeada de Catalão está publicada e aparece em oportunidades() de ana@demo.br com hoje 2026-07-15 (47.638462ms)
+✔ resumo da meta do ano e PUT /api/prefeitura/repasse (105.776462ms)
+✔ o build gera as telas da prefeitura, da cooperativa e do projeto de venda (0.180195ms)
+✔ projeto de venda soma quantidade × preço (1.930533ms)
+✔ projeto de venda avisa quando a família não tem mulher titular (0.416156ms)
+✔ cada linha sai em centavos e os totais somam as linhas arredondadas (0.214185ms)
+✔ a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20) (0.13231ms)
+✔ minimoDoAno: 30% até 2025 e 45% a partir de 2026 (1.327968ms)
+✔ minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio (0.712987ms)
+✔ constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos (1.075883ms)
+✔ limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN (0.351456ms)
+✔ SEMANAS_PADRAO vem do JSON e a variável de ambiente troca (139.363098ms)
+✔ o npm test ignora a SEMANAS_PADRAO do terminal: test/isolar-ambiente.js a tira, e o script o carrega (33.300195ms)
+✔ prazo mínimo de 20 dias (0.397667ms)
+✔ lerGruposPrioritarios aceita o texto JSON do SQLite ou uma lista e ignora o que não conhece (0.362308ms)
+✔ pontos RITS e prioridade (0.422846ms)
+✔ versaoRegra pela data do edital (0.292993ms)
+✔ roteador casa parâmetros e para quando a resposta termina (2.242977ms)
+✔ estático nega ../ (81.464098ms)
+✔ corpo acima do limite devolve 413 e JSON quebrado devolve 400 (154.437832ms)
+✔ Content-Length declarado acima do limite devolve 413 na hora, sem ler o corpo, e a conexão fecha (47.774673ms)
+✔ corpo em pedaços acima do limite: 413, o servidor para de ler e fecha a conexão (45.153444ms)
+✔ corpo: 256 KB por padrão, e só POST /api/prefeitura/chamadas aceita até 10 MB (191.855548ms)
+✔ cliente que desiste no meio do envio não vira erro no log (44.80222ms)
+✔ erro inesperado vira 500 sem pilha para o cliente e fica no log (44.402009ms)
+✔ erros dos manipuladores: sempre no log; resposta já enviada chega inteira; a pela metade é cortada; a muda vira 500 (111.232289ms)
+✔ rota cuja lista não responde lança erro em vez de deixar a requisição pendurada (0.712024ms)
+✔ cliente da IA devolve o JSON, repassa o 4xx da IA e troca o resto por 502 (6.882223ms)
+✔ o build gerou cada página de web/, e toda página gerada tem a meta viewport e carrega /css/estilo.css (3.458463ms)
+✔ estilo.css começa pelo celular, tem a quebra de 768 px, alvos de 44 px e a classe .rolavel (28.51017ms)
+✔ api() troca a falha de rede por uma mensagem em português e repassa o erro do servidor, com o status (6.054058ms)
+✔ nenhuma tela põe HTML de fora na página: nada de {@html} nem innerHTML em web/src (2.152314ms)
+✔ lerNumero entende o número do jeito brasileiro e recusa o que não é número, com a mensagem em português (18.298632ms)
+✔ nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero (1.655848ms)
+✔ os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, numero, data ou plural, e o texto é o de antes (2.228844ms)
+✔ o termo de uso diz, uma vez só, que o CPF e o CAF aparecem só em parte na tela e no projeto de venda (0.281949ms)
+✔ o aviso do chat fica embaixo da caixa de mensagem, ligado a ela, com o texto da decisão (0.389065ms)
+✔ a tela diz o que vai para a IA: município, UF, produtos, orgânico e se tem prioridade (sim ou não), e não escrever dado pessoal no chat (0.444928ms)
+✔ perto do limite anual o cartão só mostra o que a prefeitura pede, nunca a capacidade como se coubesse no limite (0.220445ms)
+✔ os botões que enviam não ficam disabled enquanto enviam (o foco se perderia): um guarda ignora o segundo toque (0.901659ms)
+✔ validarCpf (0.778782ms)
+✔ validarCaf, validarEmail e as máscaras (0.317504ms)
+✔ config sem JWT_SEGREDO lança erro (0.844986ms)
+✔ config usa DATA_REFERENCIA e, vazia, usa hoje (0.793649ms)
+ℹ tests 122
 ℹ suites 0
-ℹ pass 119
+ℹ pass 122
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1517.551077
+ℹ duration_ms 1434.88743
 (código de saída: 0)
 
 $ python -m unittest discover -s ia/tests -t . -v
@@ -267,7 +270,7 @@ test_saude_no_modo_de_regras (ia.tests.test_servidor.TestServidor.test_saude_no_
 test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400 (ia.tests.test_servidor.TestServidor.test_valueerror_fora_da_leitura_do_pdf_vira_500_e_nao_400) ... ok
 
 ----------------------------------------------------------------------
-Ran 86 tests in 11.827s
+Ran 86 tests in 11.164s
 
 OK
 (código de saída: 0)
@@ -297,9 +300,12 @@ test_faixas_de_cumprimento (dados.tests.test_pipeline.TestRegras.test_faixas_de_
 test_gap_e_o_que_falta_para_o_minimo_e_nunca_negativo (dados.tests.test_pipeline.TestRegras.test_gap_e_o_que_falta_para_o_minimo_e_nunca_negativo) ... ok
 test_minimo_de_30_ate_2025_e_de_45_a_partir_de_2026 (dados.tests.test_pipeline.TestRegras.test_minimo_de_30_ate_2025_e_de_45_a_partir_de_2026) ... ok
 test_resumo_ignora_arquivo_que_nao_e_dado (dados.tests.test_pipeline.TestResumo.test_resumo_ignora_arquivo_que_nao_e_dado) ... ok
+test_a_abobora_de_cada_item_fica_na_sua_unidade (dados.tests.test_pipeline.TestUnidadeDaEntrega.test_a_abobora_de_cada_item_fica_na_sua_unidade) ... ok
+test_entrega_de_antes_da_coluna_item_acha_a_unidade_pelo_produto (dados.tests.test_pipeline.TestUnidadeDaEntrega.test_entrega_de_antes_da_coluna_item_acha_a_unidade_pelo_produto) ... ok
+test_posicao_que_a_proposta_nao_tem_deixa_a_unidade_e_o_kg_vazios (dados.tests.test_pipeline.TestUnidadeDaEntrega.test_posicao_que_a_proposta_nao_tem_deixa_a_unidade_e_o_kg_vazios) ... ok
 
 ----------------------------------------------------------------------
-Ran 24 tests in 9.753s
+Ran 27 tests in 9.337s
 
 OK
 (código de saída: 0)

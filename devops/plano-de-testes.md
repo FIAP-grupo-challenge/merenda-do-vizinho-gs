@@ -3,8 +3,9 @@
 Cada caso abaixo diz o que o teste confere, como, o que deve acontecer, o resultado e onde está a prova. Todos os casos
 têm um teste automatizado, que roda sozinho a cada commit no Jenkins (veja o CT15).
 
-**Resumo da última execução (19/11/2026):** 15 casos, 15 passaram. Nos testes automatizados, 244 de 244 passaram:
-119 no app, 86 na IA, 24 nos dados e 15 no simulador.
+**Resumo da última execução (19/11/2026, na versão final):** 15 casos, 15 passaram. Nos testes automatizados, 250 de 250
+passaram: 122 no app, 86 na IA, 27 nos dados e 15 no simulador. O Jenkins roda tudo isso a cada commit; como subir o
+Jenkins local está em [jenkins/README.md](jenkins/README.md).
 
 ## Como rodar
 
@@ -164,7 +165,7 @@ Claude é trocado por um cliente falso, e sem `ANTHROPIC_API_KEY` a IA roda no m
   prioritário nem id de agricultor" e "pseudonimo: 12 hexadecimais do HMAC-SHA256 do id; estável, e diferente por id e
   por segredo".
 
-### CT12: a IA nunca recebe dado pessoal
+### CT12: a IA não recebe os dados cadastrados, e o chat barra dado pessoal digitado
 
 - **Objetivo:** para a IA vão só município, UF, produtos, orgânico e se há prioridade; CPF, e-mail, telefone ou dados
   do banco escritos no chat são barrados.
