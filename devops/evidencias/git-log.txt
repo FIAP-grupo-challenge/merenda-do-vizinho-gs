@@ -1,4 +1,21 @@
 # git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
+* d58c399 docs(devops): smoke.txt refeito numa rodada real, com o login da Ana e a pergunta ao assistente (SMOKE OK), e o trecho do PDF com o nome novo do projeto
+* 5835e9c docs(repo): mapa do código do README diz o que o config.js e o api.js passaram a fazer
+* ed7f89e docs(repo): 131 testes no app e 260 no total, com a saída dos testes refeita numa rodada real
+* e2b60f2 docs(entrega): print 12 refeito no app real, com a frase que diz que a meta só conta as entregas registradas no app
+* c353a15 docs(repo): roteiro do pitch igual à versão aprovada, sem a voz do planejamento, com o tempo de leitura da IA que a tela mostra e caminhos do repositório no lugar dos rótulos de tarefa
+* cb0b81d fix(entrega): checklist com o pdfinfo e a linha só no empacotar.sh; o empacotar.sh não mostra o assunto do commit antes da conferência de chaves; o gerar-pdf.sh devolve o git-log.txt se o PDF falhar
+* 18642a1 fix(devops): o smoke faz o login da Ana e uma pergunta ao assistente, o único caminho do app até a IA além do /saude; docs e Jenkinsfile dizem o mesmo
+* 91f3374 docs(repo): README com o catálogo lido do arquivo compartilhado e o python3-venv do Ubuntu e do Debian; plano de testes com .venv/bin/python
+* e5055df docs(devops): a segurança diz que qualquer um cria conta de prefeitura ou cooperativa sem verificação e que a senha da demonstração é pública
+* 64d0e38 fix(app): página de papel aberta sem login vai para a tela de entrar, e o Voltar da chamada passa a ter 44 px de altura
+* a3b5e86 fix(app): a meta do ano diz que só conta as entregas registradas neste app, para não parecer o percentual oficial da agricultura familiar
+* 39413ea fix(ia): o nome da prefeitura no modo de regras não demora mais com muitos espaços seguidos (tempo linear), com teste de 100 mil espaços
+* ee73b75 fix(app): o app não sobe com o texto de exemplo do .env.example nem com segredo de menos de 16 caracteres, e a mensagem diz o que trocar
+* b39dbe0 fix(devops): .env.example e o .env do smoke trazem DATA_REFERENCIA=2026-07-15, e o README diz o mesmo
+* cc23ea8 docs(entrega): checklist com o push da main e a conferência da URL HTTPS numa janela anônima; README só diz que a versão final está na main
+* bef9cd9 docs(repo): conexão com o curso dentro do repositório, sem apontar para o white paper nem para a pasta de planejamento
+* 81c9f8e chore(entrega): PDF e git-log refeitos com a integração, os prints 9 e 12 novos e as contagens de testes
 * 3a96c55 docs(entrega): prints 9 e 12 refeitos com a divisão em inteiros que o app faz sozinho, sem edição, e a contagem de testes
 * 4f91127 docs(repo): 127 testes no app e 255 no total, com a saída dos testes refeita numa rodada real
 *   8604842 merge: integração (divisão da proposta em números inteiros) na trilha-entrega
