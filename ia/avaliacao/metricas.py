@@ -1,4 +1,4 @@
-"""Métricas da avaliação: o que a leitura da chamada extraiu, comparado com o gabarito feito à mão."""
+"""Métricas da avaliação: o que a leitura da chamada extraiu, comparado com o gabarito (montado por agente de IA)."""
 from ia.catalogo import normalizar_texto
 
 

@@ -4,7 +4,8 @@
 const { hashSenha } = require('./auth');
 const { emTransacao } = require('./db');
 const { capacidadeNoPeriodo } = require('./regras-pnae');
-// A chamada pública 003/2026 de Catalão (GO), lida do PDF do edital e conferida à mão (semente/chamada-demo.json)
+// A chamada pública 003/2026 de Catalão (GO), lida do PDF do edital: começou de uma extração do Claude e um agente de IA a
+// conferiu contra o PDF (semente/chamada-demo.json)
 const CHAMADA_DEMO = require('../semente/chamada-demo.json');
 
 const SENHA_DEMO = 'demo1234';
@@ -102,7 +103,7 @@ function semear(db) {
   });
 }
 
-// A chamada de Catalão já publicada, com origem 'cache' (a leitura conferida à mão): a demonstração não depende da IA
+// A chamada de Catalão já publicada, com origem 'cache' (a leitura conferida contra o PDF): a demonstração não depende da IA
 // nem de clicar em "Publicar". Vem com o interesse dos seis agricultores: cada um oferece o que produz no período, em
 // cada produto que a chamada pede. Data de publicação: o início do recebimento dos projetos no edital.
 function semearChamada(db, prefeituraId, agricultores) {
