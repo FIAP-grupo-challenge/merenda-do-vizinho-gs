@@ -503,7 +503,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 Da raiz do repositório, cada área tem os seus testes. Eles precisam da preparação da seção 2B (o `.venv` com as dependências e o `npm ci` no `app/`), mas não do Docker. Nenhum usa a chave da Anthropic: a IA é testada com servidores falsos.
 
 ```bash
-# app: 122 testes (roda o build das telas antes)
+# app: 127 testes (roda o build das telas antes)
 (cd app && npm test)
 
 # IA: 86 testes
@@ -516,7 +516,7 @@ Da raiz do repositório, cada área tem os seus testes. Eles precisam da prepara
 .venv/bin/python -m unittest discover -s iot -t .
 ```
 
-Essas contagens são de 19/11/2026, na versão final (250 testes, todos passando); se um teste for acrescentado, vale o resumo que o próprio comando imprime. Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`bash devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK` (a seção 2A explica o que fazer se a porta 3000 estiver em uso). O plano de testes, com 15 casos (CT01 a CT15), cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md). O `Jenkinsfile` roda os testes, o build das imagens e o smoke a cada commit; como subir o Jenkins local está em [devops/jenkins/README.md](devops/jenkins/README.md), e as evidências de segurança, em [devops/seguranca.md](devops/seguranca.md).
+Essas contagens são de 19/11/2026, na versão final (255 testes, todos passando); se um teste for acrescentado, vale o resumo que o próprio comando imprime. Os testes em Python terminam com `OK`, e os do app mostram `fail 0`. O teste de fumaça (`bash devops/smoke.sh`) sobe o Compose e termina com `SMOKE OK` (a seção 2A explica o que fazer se a porta 3000 estiver em uso). O plano de testes, com 15 casos (CT01 a CT15), cada um com objetivo, passos, resultado esperado, resultado obtido e evidência, está em [devops/plano-de-testes.md](devops/plano-de-testes.md). O `Jenkinsfile` roda os testes, o build das imagens e o smoke a cada commit; como subir o Jenkins local está em [devops/jenkins/README.md](devops/jenkins/README.md), e as evidências de segurança, em [devops/seguranca.md](devops/seguranca.md).
 
 ## Uso de IA generativa
 
