@@ -1,7 +1,11 @@
 # Fora do contexto de build: segredos, dependências e arquivos gerados (cada imagem instala e gera os seus).
-.git
-.env
-.venv
+# O "**/" vale em qualquer pasta, a raiz inclusive: um nome sem ele (".env") só vale na raiz do contexto.
+**/.git
+**/.env
+**/.env.*
+# o exemplo, sem segredos, continua no contexto
+!.env.example
+**/.venv
 .superpowers
 .worktrees
 ebooks
@@ -9,6 +13,8 @@ ebooks
 **/__pycache__
 **/*.db
 **/*.db-journal
+**/*.db-wal
+**/*.db-shm
 **/*.baixando
 app/public
 dados/datalake/raw/app
