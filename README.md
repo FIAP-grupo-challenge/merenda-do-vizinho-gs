@@ -1,4 +1,6 @@
-# Merenda do Vizinho
+# Colhe
+
+Colhe (nome de trabalho: Merenda do Vizinho)
 
 MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos para a merenda escolar (PNAE).
 
@@ -10,7 +12,7 @@ MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos
 
 O PNAE compra a merenda das escolas públicas. Desde 1º de janeiro de 2026, pelo menos 45% da verba do programa tem de ser comprada da agricultura familiar (Lei 15.226/2025). Até 2025 eram 30%. Mesmo assim, muitas prefeituras não chegam ao mínimo: em 2022, 1.531 delas ficaram abaixo dos 30% da época, e faltaram R$ 97,1 milhões para chegarem lá (contas do grupo sobre as planilhas do FNDE, com dados preliminares).
 
-A **Merenda do Vizinho** é um serviço web para a cidade:
+O **Colhe** é um serviço web para a cidade:
 
 - a **prefeitura** envia o PDF da chamada pública, e a IA (Claude) lê os itens, as quantidades, os preços e os prazos;
 - o **agricultor** vê as chamadas que pode atender e quanto pode ganhar, e um assistente explica o edital em linguagem simples, com botão "Ouvir";
@@ -211,7 +213,7 @@ cd app
 npm start
 ```
 
-Saída esperada: `Merenda do Vizinho em http://localhost:3000`. Abra essa página no navegador.
+Saída esperada: `Colhe em http://localhost:3000`. Abra essa página no navegador.
 
 **Terminal 2, a IA:**
 

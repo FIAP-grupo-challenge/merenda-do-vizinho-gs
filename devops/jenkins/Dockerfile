@@ -1,4 +1,4 @@
-# Jenkins local do Merenda do Vizinho (veja o README.md desta pasta): o LTS com Java 21, mais o cliente do Docker com
+# Jenkins local do Colhe (veja o README.md desta pasta): o LTS com Java 21, mais o cliente do Docker com
 # os plugins Compose e Buildx (o Compose constrói as imagens pelo Buildx). O pipeline sobe os contêineres no Docker do
 # computador, pelo socket montado no docker-compose.yml.
 FROM jenkins/jenkins:lts-jdk21

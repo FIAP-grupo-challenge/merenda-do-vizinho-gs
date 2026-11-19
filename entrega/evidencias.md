@@ -1,7 +1,7 @@
 ---
-title: Merenda do Vizinho
+title: Colhe
 subtitle: PDF de evidências das quatro áreas
-pagetitle: Merenda do Vizinho – PDF de evidências
+pagetitle: Colhe – PDF de evidências
 evento: FIAP · Global Solution 2026/2 · CitizenTech
 date: 19 de novembro de 2026
 lang: pt-BR
@@ -27,7 +27,7 @@ Do lado de quem planta, o agricultor muitas vezes não fica sabendo da chamada p
 
 ## O cidadão
 
-| Quem | Hoje | Com a Merenda do Vizinho |
+| Quem | Hoje | Com o Colhe |
 |:--------------------------|:----------------------------------|:----------------------------------------|
 | **Agricultor familiar** (o cidadão principal) | não fica sabendo da chamada, não entende o edital em PDF e não monta o projeto de venda | vê no celular as chamadas que pode atender e quanto pode ganhar; o assistente explica o edital em frases curtas, com o botão "Ouvir" |
 | **Cooperativa da cidade** | divide o pedido entre os cooperados à mão e controla o limite de R$ 40 mil por ano de cada um | o app divide cada item, respeita o limite e gera o projeto de venda; a câmara fria avisa quando esquenta |

@@ -1,4 +1,4 @@
-"""Pipeline do data lake do Merenda do Vizinho: raw -> trusted -> refined.
+"""Pipeline do data lake do Colhe: raw -> trusted -> refined.
 
 Da raiz do repositório: python -m dados.pipeline {tudo,baixar-fontes,ingerir-app,gerar-simulado,tratar,refinar}
 """
@@ -69,7 +69,7 @@ def resumo(datalake: Path = DATALAKE) -> str:
 
 def principal(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog='python -m dados.pipeline',
-                                     description='Pipeline do data lake do Merenda do Vizinho (raw, trusted, refined).')
+                                     description='Pipeline do data lake do Colhe (raw, trusted, refined).')
     parser.add_argument('etapa', choices=ETAPAS, help='etapa a rodar; "tudo" roda todas, na ordem')
     etapa = parser.parse_args(argv).etapa
     logging.addLevelName(logging.INFO, 'info')

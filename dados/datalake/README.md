@@ -1,4 +1,4 @@
-# Data lake do Merenda do Vizinho
+# Data lake do Colhe
 
 Pipeline em Python (pandas e openpyxl) que junta dados públicos do PNAE, a exportação do app e um histórico simulado em três camadas: **raw** (os arquivos como chegaram), **trusted** (limpos e tipados) e **refined** (as tabelas do painel do Power BI).
 

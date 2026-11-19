@@ -1,4 +1,4 @@
-# Merenda do Vizinho no Docker Compose. Os segredos vêm do .env: copie o .env.example para .env e preencha.
+# Colhe no Docker Compose. Os segredos vêm do .env: copie o .env.example para .env e preencha.
 #   docker compose up -d --build     sobe o app (http://localhost:3000) e a IA
 #   docker compose run --rm iot      manda leituras da câmara fria ao app (veja os cenários em iot/README.md)
 #   docker compose run --rm dados    roda o pipeline do data lake, que grava em ./dados/datalake

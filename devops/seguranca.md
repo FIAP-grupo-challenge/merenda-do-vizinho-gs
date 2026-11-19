@@ -1,6 +1,6 @@
 # Segurança
 
-O Merenda do Vizinho guarda dados de agricultores (CPF, CAF, renda da venda) e fala com uma IA paga. Por isso, três
+O Colhe guarda dados de agricultores (CPF, CAF, renda da venda) e fala com uma IA paga. Por isso, três
 práticas de segurança, cada uma com a prova abaixo: a saída dos comandos está em `devops/evidencias/seguranca.txt`, e
 os testes automatizados de cada uma estão no `devops/plano-de-testes.md` (CT01 a CT04 e CT09 a CT13).
 

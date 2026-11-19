@@ -80,7 +80,7 @@ As medidas do `medidas.dax` dependem dos nomes exatos das tabelas e do tipo de c
 
    Para trocar um tipo: clique no ícone > escolha o tipo > se o Power Query perguntar, **Substituir atual** (Replace current).
 4. Clique no botão de concluir, no canto inferior direito (**Avançar**/Next ou **Criar**/Create).
-5. Na tela final, dê o nome `Merenda do Vizinho`, deixe o local em **Meu workspace** e escolha **Criar apenas um modelo semântico** (Create a semantic model only). Espere carregar (um ou dois minutos). Abre o editor do modelo, no navegador.
+5. Na tela final, dê o nome `Colhe`, deixe o local em **Meu workspace** e escolha **Criar apenas um modelo semântico** (Create a semantic model only). Espere carregar (um ou dois minutos). Abre o editor do modelo, no navegador.
 
 ## 4. Tabelas calculadas e coluna `mes`
 
@@ -88,7 +88,7 @@ O editor do modelo tem uma faixa de botões em cima, o diagrama das tabelas no m
 
 1. Se aparecer **Modo de exibição** (Viewing mode) no alto, à direita, troque para **Modo de edição** (Editing mode).
 
-   Para voltar ao editor outro dia: Meu workspace > ao lado do modelo `Merenda do Vizinho`, **Mais opções** (...) > **Abrir modelo semântico** (Open semantic model).
+   Para voltar ao editor outro dia: Meu workspace > ao lado do modelo `Colhe`, **Mais opções** (...) > **Abrir modelo semântico** (Open semantic model).
 2. Clique em **Nova tabela** (New table). Na barra de fórmulas, apague o texto que aparecer, cole o bloco `dim_ano = ...` (seção 1 do `medidas.dax`) e tecle Enter. A tabela `dim_ano` aparece no painel Dados, com a coluna `ano` (2018 a 2026).
 3. Repita com o bloco `dim_uf = ...`. Aparece `dim_uf`, com as colunas `uf` e `regiao` (as 27 UFs).
 4. No painel Dados, clique na tabela `fato_camara_fria` e depois em **Nova coluna** (New column). Cole o bloco `mes = ...` (seção 2 do `medidas.dax`) e tecle Enter.
@@ -147,7 +147,7 @@ Crie na ordem do arquivo: algumas medidas usam as de cima.
 ## 7. Página 1: PNAE no Brasil
 
 1. No editor do modelo, clique em **Novo relatório** (New report). Abre uma aba nova do navegador com uma página em branco, já em edição.
-2. Salve logo: **Arquivo** (File) > **Salvar** (Save), com o nome `Painel Merenda do Vizinho`, no Meu workspace. Salve de novo no fim de cada página.
+2. Salve logo: **Arquivo** (File) > **Salvar** (Save), com o nome `Painel Colhe`, no Meu workspace. Salve de novo no fim de cada página.
 3. Embaixo, dê dois cliques em **Página 1** e escreva `PNAE no Brasil`.
 
 **Como pôr um visual na página.** Clique numa área vazia da página, clique no ícone do visual no painel **Visualizações** (Visualizations) e arraste os campos do painel **Dados** para as caixas indicadas (Campo, Eixo X, Eixo Y, Colunas...). Ajuste o tamanho e a posição pelas bordas. O título e as opções ficam no ícone de pincel, **Formatar visual** (Format visual). Para repetir um visual, selecione-o e use Ctrl+C e Ctrl+V.

@@ -1,4 +1,4 @@
-// Pipeline de ponta a ponta do Merenda do Vizinho, no Jenkins de devops/jenkins/ (veja o README.md de lá).
+// Pipeline de ponta a ponta do Colhe, no Jenkins de devops/jenkins/ (veja o README.md de lá).
 // A cada commit, sem passo manual: testes do app e dos módulos Python em contêineres limpos, build das imagens,
 // teste de fumaça com o Docker Compose e as saídas guardadas como artefatos da execução, em devops/evidencias/.
 pipeline {

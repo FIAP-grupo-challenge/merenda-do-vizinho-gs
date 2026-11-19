@@ -1,6 +1,6 @@
 # Painel no Power BI
 
-O painel do Merenda do Vizinho é montado no Power BI web (o serviço do Power BI, no navegador) a partir da camada refined do data lake.
+O painel do Colhe é montado no Power BI web (o serviço do Power BI, no navegador) a partir da camada refined do data lake.
 
 | Arquivo | O que tem |
 |---|---|

@@ -1,6 +1,6 @@
 # Business Model Canvas
 
-Canvas do Merenda do Vizinho. Todos os blocos são hipóteses do grupo, a testar no piloto.
+Canvas do Colhe. Todos os blocos são hipóteses do grupo, a testar no piloto.
 
 ## Parcerias principais
 
