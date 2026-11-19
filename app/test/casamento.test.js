@@ -74,7 +74,7 @@ test('mesma cidade primeiro e ganho = min(capacidade, pedido) × preço', () => 
     prazo_envio: '2026-07-30',
     mesma_cidade: true,
     versao_regra: 'res4-original',
-    itens: [{ produto_id: 'alface', produto: 'Alface', unidade: 'kg', quantidade_max: 1000, preco_unitario: 5.4, ganho_estimado: 5400 }],
+    itens: [{ produto_id: 'alface', produto: 'Alface', unidade: 'kg', quantidade_pedida: 1000, quantidade_max: 1000, preco_unitario: 5.4, ganho_estimado: 5400 }],
     ganho_total: 5400,
   });
   assert.deepEqual([segunda.chamada_id, segunda.mesma_cidade, segunda.itens[0].quantidade_max, segunda.ganho_total], [1, false, 1200, 10800]);
