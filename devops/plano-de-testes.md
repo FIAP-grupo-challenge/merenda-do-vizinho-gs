@@ -198,9 +198,11 @@ Claude é trocado por um cliente falso, e sem `ANTHROPIC_API_KEY` a IA roda no m
 ### CT14: teste de fumaça com o Docker Compose
 
 - **Objetivo:** as imagens sobem juntas e conversam umas com as outras.
-- **Passos:** `devops/smoke.sh`: 1) build e subida do app e da IA; 2) app e IA respondem 200; 3) o simulador manda 5
-  leituras com a porta aberta; 4) o pipeline de dados roda com a exportação do app; 5) os serviços descem.
-- **Esperado:** 200 nos dois serviços, 5 respostas 201, o pipeline com as três camadas e `SMOKE OK`.
+- **Passos:** `devops/smoke.sh`: 1) build e subida do app e da IA; 2) app e IA respondem 200; 3) a Ana entra e pergunta
+  ao assistente (o app chama a IA); 4) o simulador manda 5 leituras com a porta aberta; 5) o pipeline de dados roda com
+  a exportação do app; 6) os serviços descem.
+- **Esperado:** 200 nos dois serviços, 200 do assistente com a origem `regras` (`ia` também vale, se houver chave),
+  5 respostas 201, o pipeline com as três camadas e `SMOKE OK`.
 - **Resultado:** passou, numa cópia limpa do repositório e em cada execução do Jenkins.
 - **Evidência:** `devops/evidencias/smoke.txt`.
 - **Teste automatizado:** `devops/smoke.sh` (a etapa "Smoke" do `Jenkinsfile`).

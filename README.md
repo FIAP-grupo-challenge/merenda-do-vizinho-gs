@@ -151,7 +151,7 @@ docker compose --profile tarefas run --rm iot python iot/simulador.py --cenario 
 docker compose --profile tarefas run --rm -e PIPELINE_OFFLINE=1 dados
 ```
 
-**Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios, `DATA_REFERENCIA=2026-07-15` e sem chave da API.
+**Teste de fumaça:** `devops/smoke.sh` sobe o app e a IA num projeto Compose próprio (`merenda-smoke`), confere os dois, faz uma pergunta ao assistente como a Ana (o app chama a IA e a resposta volta), manda leituras, roda o pipeline, derruba a pilha e imprime `SMOKE OK`. Se o `.env` não existir, ele cria um de teste, com segredos aleatórios, `DATA_REFERENCIA=2026-07-15` e sem chave da API.
 
 O app do smoke também quer a porta 3000 do computador. Com a pilha do `docker compose up` ainda no ar, o smoke falha com `Bind for 0.0.0.0:3000 failed: port is already allocated`. Há dois jeitos de evitar isso. O primeiro é parar a pilha antes (o banco fica guardado):
 

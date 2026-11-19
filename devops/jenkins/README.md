@@ -8,7 +8,8 @@ repositório a cada 2 minutos (`pollSCM`) e, quando há commit novo no ramo do j
 3. **Testes Python (ia, dados e iot):** instala os `requirements.txt` e roda o `unittest` das três pastas num contêiner
    `python:3.12-slim`.
 4. **Build das imagens:** `docker compose build`, as quatro imagens do `docker-compose.yml`.
-5. **Smoke:** `devops/smoke.sh`, o teste de fumaça (app, IA, leituras do simulador e pipeline de dados).
+5. **Smoke:** `devops/smoke.sh`, o teste de fumaça (app, IA, uma pergunta da Ana ao assistente, leituras do simulador e
+   pipeline de dados).
 6. **Arquivar evidências:** guarda `devops/evidencias/` como artefatos da execução, com a saída dos testes
    (`testes.txt`) e do smoke (`smoke.txt`) daquela execução. Numa execução vermelha, o `post { always }` do
    `Jenkinsfile` arquiva também, e a saída do que falhou fica à mão.

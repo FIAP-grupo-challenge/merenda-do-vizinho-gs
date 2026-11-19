@@ -49,6 +49,7 @@ pipeline {
       steps { sh 'docker compose --env-file .env.example --profile tarefas build' }
     }
     stage('Smoke') {
+      // inclui o login da Ana e uma pergunta ao assistente: é o teste em que o app chama a IA de verdade
       steps {
         sh '''#!/bin/bash
           set -xeo pipefail

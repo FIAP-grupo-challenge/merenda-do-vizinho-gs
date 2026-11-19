@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Teste de fumaça do Docker Compose: sobe o app e a IA, confere os dois, manda leituras do simulador,
-# roda o pipeline de dados e derruba os serviços. No fim imprime SMOKE OK; qualquer falha sai com código 1.
+# Teste de fumaça do Docker Compose: sobe o app e a IA, confere os dois, faz uma pergunta ao assistente (o app chamando a
+# IA), manda leituras do simulador, roda o pipeline de dados e derruba os serviços. No fim imprime SMOKE OK; qualquer
+# falha sai com código 1.
 # Uso: devops/smoke.sh
 # O projeto do Compose é o merenda-smoke, e não o nome da pasta: o smoke não rebuilda, reinicia nem derruba a pilha que
 # você usa no dia a dia. Para outro nome: COMPOSE_PROJECT_NAME=outro devops/smoke.sh
@@ -60,13 +61,34 @@ esperar() {
 esperar http://ia:3001/saude
 esperar http://localhost:3000/
 
-echo '== 3. 5 leituras do simulador com a porta aberta'
+echo '== 3. login da Ana e uma pergunta ao assistente: o app chama a IA e a resposta volta'
+# O /saude só mostra que a IA está de pé. O assistente é o caminho do app até ela (a chamada 1 é a de Catalão, que a
+# semente publica). Sem chave da Anthropic, a origem tem de ser "regras"; com chave, "ia" também vale (o modo da IA vem
+# do /saude dela).
+$COMPOSE exec -T app node -e '
+  const pedir = (caminho, corpo, token) => fetch("http://localhost:3000" + caminho, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(token && { Authorization: "Bearer " + token }) },
+    body: JSON.stringify(corpo),
+  });
+  (async () => {
+    const { modo } = await (await fetch("http://ia:3001/saude")).json();
+    const { token } = await (await pedir("/api/login", { email: "ana@demo.br", senha: "demo1234" })).json();
+    const r = await pedir("/api/agricultor/chamadas/1/assistente",
+      { mensagens: [{ papel: "agricultor", texto: "Posso entregar 50 de alface por semana?" }] }, token);
+    const texto = await r.text();
+    console.log(r.status, texto.replace(/\s+/g, " ").slice(0, 80));
+    const { origem } = JSON.parse(texto);
+    process.exit(r.status === 200 && (origem === "regras" || (origem === "ia" && modo === "ia")) ? 0 : 1);
+  })().catch(() => process.exit(1));'
+
+echo '== 4. 5 leituras do simulador com a porta aberta'
 # O simulador sai com código 1 se algum status não for 201.
 # --profile tarefas nos run: o podman-compose só roda um serviço de perfil com o perfil ligado.
 $COMPOSE --profile tarefas run --rm -T iot python iot/simulador.py --cenario porta-aberta --quantidade 5 \
   --intervalo 1 --url http://app:3000/api/leituras
 
-echo '== 4. pipeline do data lake, com a cópia versionada das fontes públicas e os dados do app'
+echo '== 5. pipeline do data lake, com a cópia versionada das fontes públicas e os dados do app'
 $COMPOSE --profile tarefas run --rm -T -e PIPELINE_OFFLINE=1 dados python -m dados.pipeline tudo
 
 $COMPOSE ps

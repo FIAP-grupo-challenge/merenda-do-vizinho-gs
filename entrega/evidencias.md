@@ -342,7 +342,7 @@ Tudo é versionado com Git: commits pequenos, com mensagens em português no for
 
 **Docker.** O `docker-compose.yml` sobe o app e a IA, com healthcheck nos dois; a IA fica só na rede interna, sem porta publicada. O pipeline de dados e o simulador rodam como tarefas (perfil `tarefas`). As quatro imagens rodam com um usuário sem privilégios (uid 1000).
 
-**Teste de fumaça.** O `devops/smoke.sh` sobe a pilha num projeto próprio, confere o app e a IA, manda 5 leituras do simulador, roda o pipeline e derruba tudo. Trecho de `devops/evidencias/smoke.txt` (o build das imagens e o resumo do pipeline foram omitidos):
+**Teste de fumaça.** O `devops/smoke.sh` sobe a pilha num projeto próprio, confere o app e a IA, faz uma pergunta ao assistente como a Ana (o app chama a IA e a resposta volta), manda 5 leituras do simulador, roda o pipeline e derruba tudo. Trecho de `devops/evidencias/smoke.txt` (o build das imagens e o resumo do pipeline foram omitidos):
 
 ```{.text incluir="../devops/evidencias/smoke.txt" comeca="$ ;== ;200 ;201 ;NAME ;merenda-smoke-app-1 ;merenda-smoke-ia-1 ;SMOKE OK"}
 ```
