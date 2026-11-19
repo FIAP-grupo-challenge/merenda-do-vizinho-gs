@@ -1,0 +1,37 @@
+{
+  "municipio": "Santos Dumont",
+  "uf": "MG",
+  "prazo_envio": "2025-03-26",
+  "notas": [
+    "Itens: tabela do item 1.1 (24 itens), com preços de até 4 casas decimais. O Anexo I (termo de referência) repete os itens com preços de 2 casas (diferença de no máximo R$ 0,01, dentro da tolerância) e troca a ordem dos itens 13 e 14.",
+    "Contradição: no item 01 (abobrinha) a tabela 1.1 imprime R$ 6,48, mas o total da linha (252 x 6,84 = 1.723,68) e o Anexo I dizem R$ 6,84. O gabarito segue o preço impresso na tabela 1.1 (6,48).",
+    "O item 05 (batata inglesa) tem total R$ 7.901,54 na tabela 1.1, que não confere com 1.835 x 7,23 = 13.267,05 (o valor do Anexo I); quantidade e preço são os mesmos nas duas tabelas. No item 07 (brócolis) a unidade é \"Unid.\" na tabela 1.1 e \"KG\" no Anexo I.",
+    "Prazo: a sessão para entregar os documentos de habilitação e os projetos de venda é em 26/03/2025, às 14h (item 4.1); o edital não dá outro prazo."
+  ],
+  "itens": [
+    {"produto": "Abobrinha", "produto_id": "abobrinha", "unidade": "kg", "quantidade": 252, "preco_unitario": 6.48},
+    {"produto": "Alface liso", "produto_id": "alface", "unidade": "unid.", "quantidade": 1316, "preco_unitario": 3.1467},
+    {"produto": "Banana prata", "produto_id": "banana", "unidade": "kg", "quantidade": 4880, "preco_unitario": 8.2933},
+    {"produto": "Banana nanica", "produto_id": "banana", "unidade": "kg", "quantidade": 2440, "preco_unitario": 5.32},
+    {"produto": "Batata inglesa", "produto_id": "batata-inglesa", "unidade": "kg", "quantidade": 1835, "preco_unitario": 7.23},
+    {"produto": "Beterraba", "produto_id": "beterraba", "unidade": "kg", "quantidade": 412, "preco_unitario": 6.4167},
+    {"produto": "Brócolis", "produto_id": "brocolis", "unidade": "unid.", "quantidade": 524, "preco_unitario": 8.93},
+    {"produto": "Cebolinha", "produto_id": "cebolinha", "unidade": "molho", "quantidade": 575, "preco_unitario": 2.5933},
+    {"produto": "Cenoura vermelha", "produto_id": "cenoura", "unidade": "kg", "quantidade": 804, "preco_unitario": 5.13},
+    {"produto": "Chuchu", "produto_id": "chuchu", "unidade": "kg", "quantidade": 534, "preco_unitario": 6.2033},
+    {"produto": "Couve flor", "produto_id": "couve-flor", "unidade": "unid.", "quantidade": 393, "preco_unitario": 8.445},
+    {"produto": "Couve", "produto_id": "couve", "unidade": "molho", "quantidade": 1170, "preco_unitario": 3.3267},
+    {"produto": "Goiaba", "produto_id": "goiaba", "unidade": "kg", "quantidade": 290, "preco_unitario": 11.37},
+    {"produto": "Inhame", "produto_id": null, "unidade": "kg", "quantidade": 808, "preco_unitario": 10.495},
+    {"produto": "Mandioca congelada", "produto_id": "mandioca", "unidade": "kg", "quantidade": 320, "preco_unitario": 8.24},
+    {"produto": "Mandioca", "produto_id": "mandioca", "unidade": "kg", "quantidade": 480, "preco_unitario": 4.99},
+    {"produto": "Mexerica", "produto_id": "mexerica", "unidade": "kg", "quantidade": 1040, "preco_unitario": 8.9},
+    {"produto": "Moranga japonesa", "produto_id": "abobora", "unidade": "kg", "quantidade": 672, "preco_unitario": 4.54},
+    {"produto": "Morango congelado", "produto_id": null, "unidade": "kg", "quantidade": 300, "preco_unitario": 27.49},
+    {"produto": "Pimentão verde", "produto_id": "pimentao", "unidade": "kg", "quantidade": 60, "preco_unitario": 9.97},
+    {"produto": "Repolho", "produto_id": "repolho", "unidade": "kg", "quantidade": 345, "preco_unitario": 4.31},
+    {"produto": "Salsinha", "produto_id": "salsa", "unidade": "molho", "quantidade": 575, "preco_unitario": 2.4933},
+    {"produto": "Tomate", "produto_id": "tomate", "unidade": "kg", "quantidade": 830, "preco_unitario": 8.94},
+    {"produto": "Vagem", "produto_id": null, "unidade": "kg", "quantidade": 300, "preco_unitario": 14.06}
+  ]
+}

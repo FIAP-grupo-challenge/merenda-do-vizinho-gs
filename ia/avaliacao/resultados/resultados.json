@@ -1,0 +1,3989 @@
+{
+  "data": "2026-11-19",
+  "modelo": "claude-haiku-5-5",
+  "resumo": {
+    "regras": {
+      "pct_encontrados": 66.7,
+      "pct_corretos": 56.1,
+      "pct_prazo_correto": 37.5,
+      "tempo_medio_ms": 1368,
+      "chamadas": 8
+    },
+    "ia": {
+      "pct_encontrados": 95.6,
+      "pct_corretos": 95.6,
+      "pct_prazo_correto": 100.0,
+      "tempo_medio_ms": 27637,
+      "chamadas": 8
+    },
+    "falhas_ia": []
+  },
+  "custo_total_usd": 0.6369,
+  "linhas": [
+    {
+      "arquivo": "01-ba-estado-bahia-2026.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 16,
+      "encontrados": 0,
+      "corretos": 0,
+      "prazo_envio": "2026-02-20",
+      "prazo_gabarito": "2026-02-20",
+      "prazo_correto": true,
+      "municipio_uf": [
+        null,
+        null
+      ],
+      "municipio_uf_correto": false,
+      "duracao_ms": 4883,
+      "avisos": [
+        "nenhuma tabela de itens encontrada; confira à mão"
+      ],
+      "itens": []
+    },
+    {
+      "arquivo": "01-ba-estado-bahia-2026.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 16,
+      "encontrados": 14,
+      "corretos": 14,
+      "prazo_envio": "2026-02-20",
+      "prazo_gabarito": "2026-02-20",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Salvador",
+        "BA"
+      ],
+      "municipio_uf_correto": false,
+      "duracao_ms": 26282,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Barrinha de cereais",
+          "produto_id": null,
+          "unidade": "und",
+          "quantidade": 666766,
+          "preco_unitario": 4.0
+        },
+        {
+          "produto": "Café torrado e moído",
+          "produto_id": null,
+          "unidade": "250g",
+          "quantidade": 399765,
+          "preco_unitario": 23.33
+        },
+        {
+          "produto": "Aipim palito corte caseiro",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 116971,
+          "preco_unitario": 12.33
+        },
+        {
+          "produto": "Flocão de milho",
+          "produto_id": "milho-verde",
+          "unidade": "500g",
+          "quantidade": 249540,
+          "preco_unitario": 5.58
+        },
+        {
+          "produto": "Farinha",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 81197,
+          "preco_unitario": 10.35
+        },
+        {
+          "produto": "Polpa de fruta",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 389906,
+          "preco_unitario": 15.8
+        },
+        {
+          "produto": "Ovos caipira",
+          "produto_id": "ovo",
+          "unidade": "dz",
+          "quantidade": 7960,
+          "preco_unitario": 17.27
+        },
+        {
+          "produto": "Feijão",
+          "produto_id": "feijao",
+          "unidade": "kg",
+          "quantidade": 124770,
+          "preco_unitario": 13.73
+        },
+        {
+          "produto": "Leite em pó",
+          "produto_id": "leite",
+          "unidade": "200g",
+          "quantidade": 665766,
+          "preco_unitario": 10.17
+        },
+        {
+          "produto": "Cacau em pó 100%",
+          "produto_id": null,
+          "unidade": "200g",
+          "quantidade": 266306,
+          "preco_unitario": 20.25
+        },
+        {
+          "produto": "Massa de aipim",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 23394,
+          "preco_unitario": 12.27
+        },
+        {
+          "produto": "Iogurte",
+          "produto_id": null,
+          "unidade": "200ml",
+          "quantidade": 1331532,
+          "preco_unitario": 3.77
+        },
+        {
+          "produto": "Filé de tilápia",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 66577,
+          "preco_unitario": 51.0
+        },
+        {
+          "produto": "Mel",
+          "produto_id": "mel",
+          "unidade": "kg",
+          "quantidade": 6991,
+          "preco_unitario": 42.33
+        },
+        {
+          "produto": "Tapioca granulada",
+          "produto_id": null,
+          "unidade": "500g",
+          "quantidade": 186414,
+          "preco_unitario": 11.85
+        },
+        {
+          "produto": "Carne de cordeiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 46603,
+          "preco_unitario": 69.5
+        }
+      ],
+      "tokens_entrada": 526217,
+      "tokens_saida": 4854,
+      "custo_usd": 0.275243
+    },
+    {
+      "arquivo": "02-ba-iraquara-2025.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 49,
+      "encontrados": 37,
+      "corretos": 37,
+      "prazo_envio": null,
+      "prazo_gabarito": "2025-03-14",
+      "prazo_correto": false,
+      "municipio_uf": [
+        "Iraquara",
+        "BA"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 760,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "ALFACE",
+          "produto_id": "alface",
+          "unidade": "maço",
+          "quantidade": 5000.0,
+          "preco_unitario": 4.37
+        },
+        {
+          "produto": "ABÓBORA",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4400.0,
+          "preco_unitario": 4.57
+        },
+        {
+          "produto": "ABOBRINHA DE 1 QUALIDADE",
+          "produto_id": "abobrinha",
+          "unidade": "kg",
+          "quantidade": 500.0,
+          "preco_unitario": 4.06
+        },
+        {
+          "produto": "AIPIM (MACAXEIRA)",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 5000.0,
+          "preco_unitario": 5.36
+        },
+        {
+          "produto": "ABACAXI",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 2000.0,
+          "preco_unitario": 7.83
+        },
+        {
+          "produto": "ALHO",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 700.0,
+          "preco_unitario": 40.13
+        },
+        {
+          "produto": "BANANA DA PRATA",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 16000.0,
+          "preco_unitario": 4.92
+        },
+        {
+          "produto": "BANANA DA TERRA",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3500.0,
+          "preco_unitario": 14.7
+        },
+        {
+          "produto": "BATATA DOCE",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 12000.0,
+          "preco_unitario": 5.68
+        },
+        {
+          "produto": "BETERRABA",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 1500.0,
+          "preco_unitario": 6.2
+        },
+        {
+          "produto": "KG.",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4000.0,
+          "preco_unitario": 36.5
+        },
+        {
+          "produto": "CAFÉ EM PÓ",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2500.0,
+          "preco_unitario": 19.45
+        },
+        {
+          "produto": "CEBOLA",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 4000.0,
+          "preco_unitario": 7.68
+        },
+        {
+          "produto": "CEBOLA ROXA",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2100.0,
+          "preco_unitario": 8.51
+        },
+        {
+          "produto": "CENOURA",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 2100.0,
+          "preco_unitario": 6.6
+        },
+        {
+          "produto": "COENTRO",
+          "produto_id": "coentro",
+          "unidade": "maço",
+          "quantidade": 5000.0,
+          "preco_unitario": 4.0
+        },
+        {
+          "produto": "CHUCHU",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 500.0,
+          "preco_unitario": 8.63
+        },
+        {
+          "produto": "COUVE",
+          "produto_id": "couve",
+          "unidade": "maço",
+          "quantidade": 1000.0,
+          "preco_unitario": 4.9
+        },
+        {
+          "produto": "FARINHA DE MANDIOCA",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 4500.0,
+          "preco_unitario": 9.3
+        },
+        {
+          "produto": "GOIABA DE 1 QUALIDADE",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 400.0,
+          "preco_unitario": 7.75
+        },
+        {
+          "produto": "LIMÃO",
+          "produto_id": "limao",
+          "unidade": "dúzia",
+          "quantidade": 50.0,
+          "preco_unitario": 9.25
+        },
+        {
+          "produto": "MAMÃO",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 4000.0,
+          "preco_unitario": 5.71
+        },
+        {
+          "produto": "MANGA",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 1000.0,
+          "preco_unitario": 6.5
+        },
+        {
+          "produto": "MARACUJÁ",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 200.0,
+          "preco_unitario": 9.0
+        },
+        {
+          "produto": "MARACUJINA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 100.0,
+          "preco_unitario": 7.99
+        },
+        {
+          "produto": "MELANCIA",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 15000.0,
+          "preco_unitario": 4.34
+        },
+        {
+          "produto": "PIMENTÃO",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 1100.0,
+          "preco_unitario": 6.59
+        },
+        {
+          "produto": "QUIABO DE 1 QUALIDADE",
+          "produto_id": "quiabo",
+          "unidade": "kg",
+          "quantidade": 200.0,
+          "preco_unitario": 11.33
+        },
+        {
+          "produto": "POLPA DE FRUTA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 11000.0,
+          "preco_unitario": 8.75
+        },
+        {
+          "produto": "REPOLHO",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 500.0,
+          "preco_unitario": 5.88
+        },
+        {
+          "produto": "TAPIOCA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5000.0,
+          "preco_unitario": 13.23
+        },
+        {
+          "produto": "TOMATE",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 4000.0,
+          "preco_unitario": 7.67
+        },
+        {
+          "produto": "TEMPERO PRONTO",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2000.0,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "FEIJÃO CARIOCA",
+          "produto_id": "feijao",
+          "unidade": "kg",
+          "quantidade": 1000.0,
+          "preco_unitario": 9.72
+        },
+        {
+          "produto": "BOLO CASEIRO",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1500.0,
+          "preco_unitario": 15.9
+        },
+        {
+          "produto": "AÇAFRÃO EM PÓ",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400.0,
+          "preco_unitario": 44.11
+        },
+        {
+          "produto": "COMINHO DEVERÁ SER",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400.0,
+          "preco_unitario": 50.0
+        },
+        {
+          "produto": "CORANTE (COLORAU) PÓ",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400.0,
+          "preco_unitario": 28.95
+        },
+        {
+          "produto": "MAXIXE",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300.0,
+          "preco_unitario": 5.16
+        },
+        {
+          "produto": "MESES. CONTENDO SELO",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1000.0,
+          "preco_unitario": 12.0
+        },
+        {
+          "produto": "FLOCÃO DE MILHO FARINHA",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 2000.0,
+          "preco_unitario": 3.23
+        }
+      ]
+    },
+    {
+      "arquivo": "02-ba-iraquara-2025.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 49,
+      "encontrados": 48,
+      "corretos": 48,
+      "prazo_envio": "2025-03-14",
+      "prazo_gabarito": "2025-03-14",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Iraquara",
+        "BA"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 29853,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Alface",
+          "produto_id": "alface",
+          "unidade": "maço",
+          "quantidade": 5000,
+          "preco_unitario": 4.37
+        },
+        {
+          "produto": "Abóbora",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4400,
+          "preco_unitario": 4.57
+        },
+        {
+          "produto": "Abobrinha",
+          "produto_id": "abobrinha",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 4.06
+        },
+        {
+          "produto": "Aipim (Macaxeira)",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 5000,
+          "preco_unitario": 5.36
+        },
+        {
+          "produto": "Abacaxi",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 2000,
+          "preco_unitario": 7.83
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 700,
+          "preco_unitario": 40.13
+        },
+        {
+          "produto": "Banana da Prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 16000,
+          "preco_unitario": 4.92
+        },
+        {
+          "produto": "Banana da Terra",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3500,
+          "preco_unitario": 14.7
+        },
+        {
+          "produto": "Batata Doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 12000,
+          "preco_unitario": 5.68
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 1500,
+          "preco_unitario": 6.2
+        },
+        {
+          "produto": "Biscoito de Tapioca",
+          "produto_id": "biscoito-caseiro",
+          "unidade": "kg",
+          "quantidade": 4000,
+          "preco_unitario": 36.5
+        },
+        {
+          "produto": "Café em pó",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2500,
+          "preco_unitario": 19.45
+        },
+        {
+          "produto": "Cebola",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 4000,
+          "preco_unitario": 7.68
+        },
+        {
+          "produto": "Cebola Roxa",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2100,
+          "preco_unitario": 8.51
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 2100,
+          "preco_unitario": 6.6
+        },
+        {
+          "produto": "Coentro",
+          "produto_id": "coentro",
+          "unidade": "maço",
+          "quantidade": 5000,
+          "preco_unitario": 4.0
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 8.63
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "maço",
+          "quantidade": 1000,
+          "preco_unitario": 4.9
+        },
+        {
+          "produto": "Farinha de Mandioca",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 4500,
+          "preco_unitario": 9.3
+        },
+        {
+          "produto": "Goiaba",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 400,
+          "preco_unitario": 7.75
+        },
+        {
+          "produto": "Laranja",
+          "produto_id": "laranja",
+          "unidade": "un",
+          "quantidade": 4000,
+          "preco_unitario": 1.5
+        },
+        {
+          "produto": "Limão",
+          "produto_id": "limao",
+          "unidade": "dz",
+          "quantidade": 50,
+          "preco_unitario": 9.25
+        },
+        {
+          "produto": "Mamão",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 4000,
+          "preco_unitario": 5.71
+        },
+        {
+          "produto": "Manga",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 1000,
+          "preco_unitario": 6.5
+        },
+        {
+          "produto": "Maracujá",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 9.0
+        },
+        {
+          "produto": "Maracujina",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 7.99
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 15000,
+          "preco_unitario": 4.34
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 400,
+          "preco_unitario": 5.5
+        },
+        {
+          "produto": "Milho verde",
+          "produto_id": "milho-verde",
+          "unidade": "un",
+          "quantidade": 600,
+          "preco_unitario": 1.9
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "un",
+          "quantidade": 300,
+          "preco_unitario": 3.44
+        },
+        {
+          "produto": "Pimentão",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 1100,
+          "preco_unitario": 6.59
+        },
+        {
+          "produto": "Quiabo",
+          "produto_id": "quiabo",
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 11.33
+        },
+        {
+          "produto": "Rúcula",
+          "produto_id": null,
+          "unidade": "molho",
+          "quantidade": 400,
+          "preco_unitario": 3.65
+        },
+        {
+          "produto": "Polpa de Fruta",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 11000,
+          "preco_unitario": 8.75
+        },
+        {
+          "produto": "Repolho",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 5.88
+        },
+        {
+          "produto": "Tapioca",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5000,
+          "preco_unitario": 13.23
+        },
+        {
+          "produto": "Tomate",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 4000,
+          "preco_unitario": 7.67
+        },
+        {
+          "produto": "Tempero Pronto",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2000,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "Feijão Carioca",
+          "produto_id": "feijao",
+          "unidade": "kg",
+          "quantidade": 1000,
+          "preco_unitario": 9.72
+        },
+        {
+          "produto": "Bolo Caseiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1500,
+          "preco_unitario": 15.9
+        },
+        {
+          "produto": "Açafrão em pó",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400,
+          "preco_unitario": 44.11
+        },
+        {
+          "produto": "Cominho",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400,
+          "preco_unitario": 50.0
+        },
+        {
+          "produto": "Corante (Colorau)",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 400,
+          "preco_unitario": 28.95
+        },
+        {
+          "produto": "Maxixe",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300,
+          "preco_unitario": 5.16
+        },
+        {
+          "produto": "Pão caseiro",
+          "produto_id": "pao-caseiro",
+          "unidade": "un",
+          "quantidade": 100000,
+          "preco_unitario": 1.0
+        },
+        {
+          "produto": "Feijão preto",
+          "produto_id": "feijao",
+          "unidade": "kg",
+          "quantidade": 1000,
+          "preco_unitario": 12.0
+        },
+        {
+          "produto": "Iogurte diversos sabores",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 8000,
+          "preco_unitario": 4.08
+        },
+        {
+          "produto": "Flocão de milho",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 2000,
+          "preco_unitario": 3.23
+        },
+        {
+          "produto": "Vagem",
+          "produto_id": null,
+          "unidade": "pact",
+          "quantidade": 100,
+          "preco_unitario": 12.52
+        }
+      ],
+      "tokens_entrada": 81907,
+      "tokens_saida": 8934,
+      "custo_usd": 0.012658
+    },
+    {
+      "arquivo": "03-go-aparecida-de-goiania-2025.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 54,
+      "encontrados": 51,
+      "corretos": 51,
+      "prazo_envio": null,
+      "prazo_gabarito": "2025-04-22",
+      "prazo_correto": false,
+      "municipio_uf": [
+        "Aparecida De Goiânia",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 1498,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora Cabotiá madura",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4366.0,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 7.7
+        },
+        {
+          "produto": "Açafrão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 339.0,
+          "preco_unitario": 70.0
+        },
+        {
+          "produto": "Acelga",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2387.0,
+          "preco_unitario": 24.75
+        },
+        {
+          "produto": "Agrião",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1417.0,
+          "preco_unitario": 21.43
+        },
+        {
+          "produto": "Alface Americana",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610.0,
+          "preco_unitario": 17.66
+        },
+        {
+          "produto": "Alface Crespa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 5213.0,
+          "preco_unitario": 17.24
+        },
+        {
+          "produto": "Alface Lisa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610.0,
+          "preco_unitario": 20.16
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1394.0,
+          "preco_unitario": 36.33
+        },
+        {
+          "produto": "Batata doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 5375.0,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 6514.0,
+          "preco_unitario": 9.66
+        },
+        {
+          "produto": "Berinjela",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4066.0,
+          "preco_unitario": 7.33
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 4874.0,
+          "preco_unitario": 6.53
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "kg",
+          "quantidade": 2687.0,
+          "preco_unitario": 41.8
+        },
+        {
+          "produto": "Cará",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 10.27
+        },
+        {
+          "produto": "Cebola branca",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2210.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 31.33
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 5921.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Cheiro Verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 75.47
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 4782.0,
+          "preco_unitario": 7.97
+        },
+        {
+          "produto": "Couve flor",
+          "produto_id": "couve-flor",
+          "unidade": "kg",
+          "quantidade": 2079.0,
+          "preco_unitario": 27.13
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 2233.0,
+          "preco_unitario": 30.14
+        },
+        {
+          "produto": "Espinafre",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2071.0,
+          "preco_unitario": 26.34
+        },
+        {
+          "produto": "Inhame",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2888.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mandioca",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 7885.0,
+          "preco_unitario": 8.27
+        },
+        {
+          "produto": "Milho verde",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 6183.0,
+          "preco_unitario": 14.4
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 2449.0,
+          "preco_unitario": 9.7
+        },
+        {
+          "produto": "Pimenta de cheiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 708.0,
+          "preco_unitario": 58.33
+        },
+        {
+          "produto": "Pimentão verde",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 14.2
+        },
+        {
+          "produto": "Rabanete",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1309.0,
+          "preco_unitario": 14.08
+        },
+        {
+          "produto": "Repolho verde",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 6838.0,
+          "preco_unitario": 7.87
+        },
+        {
+          "produto": "Rúcula",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1594.0,
+          "preco_unitario": 42.0
+        },
+        {
+          "produto": "Tomate salada",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 5513.0,
+          "preco_unitario": 11.63
+        },
+        {
+          "produto": "Vagem fresca",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3527.0,
+          "preco_unitario": 20.07
+        },
+        {
+          "produto": "Abacate",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5313.0,
+          "preco_unitario": 11.06
+        },
+        {
+          "produto": "Abacaxi",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 6468.0,
+          "preco_unitario": 9.1
+        },
+        {
+          "produto": "Banana Maçã",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 5744.0,
+          "preco_unitario": 14.97
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 15600.0,
+          "preco_unitario": 10.03
+        },
+        {
+          "produto": "Goiaba vermelha",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 4404.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Jabuticaba",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 8285.0,
+          "preco_unitario": 13.63
+        },
+        {
+          "produto": "Laranja pêra",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 25071.0,
+          "preco_unitario": 6.17
+        },
+        {
+          "produto": "Limão",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 2433.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mamão Formosa",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 19443.0,
+          "preco_unitario": 9.33
+        },
+        {
+          "produto": "Manga",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 6453.0,
+          "preco_unitario": 11.3
+        },
+        {
+          "produto": "Maracujá",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 23855.0,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 9848.0,
+          "preco_unitario": 9.63
+        },
+        {
+          "produto": "Mexerica (Tangerina PONKAN)",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 6822.0,
+          "preco_unitario": 9.77
+        },
+        {
+          "produto": "Bolo de trigo sabor coco",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4751.0,
+          "preco_unitario": 44.2
+        },
+        {
+          "produto": "Doce de banana",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3519.0,
+          "preco_unitario": 34.0
+        },
+        {
+          "produto": "Farinha de mandioca",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 693.0,
+          "preco_unitario": 16.63
+        },
+        {
+          "produto": "Iogurte de polpa de fruta 115 g",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 10934.0,
+          "preco_unitario": 3.83
+        },
+        {
+          "produto": "Polpa de frutas",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3234.0,
+          "preco_unitario": 25.23
+        },
+        {
+          "produto": "Rapadurinha",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3427.0,
+          "preco_unitario": 26.0
+        },
+        {
+          "produto": "Abóbora Cabotiá madura",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4366.0,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 7.7
+        },
+        {
+          "produto": "Açafrão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 339.0,
+          "preco_unitario": 70.0
+        },
+        {
+          "produto": "Acelga",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2387.0,
+          "preco_unitario": 24.7
+        },
+        {
+          "produto": "Agrião",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1417.0,
+          "preco_unitario": 21.4
+        },
+        {
+          "produto": "Alface Crespa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 5213.0,
+          "preco_unitario": 17.2
+        },
+        {
+          "produto": "Alface Lisa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610.0,
+          "preco_unitario": 20.1
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1394.0,
+          "preco_unitario": 36.3
+        },
+        {
+          "produto": "Batata doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 5375.0,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 6514.0,
+          "preco_unitario": 9.66
+        },
+        {
+          "produto": "Berinjela",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4066.0,
+          "preco_unitario": 7.33
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 4874.0,
+          "preco_unitario": 6.53
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "kg",
+          "quantidade": 2687.0,
+          "preco_unitario": 41.8
+        },
+        {
+          "produto": "Cará",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 10.27
+        },
+        {
+          "produto": "Cebola branca",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2210.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 31.33
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 5921.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Cheiro Verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 75.47
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 4782.0,
+          "preco_unitario": 7.97
+        },
+        {
+          "produto": "Couve flor",
+          "produto_id": "couve-flor",
+          "unidade": "kg",
+          "quantidade": 2079.0,
+          "preco_unitario": 27.13
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 2233.0,
+          "preco_unitario": 30.14
+        },
+        {
+          "produto": "Espinafre",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2071.0,
+          "preco_unitario": 26.34
+        },
+        {
+          "produto": "Inhame",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2888.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "ºC",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 7885.0,
+          "preco_unitario": 8.27
+        },
+        {
+          "produto": "Milho verde",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 6183.0,
+          "preco_unitario": 14.4
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 2449.0,
+          "preco_unitario": 9.7
+        },
+        {
+          "produto": "Pimenta de cheiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 708.0,
+          "preco_unitario": 58.33
+        },
+        {
+          "produto": "Pimentão verde",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 14.2
+        },
+        {
+          "produto": "Rabanete",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1309.0,
+          "preco_unitario": 14.08
+        },
+        {
+          "produto": "Repolho verde",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 6838.0,
+          "preco_unitario": 7.87
+        },
+        {
+          "produto": "Rúcula",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1594.0,
+          "preco_unitario": 42.0
+        },
+        {
+          "produto": "Tomate salada",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 5513.0,
+          "preco_unitario": 11.63
+        },
+        {
+          "produto": "Vagem fresca",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3527.0,
+          "preco_unitario": 20.07
+        },
+        {
+          "produto": "Abacate",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5313.0,
+          "preco_unitario": 11.06
+        },
+        {
+          "produto": "Abacaxi",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 6468.0,
+          "preco_unitario": 9.1
+        },
+        {
+          "produto": "Banana Maçã",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 5744.0,
+          "preco_unitario": 14.97
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 15600.0,
+          "preco_unitario": 10.03
+        },
+        {
+          "produto": "Goiaba vermelha",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 4404.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Jabuticaba",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 8285.0,
+          "preco_unitario": 13.63
+        },
+        {
+          "produto": "Laranja pêra",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 25071.0,
+          "preco_unitario": 6.17
+        },
+        {
+          "produto": "Limão",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 2433.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mamão Formosa",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 19443.0,
+          "preco_unitario": 9.33
+        },
+        {
+          "produto": "Manga",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 6453.0,
+          "preco_unitario": 11.3
+        },
+        {
+          "produto": "Maracujá",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 23855.0,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 9848.0,
+          "preco_unitario": 9.63
+        },
+        {
+          "produto": "Mexerica (Tangerina PONKAN)",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 6822.0,
+          "preco_unitario": 9.77
+        },
+        {
+          "produto": "Bolo de trigo sabor coco",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4751.0,
+          "preco_unitario": 44.2
+        },
+        {
+          "produto": "Doce de banana",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3519.0,
+          "preco_unitario": 34.0
+        },
+        {
+          "produto": "Farinha de mandioca",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 693.0,
+          "preco_unitario": 16.63
+        },
+        {
+          "produto": "Iogurte de polpa de fruta 115 g",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 10934.0,
+          "preco_unitario": 3.83
+        },
+        {
+          "produto": "Polpa de frutas",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3234.0,
+          "preco_unitario": 25.23
+        },
+        {
+          "produto": "Rapadurinha",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3427.0,
+          "preco_unitario": 26.0
+        },
+        {
+          "produto": "Abóbora Cabotiá madura",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4366.0,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 7.7
+        },
+        {
+          "produto": "Açafrão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 339.0,
+          "preco_unitario": 70.0
+        },
+        {
+          "produto": "Acelga",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2387.0,
+          "preco_unitario": 24.75
+        },
+        {
+          "produto": "Agrião",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1417.0,
+          "preco_unitario": 21.43
+        },
+        {
+          "produto": "Alface Americana",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610.0,
+          "preco_unitario": 17.66
+        },
+        {
+          "produto": "Alface Crespa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 5213.0,
+          "preco_unitario": 17.24
+        },
+        {
+          "produto": "Alface Lisa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610.0,
+          "preco_unitario": 20.16
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1394.0,
+          "preco_unitario": 36.33
+        },
+        {
+          "produto": "Batata doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 5375.0,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 6514.0,
+          "preco_unitario": 9.66
+        },
+        {
+          "produto": "Berinjela",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4066.0,
+          "preco_unitario": 7.33
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 4874.0,
+          "preco_unitario": 6.53
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "kg",
+          "quantidade": 2687.0,
+          "preco_unitario": 41.8
+        },
+        {
+          "produto": "Cará",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4666.0,
+          "preco_unitario": 10.27
+        },
+        {
+          "produto": "Cebola branca",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2210.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 31.33
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 5921.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Cheiro Verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "kg",
+          "quantidade": 747.0,
+          "preco_unitario": 75.47
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 4782.0,
+          "preco_unitario": 7.97
+        },
+        {
+          "produto": "Couve flor",
+          "produto_id": "couve-flor",
+          "unidade": "kg",
+          "quantidade": 2079.0,
+          "preco_unitario": 27.13
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 2233.0,
+          "preco_unitario": 30.14
+        },
+        {
+          "produto": "Espinafre",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2071.0,
+          "preco_unitario": 26.34
+        },
+        {
+          "produto": "Inhame",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2888.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "ºC",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 7885.0,
+          "preco_unitario": 8.27
+        },
+        {
+          "produto": "Milho verde",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 6183.0,
+          "preco_unitario": 14.4
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 2449.0,
+          "preco_unitario": 9.7
+        },
+        {
+          "produto": "Pimenta de cheiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 708.0,
+          "preco_unitario": 58.33
+        },
+        {
+          "produto": "Pimentão verde",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 14.2
+        },
+        {
+          "produto": "Rabanete",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1309.0,
+          "preco_unitario": 14.08
+        },
+        {
+          "produto": "Repolho verde",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 6838.0,
+          "preco_unitario": 7.87
+        },
+        {
+          "produto": "Rúcula",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1594.0,
+          "preco_unitario": 42.0
+        },
+        {
+          "produto": "Tomate salada",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 5513.0,
+          "preco_unitario": 11.63
+        },
+        {
+          "produto": "Vagem fresca",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3527.0,
+          "preco_unitario": 20.07
+        },
+        {
+          "produto": "Abacate",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5313.0,
+          "preco_unitario": 11.06
+        },
+        {
+          "produto": "Abacaxi",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 6468.0,
+          "preco_unitario": 9.1
+        },
+        {
+          "produto": "Banana Maçã",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 5744.0,
+          "preco_unitario": 14.97
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 15600.0,
+          "preco_unitario": 10.03
+        },
+        {
+          "produto": "Goiaba vermelha",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 4404.0,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "dezenas (conforme solicitado).",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 8285.0,
+          "preco_unitario": 13.63
+        },
+        {
+          "produto": "Laranja pêra",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 25071.0,
+          "preco_unitario": 6.17
+        },
+        {
+          "produto": "Limão",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 2433.0,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mamão Formosa",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 19443.0,
+          "preco_unitario": 9.33
+        },
+        {
+          "produto": "Manga",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 6453.0,
+          "preco_unitario": 11.3
+        },
+        {
+          "produto": "Maracujá",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 2965.0,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 23855.0,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 9848.0,
+          "preco_unitario": 9.63
+        },
+        {
+          "produto": "Mexerica (Tangerina PONKAN)",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 6822.0,
+          "preco_unitario": 9.77
+        },
+        {
+          "produto": "Bolo de trigo sabor coco",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4751.0,
+          "preco_unitario": 44.2
+        },
+        {
+          "produto": "Doce de banana",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3519.0,
+          "preco_unitario": 34.0
+        },
+        {
+          "produto": "Farinha de mandioca",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 693.0,
+          "preco_unitario": 16.63
+        },
+        {
+          "produto": "Iogurte de polpa de fruta 115 g",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 10934.0,
+          "preco_unitario": 3.83
+        },
+        {
+          "produto": "Polpa de frutas",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3234.0,
+          "preco_unitario": 25.23
+        },
+        {
+          "produto": "Rapadurinha",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3427.0,
+          "preco_unitario": 26.0
+        }
+      ]
+    },
+    {
+      "arquivo": "03-go-aparecida-de-goiania-2025.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 54,
+      "encontrados": 51,
+      "corretos": 51,
+      "prazo_envio": "2025-04-22",
+      "prazo_gabarito": "2025-04-22",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Aparecida de Goiânia",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 40893,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora Cabotiá madura",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4366,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 4666,
+          "preco_unitario": 7.7
+        },
+        {
+          "produto": "Açafrão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 339,
+          "preco_unitario": 70.0
+        },
+        {
+          "produto": "Acelga",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2387,
+          "preco_unitario": 24.75
+        },
+        {
+          "produto": "Agrião",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1417,
+          "preco_unitario": 21.43
+        },
+        {
+          "produto": "Alface Americana",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610,
+          "preco_unitario": 17.66
+        },
+        {
+          "produto": "Alface Crespa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 5213,
+          "preco_unitario": 17.24
+        },
+        {
+          "produto": "Alface Lisa",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 2610,
+          "preco_unitario": 20.16
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1394,
+          "preco_unitario": 36.33
+        },
+        {
+          "produto": "Batata doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 5375,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 6514,
+          "preco_unitario": 9.66
+        },
+        {
+          "produto": "Berinjela",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4066,
+          "preco_unitario": 7.33
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 4874,
+          "preco_unitario": 6.53
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "kg",
+          "quantidade": 2687,
+          "preco_unitario": 41.8
+        },
+        {
+          "produto": "Cará",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 4666,
+          "preco_unitario": 10.27
+        },
+        {
+          "produto": "Cebola branca",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 2210,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 747,
+          "preco_unitario": 31.33
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 5921,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Cheiro Verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "kg",
+          "quantidade": 747,
+          "preco_unitario": 75.47
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 4782,
+          "preco_unitario": 7.97
+        },
+        {
+          "produto": "Couve flor",
+          "produto_id": "couve-flor",
+          "unidade": "kg",
+          "quantidade": 2079,
+          "preco_unitario": 27.13
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 2233,
+          "preco_unitario": 30.14
+        },
+        {
+          "produto": "Espinafre",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2071,
+          "preco_unitario": 26.34
+        },
+        {
+          "produto": "Inhame",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 2888,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mandioca",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 7885,
+          "preco_unitario": 8.27
+        },
+        {
+          "produto": "Milho verde",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 6183,
+          "preco_unitario": 14.4
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 2449,
+          "preco_unitario": 9.7
+        },
+        {
+          "produto": "Pimenta de cheiro",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 708,
+          "preco_unitario": 58.33
+        },
+        {
+          "produto": "Pimentão verde",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 2965,
+          "preco_unitario": 14.2
+        },
+        {
+          "produto": "Rabanete",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1309,
+          "preco_unitario": 14.08
+        },
+        {
+          "produto": "Repolho verde",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 6838,
+          "preco_unitario": 7.87
+        },
+        {
+          "produto": "Rúcula",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 1594,
+          "preco_unitario": 42.0
+        },
+        {
+          "produto": "Tomate salada",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 5513,
+          "preco_unitario": 11.63
+        },
+        {
+          "produto": "Vagem fresca",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3527,
+          "preco_unitario": 20.07
+        },
+        {
+          "produto": "Abacate",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 5313,
+          "preco_unitario": 11.06
+        },
+        {
+          "produto": "Abacaxi",
+          "produto_id": "abacaxi",
+          "unidade": "kg",
+          "quantidade": 6468,
+          "preco_unitario": 9.1
+        },
+        {
+          "produto": "Banana Maçã",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 5744,
+          "preco_unitario": 14.97
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 15600,
+          "preco_unitario": 10.03
+        },
+        {
+          "produto": "Goiaba vermelha",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 4404,
+          "preco_unitario": 8.83
+        },
+        {
+          "produto": "Jabuticaba",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 8285,
+          "preco_unitario": 13.63
+        },
+        {
+          "produto": "Laranja pêra",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 25071,
+          "preco_unitario": 6.17
+        },
+        {
+          "produto": "Limão",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 2433,
+          "preco_unitario": 9.4
+        },
+        {
+          "produto": "Mamão Formosa",
+          "produto_id": "mamao",
+          "unidade": "kg",
+          "quantidade": 19443,
+          "preco_unitario": 9.33
+        },
+        {
+          "produto": "Manga",
+          "produto_id": "manga",
+          "unidade": "kg",
+          "quantidade": 6453,
+          "preco_unitario": 11.3
+        },
+        {
+          "produto": "Maracujá",
+          "produto_id": "maracuja",
+          "unidade": "kg",
+          "quantidade": 2965,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 23855,
+          "preco_unitario": 7.6
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 9848,
+          "preco_unitario": 9.63
+        },
+        {
+          "produto": "Mexerica (Tangerina Ponkan)",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 6822,
+          "preco_unitario": 9.77
+        },
+        {
+          "produto": "Bolo de trigo sabor coco, laranja, milho e fubá",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 4751,
+          "preco_unitario": 44.2
+        },
+        {
+          "produto": "Doce de banana",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 3519,
+          "preco_unitario": 34.0
+        },
+        {
+          "produto": "Farinha de mandioca",
+          "produto_id": "farinha-de-mandioca",
+          "unidade": "kg",
+          "quantidade": 693,
+          "preco_unitario": 16.63
+        },
+        {
+          "produto": "Iogurte de polpa de fruta 115 g",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 10934,
+          "preco_unitario": 3.83
+        },
+        {
+          "produto": "Polpa de frutas",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3234,
+          "preco_unitario": 25.23
+        },
+        {
+          "produto": "Rapadurinha",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 3427,
+          "preco_unitario": 26.0
+        }
+      ],
+      "tokens_entrada": 230576,
+      "tokens_saida": 11407,
+      "custo_usd": 0.143806
+    },
+    {
+      "arquivo": "04-go-catalao-2026.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 16,
+      "encontrados": 16,
+      "corretos": 16,
+      "prazo_envio": "2026-07-30",
+      "prazo_gabarito": "2026-07-30",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Catalão",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 386,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora Cabotiá",
+          "produto_id": "abobora",
+          "unidade": "unidade",
+          "quantidade": 390.0,
+          "preco_unitario": 7.0
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 1640.0,
+          "preco_unitario": 6.87
+        },
+        {
+          "produto": "Alface",
+          "produto_id": "alface",
+          "unidade": "pç",
+          "quantidade": 2280.0,
+          "preco_unitario": 7.03
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1276.0,
+          "preco_unitario": 38.16
+        },
+        {
+          "produto": "Batata Inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 5218.0,
+          "preco_unitario": 6.04
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "pç",
+          "quantidade": 300.0,
+          "preco_unitario": 12.74
+        },
+        {
+          "produto": "Cebola",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 7540.0,
+          "preco_unitario": 7.05
+        },
+        {
+          "produto": "Cheiro verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "fx",
+          "quantidade": 2210.0,
+          "preco_unitario": 8.1
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "pç",
+          "quantidade": 1269.0,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Couve- flor",
+          "produto_id": "couve-flor",
+          "unidade": "un",
+          "quantidade": 300.0,
+          "preco_unitario": 15.44
+        },
+        {
+          "produto": "Mandioca",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 2800.0,
+          "preco_unitario": 11.71
+        },
+        {
+          "produto": "Milho",
+          "produto_id": "milho-verde",
+          "unidade": "atilho",
+          "quantidade": 1056.0,
+          "preco_unitario": 7.69
+        },
+        {
+          "produto": "Pepino Branco",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 1502.0,
+          "preco_unitario": 9.25
+        },
+        {
+          "produto": "Tomate",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 1768.0,
+          "preco_unitario": 12.04
+        },
+        {
+          "produto": "Pão Enriquecido",
+          "produto_id": "pao-caseiro",
+          "unidade": "kg",
+          "quantidade": 6350.0,
+          "preco_unitario": 48.84
+        },
+        {
+          "produto": "Biscoito de Queijo",
+          "produto_id": "biscoito-caseiro",
+          "unidade": "kg",
+          "quantidade": 5800.0,
+          "preco_unitario": 50.09
+        }
+      ]
+    },
+    {
+      "arquivo": "04-go-catalao-2026.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 16,
+      "encontrados": 16,
+      "corretos": 16,
+      "prazo_envio": "2026-07-30",
+      "prazo_gabarito": "2026-07-30",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Catalão",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 18140,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora cabotiá",
+          "produto_id": "abobora",
+          "unidade": "unidade",
+          "quantidade": 390,
+          "preco_unitario": 7.0
+        },
+        {
+          "produto": "Abóbora verde",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 1640,
+          "preco_unitario": 6.87
+        },
+        {
+          "produto": "Alface",
+          "produto_id": "alface",
+          "unidade": "pç",
+          "quantidade": 2280,
+          "preco_unitario": 7.03
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 1276,
+          "preco_unitario": 38.16
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 5218,
+          "preco_unitario": 6.04
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "pç",
+          "quantidade": 300,
+          "preco_unitario": 12.74
+        },
+        {
+          "produto": "Cebola",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 7540,
+          "preco_unitario": 7.05
+        },
+        {
+          "produto": "Cheiro verde",
+          "produto_id": "cheiro-verde",
+          "unidade": "fx",
+          "quantidade": 2210,
+          "preco_unitario": 8.1
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "pç",
+          "quantidade": 1269,
+          "preco_unitario": 7.37
+        },
+        {
+          "produto": "Couve-flor",
+          "produto_id": "couve-flor",
+          "unidade": "un",
+          "quantidade": 300,
+          "preco_unitario": 15.44
+        },
+        {
+          "produto": "Mandioca",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 2800,
+          "preco_unitario": 11.71
+        },
+        {
+          "produto": "Milho",
+          "produto_id": "milho-verde",
+          "unidade": "atilho",
+          "quantidade": 1056,
+          "preco_unitario": 7.69
+        },
+        {
+          "produto": "Pepino branco",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 1502,
+          "preco_unitario": 9.25
+        },
+        {
+          "produto": "Tomate",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 1768,
+          "preco_unitario": 12.04
+        },
+        {
+          "produto": "Pão enriquecido",
+          "produto_id": "pao-caseiro",
+          "unidade": "kg",
+          "quantidade": 6350,
+          "preco_unitario": 48.84
+        },
+        {
+          "produto": "Biscoito de queijo",
+          "produto_id": "biscoito-caseiro",
+          "unidade": "kg",
+          "quantidade": 5800,
+          "preco_unitario": 50.09
+        }
+      ],
+      "tokens_entrada": 45158,
+      "tokens_saida": 4914,
+      "custo_usd": 0.006973
+    },
+    {
+      "arquivo": "05-go-goiania-2026.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 16,
+      "encontrados": 0,
+      "corretos": 0,
+      "prazo_envio": null,
+      "prazo_gabarito": "2026-02-20",
+      "prazo_correto": false,
+      "municipio_uf": [
+        "Goiânia",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 1207,
+      "avisos": [
+        "nenhuma tabela de itens encontrada; confira à mão"
+      ],
+      "itens": []
+    },
+    {
+      "arquivo": "05-go-goiania-2026.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 16,
+      "encontrados": 14,
+      "corretos": 14,
+      "prazo_envio": "2026-02-20",
+      "prazo_gabarito": "2026-02-20",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Goiânia",
+        "GO"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 27914,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Banana prata in natura",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 202000,
+          "preco_unitario": 13.96
+        },
+        {
+          "produto": "Batata inglesa orgânica in natura",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 48000,
+          "preco_unitario": 17.11
+        },
+        {
+          "produto": "Beterraba in natura",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 19000,
+          "preco_unitario": 10.9
+        },
+        {
+          "produto": "Carne em cubos congelada (IQF)",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 67000,
+          "preco_unitario": 49.11
+        },
+        {
+          "produto": "Cebola in natura",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 53500,
+          "preco_unitario": 13.61
+        },
+        {
+          "produto": "Frango congelado corte peito",
+          "produto_id": "frango",
+          "unidade": "kg",
+          "quantidade": 100000,
+          "preco_unitario": 18.34
+        },
+        {
+          "produto": "Iogurte integral natural",
+          "produto_id": null,
+          "unidade": "pote",
+          "quantidade": 80000,
+          "preco_unitario": 7.8
+        },
+        {
+          "produto": "Iogurte com polpa de frutas",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 90000,
+          "preco_unitario": 17.52
+        },
+        {
+          "produto": "Laranja in natura",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 190000,
+          "preco_unitario": 12.54
+        },
+        {
+          "produto": "Mandioca descascada congelada",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 21000,
+          "preco_unitario": 11.4
+        },
+        {
+          "produto": "Manteiga de leite",
+          "produto_id": "leite",
+          "unidade": "kg",
+          "quantidade": 19000,
+          "preco_unitario": 62.05
+        },
+        {
+          "produto": "Ovo de galinha",
+          "produto_id": "ovo",
+          "unidade": "embalagem",
+          "quantidade": 15000,
+          "preco_unitario": 33.8
+        },
+        {
+          "produto": "Polpa de frutas natural integral congelada",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 112000,
+          "preco_unitario": 42.08
+        },
+        {
+          "produto": "Queijo muçarela",
+          "produto_id": "queijo",
+          "unidade": "kg",
+          "quantidade": 28000,
+          "preco_unitario": 67.5
+        },
+        {
+          "produto": "Repolho verde in natura",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 39000,
+          "preco_unitario": 12.4
+        },
+        {
+          "produto": "Tomate in natura",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 94000,
+          "preco_unitario": 13.85
+        }
+      ],
+      "tokens_entrada": 153282,
+      "tokens_saida": 6904,
+      "custo_usd": 0.093901
+    },
+    {
+      "arquivo": "06-mg-santos-dumont-2025.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 24,
+      "encontrados": 15,
+      "corretos": 15,
+      "prazo_envio": null,
+      "prazo_gabarito": "2025-03-26",
+      "prazo_correto": false,
+      "municipio_uf": [
+        "Santos Dumont",
+        "MG"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 511,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "ALFACE LISO",
+          "produto_id": "alface",
+          "unidade": "unid",
+          "quantidade": 1316.0,
+          "preco_unitario": 3.14
+        },
+        {
+          "produto": "BANANA PRATA IN NATURA",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 4880.0,
+          "preco_unitario": 8.29
+        },
+        {
+          "produto": "BANANA NANICA IN NATURA",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 2440.0,
+          "preco_unitario": 5.32
+        },
+        {
+          "produto": "BATATA INGLESA IN NATURA",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 1835.0,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "BETERRABA IN NATURA",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 412.0,
+          "preco_unitario": 6.41
+        },
+        {
+          "produto": "BROCÓLIS DE PRIMEIRA QUALIDADE",
+          "produto_id": "brocolis",
+          "unidade": "kg",
+          "quantidade": 524.0,
+          "preco_unitario": 8.93
+        },
+        {
+          "produto": "QUALIDADE",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 804.0,
+          "preco_unitario": 5.13
+        },
+        {
+          "produto": "CHUCHU PRIMEIRA QUALIDADE",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 534.0,
+          "preco_unitario": 6.2
+        },
+        {
+          "produto": "COUVE FLOR IN NATURA PRIMEIRA QUALIDADE",
+          "produto_id": "couve-flor",
+          "unidade": "unid",
+          "quantidade": 393.0,
+          "preco_unitario": 8.44
+        },
+        {
+          "produto": "INHAME PRIMEIRA QUALIDADE",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 808.0,
+          "preco_unitario": 10.49
+        },
+        {
+          "produto": "GOIABA IN NATURA PRIMEIRA QUALIDADE",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 290.0,
+          "preco_unitario": 11.37
+        },
+        {
+          "produto": "MANDIOCA CONGELADA",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 320.0,
+          "preco_unitario": 8.24
+        },
+        {
+          "produto": "MANDIOCA FRESCA DE PRIMEIRA QUALIDADE",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 480.0,
+          "preco_unitario": 4.99
+        },
+        {
+          "produto": "MEXERICA IN NATURA PRIMEIRA QUALIDADE",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 1040.0,
+          "preco_unitario": 8.9
+        },
+        {
+          "produto": "QUALIDADE",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 672.0,
+          "preco_unitario": 4.54
+        },
+        {
+          "produto": "MORANGO CONGELADA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300.0,
+          "preco_unitario": 27.49
+        },
+        {
+          "produto": "PIMENTÃO PRIMEIRA QUALIDADE",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 60.0,
+          "preco_unitario": 9.97
+        },
+        {
+          "produto": "REPOLHO PRIMEIRA QUALIDADE",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 345.0,
+          "preco_unitario": 4.31
+        },
+        {
+          "produto": "TOMATE FRESCO PRIMEIRA QUALIDADE",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 830.0,
+          "preco_unitario": 8.94
+        },
+        {
+          "produto": "VAGEM DE PRIMEIRA QUALIDADE",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300.0,
+          "preco_unitario": 14.06
+        }
+      ]
+    },
+    {
+      "arquivo": "06-mg-santos-dumont-2025.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 24,
+      "encontrados": 24,
+      "corretos": 24,
+      "prazo_envio": "2025-03-26",
+      "prazo_gabarito": "2025-03-26",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Santos Dumont",
+        "MG"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 23876,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abobrinha",
+          "produto_id": "abobrinha",
+          "unidade": "kg",
+          "quantidade": 252,
+          "preco_unitario": 6.48
+        },
+        {
+          "produto": "Alface liso",
+          "produto_id": "alface",
+          "unidade": "unid",
+          "quantidade": 1316,
+          "preco_unitario": 3.1467
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 4880,
+          "preco_unitario": 8.2933
+        },
+        {
+          "produto": "Banana nanica",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 2440,
+          "preco_unitario": 5.32
+        },
+        {
+          "produto": "Batata inglesa",
+          "produto_id": "batata-inglesa",
+          "unidade": "kg",
+          "quantidade": 1835,
+          "preco_unitario": 7.23
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 412,
+          "preco_unitario": 6.4167
+        },
+        {
+          "produto": "Brócolis",
+          "produto_id": "brocolis",
+          "unidade": "unid",
+          "quantidade": 524,
+          "preco_unitario": 8.93
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "molho",
+          "quantidade": 575,
+          "preco_unitario": 2.5933
+        },
+        {
+          "produto": "Cenoura vermelha",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 804,
+          "preco_unitario": 5.13
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 534,
+          "preco_unitario": 6.2033
+        },
+        {
+          "produto": "Couve-flor",
+          "produto_id": "couve-flor",
+          "unidade": "unid",
+          "quantidade": 393,
+          "preco_unitario": 8.445
+        },
+        {
+          "produto": "Couve",
+          "produto_id": "couve",
+          "unidade": "molho",
+          "quantidade": 1170,
+          "preco_unitario": 3.3267
+        },
+        {
+          "produto": "Goiaba",
+          "produto_id": "goiaba",
+          "unidade": "kg",
+          "quantidade": 290,
+          "preco_unitario": 11.37
+        },
+        {
+          "produto": "Inhame",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 808,
+          "preco_unitario": 10.495
+        },
+        {
+          "produto": "Mandioca congelada",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 320,
+          "preco_unitario": 8.24
+        },
+        {
+          "produto": "Mandioca",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 480,
+          "preco_unitario": 4.99
+        },
+        {
+          "produto": "Mexerica",
+          "produto_id": "mexerica",
+          "unidade": "kg",
+          "quantidade": 1040,
+          "preco_unitario": 8.9
+        },
+        {
+          "produto": "Moranga japonesa",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 672,
+          "preco_unitario": 4.54
+        },
+        {
+          "produto": "Morango congelado",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300,
+          "preco_unitario": 27.49
+        },
+        {
+          "produto": "Pimentão verde",
+          "produto_id": "pimentao",
+          "unidade": "kg",
+          "quantidade": 60,
+          "preco_unitario": 9.97
+        },
+        {
+          "produto": "Repolho",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 345,
+          "preco_unitario": 4.31
+        },
+        {
+          "produto": "Salsinha",
+          "produto_id": "salsa",
+          "unidade": "molho",
+          "quantidade": 575,
+          "preco_unitario": 2.4933
+        },
+        {
+          "produto": "Tomate",
+          "produto_id": "tomate",
+          "unidade": "kg",
+          "quantidade": 830,
+          "preco_unitario": 8.94
+        },
+        {
+          "produto": "Vagem",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300,
+          "preco_unitario": 14.06
+        }
+      ],
+      "tokens_entrada": 57371,
+      "tokens_saida": 6361,
+      "custo_usd": 0.008918
+    },
+    {
+      "arquivo": "08-pr-manfrinopolis-2026.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 43,
+      "encontrados": 24,
+      "corretos": 0,
+      "prazo_envio": "2026-02-04",
+      "prazo_gabarito": "2026-02-04",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Manfrinópolis",
+        "PR"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 1400,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora cabotiá. fresca e sãs",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 8.25,
+          "preco_unitario": 660.0
+        },
+        {
+          "produto": "Abobrinha verde. fresca e sãs",
+          "produto_id": "abobrinha",
+          "unidade": "kg",
+          "quantidade": 6.84,
+          "preco_unitario": 1026.0
+        },
+        {
+          "produto": "Acelga. fresca e sãs",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 10.65,
+          "preco_unitario": 2130.0
+        },
+        {
+          "produto": "Alface crespa ou lisa. fresca e sãs",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 11.39,
+          "preco_unitario": 2278.0
+        },
+        {
+          "produto": "Alho. graúdo",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 43.85,
+          "preco_unitario": 2192.5
+        },
+        {
+          "produto": "Batata doce. fresca e sãs",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 6.54,
+          "preco_unitario": 981.0
+        },
+        {
+          "produto": "Beterraba. fresca e sãs",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 6.86,
+          "preco_unitario": 1715.0
+        },
+        {
+          "produto": "Cebola. fresca e sãs",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 7.58,
+          "preco_unitario": 758.0
+        },
+        {
+          "produto": "Cebolinha. fresca e sãs",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 17.52,
+          "preco_unitario": 1401.6
+        },
+        {
+          "produto": "Cenoura. fresca e sãs",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 7.38,
+          "preco_unitario": 1107.0
+        },
+        {
+          "produto": "Couve manteiga. fresca e sãs",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 15.2,
+          "preco_unitario": 1216.0
+        },
+        {
+          "produto": "Chuchu. frescos e sãos",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 8.09,
+          "preco_unitario": 1213.5
+        },
+        {
+          "produto": "Mandioca descascada. Limpas",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 9.03,
+          "preco_unitario": 1354.5
+        },
+        {
+          "produto": "Milho verde descascado. limpo",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 12.1,
+          "preco_unitario": 1210.0
+        },
+        {
+          "produto": "Pepino. fresca e sãs",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 8.65,
+          "preco_unitario": 1297.5
+        },
+        {
+          "produto": "Repolho verde. fresca e sãs",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 5.37,
+          "preco_unitario": 1342.5
+        },
+        {
+          "produto": "Salsinha. fresca e sãs",
+          "produto_id": "salsa",
+          "unidade": "kg",
+          "quantidade": 19.54,
+          "preco_unitario": 1563.2
+        },
+        {
+          "produto": "Vagem. fresca e sãs",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 19.79,
+          "preco_unitario": 1583.2
+        },
+        {
+          "produto": "Abacate. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 18.27,
+          "preco_unitario": 6394.5
+        },
+        {
+          "produto": "Banana prata. frescos e sãos",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 10.06,
+          "preco_unitario": 5030.0
+        },
+        {
+          "produto": "Banana caturra. frescos e sãos",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 10.8,
+          "preco_unitario": 5400.0
+        },
+        {
+          "produto": "Bergamota. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 9.96,
+          "preco_unitario": 2988.0
+        },
+        {
+          "produto": "Caqui. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 14.33,
+          "preco_unitario": 3295.9
+        },
+        {
+          "produto": "Laranja pera. frescos e sãos",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 11.27,
+          "preco_unitario": 5635.0
+        },
+        {
+          "produto": "Limão cravo. frescos e sãos",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 11.66,
+          "preco_unitario": 233.2
+        },
+        {
+          "produto": "Limão galego. frescos e sãos",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 10.14,
+          "preco_unitario": 202.8
+        },
+        {
+          "produto": "Melancia. frescos e sãos",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 5.0,
+          "preco_unitario": 4250.0
+        },
+        {
+          "produto": "Melão. tipo caipira. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 10.35,
+          "preco_unitario": 5175.0
+        },
+        {
+          "produto": "Morango. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 41.58,
+          "preco_unitario": 4158.0
+        },
+        {
+          "produto": "Nactarina. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 14.33,
+          "preco_unitario": 2866.0
+        },
+        {
+          "produto": "Pêra. Tipo Williams",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 14.98,
+          "preco_unitario": 2996.0
+        },
+        {
+          "produto": "Pêssego. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 15.36,
+          "preco_unitario": 3072.0
+        },
+        {
+          "produto": "Pocã. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 12.95,
+          "preco_unitario": 3885.0
+        },
+        {
+          "produto": "Uva. frescos e sãos",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 15.28,
+          "preco_unitario": 3820.0
+        },
+        {
+          "produto": "Bolacha caseira. Produzidos com ingredientes sem adição de",
+          "produto_id": null,
+          "unidade": "pc",
+          "quantidade": 30.68,
+          "preco_unitario": 3068.0
+        },
+        {
+          "produto": "Bolacha de polvilho. Produzidos com ingredientes sem adição de",
+          "produto_id": null,
+          "unidade": "pc",
+          "quantidade": 31.42,
+          "preco_unitario": 2513.6
+        },
+        {
+          "produto": "Macarrão caseiro. Com ovos",
+          "produto_id": "ovo",
+          "unidade": "pc",
+          "quantidade": 27.26,
+          "preco_unitario": 5452.0
+        },
+        {
+          "produto": "Massa de lasanha. Ingredientes ovo e farinha. Produzidos com",
+          "produto_id": "ovo",
+          "unidade": "pc",
+          "quantidade": 23.55,
+          "preco_unitario": 4710.0
+        },
+        {
+          "produto": "Pão caseiro. Bem assado",
+          "produto_id": "pao-caseiro",
+          "unidade": "kg",
+          "quantidade": 17.87,
+          "preco_unitario": 3574.0
+        },
+        {
+          "produto": "Açúcar mascavo tipo colonial. Açúcar mascavo",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 21.37,
+          "preco_unitario": 2137.0
+        },
+        {
+          "produto": "Melado. Elaborado a partir de caldo de cana",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 21.44,
+          "preco_unitario": 1715.2
+        },
+        {
+          "produto": "Queijo tipo colonial. De sabor láctico",
+          "produto_id": "queijo",
+          "unidade": "kg",
+          "quantidade": 61.67,
+          "preco_unitario": 6151.0
+        }
+      ]
+    },
+    {
+      "arquivo": "08-pr-manfrinopolis-2026.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 43,
+      "encontrados": 42,
+      "corretos": 42,
+      "prazo_envio": "2026-02-04",
+      "prazo_gabarito": "2026-02-04",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "Manfrinópolis",
+        "PR"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 33895,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "Abóbora cabotiá",
+          "produto_id": "abobora",
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 8.25
+        },
+        {
+          "produto": "Abobrinha verde",
+          "produto_id": "abobrinha",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 6.84
+        },
+        {
+          "produto": "Acelga",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 10.65
+        },
+        {
+          "produto": "Alface",
+          "produto_id": "alface",
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 11.39
+        },
+        {
+          "produto": "Alho",
+          "produto_id": "alho",
+          "unidade": "kg",
+          "quantidade": 50,
+          "preco_unitario": 43.85
+        },
+        {
+          "produto": "Batata doce",
+          "produto_id": "batata-doce",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 6.54
+        },
+        {
+          "produto": "Beterraba",
+          "produto_id": "beterraba",
+          "unidade": "kg",
+          "quantidade": 250,
+          "preco_unitario": 6.86
+        },
+        {
+          "produto": "Cebola",
+          "produto_id": "cebola",
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 7.58
+        },
+        {
+          "produto": "Cebolinha",
+          "produto_id": "cebolinha",
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 17.52
+        },
+        {
+          "produto": "Cenoura",
+          "produto_id": "cenoura",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 7.38
+        },
+        {
+          "produto": "Couve manteiga",
+          "produto_id": "couve",
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 15.2
+        },
+        {
+          "produto": "Chuchu",
+          "produto_id": "chuchu",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 8.09
+        },
+        {
+          "produto": "Mandioca descascada",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 9.03
+        },
+        {
+          "produto": "Milho verde descascado",
+          "produto_id": "milho-verde",
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 12.1
+        },
+        {
+          "produto": "Pepino",
+          "produto_id": "pepino",
+          "unidade": "kg",
+          "quantidade": 150,
+          "preco_unitario": 8.65
+        },
+        {
+          "produto": "Repolho verde",
+          "produto_id": "repolho",
+          "unidade": "kg",
+          "quantidade": 250,
+          "preco_unitario": 5.37
+        },
+        {
+          "produto": "Salsinha",
+          "produto_id": "salsa",
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 19.54
+        },
+        {
+          "produto": "Vagem",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 19.79
+        },
+        {
+          "produto": "Abacate",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 350,
+          "preco_unitario": 18.27
+        },
+        {
+          "produto": "Banana prata",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 10.06
+        },
+        {
+          "produto": "Banana caturra",
+          "produto_id": "banana",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 10.8
+        },
+        {
+          "produto": "Bergamota",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300,
+          "preco_unitario": 9.96
+        },
+        {
+          "produto": "Caqui",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 230,
+          "preco_unitario": 14.33
+        },
+        {
+          "produto": "Laranja pera",
+          "produto_id": "laranja",
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 11.27
+        },
+        {
+          "produto": "Limão cravo",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 20,
+          "preco_unitario": 11.66
+        },
+        {
+          "produto": "Limão galego",
+          "produto_id": "limao",
+          "unidade": "kg",
+          "quantidade": 20,
+          "preco_unitario": 10.14
+        },
+        {
+          "produto": "Melancia",
+          "produto_id": "melancia",
+          "unidade": "kg",
+          "quantidade": 850,
+          "preco_unitario": 5.0
+        },
+        {
+          "produto": "Melão",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 500,
+          "preco_unitario": 10.35
+        },
+        {
+          "produto": "Morango",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 41.58
+        },
+        {
+          "produto": "Nectarina",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 14.33
+        },
+        {
+          "produto": "Pêra",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 14.98
+        },
+        {
+          "produto": "Pêssego",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 15.36
+        },
+        {
+          "produto": "Pocã",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 300,
+          "preco_unitario": 12.95
+        },
+        {
+          "produto": "Uva",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 250,
+          "preco_unitario": 15.28
+        },
+        {
+          "produto": "Bolacha caseira",
+          "produto_id": null,
+          "unidade": "pç",
+          "quantidade": 100,
+          "preco_unitario": 30.68
+        },
+        {
+          "produto": "Bolacha de polvilho",
+          "produto_id": null,
+          "unidade": "pç",
+          "quantidade": 80,
+          "preco_unitario": 31.42
+        },
+        {
+          "produto": "Macarrão caseiro",
+          "produto_id": null,
+          "unidade": "pç",
+          "quantidade": 200,
+          "preco_unitario": 27.26
+        },
+        {
+          "produto": "Massa de lasanha",
+          "produto_id": null,
+          "unidade": "pç",
+          "quantidade": 200,
+          "preco_unitario": 23.55
+        },
+        {
+          "produto": "Pão caseiro",
+          "produto_id": "pao-caseiro",
+          "unidade": "kg",
+          "quantidade": 200,
+          "preco_unitario": 17.87
+        },
+        {
+          "produto": "Açúcar mascavo tipo colonial",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 21.37
+        },
+        {
+          "produto": "Melado",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 80,
+          "preco_unitario": 21.44
+        },
+        {
+          "produto": "Suco de uva",
+          "produto_id": null,
+          "unidade": "lt",
+          "quantidade": 400,
+          "preco_unitario": 25.06
+        },
+        {
+          "produto": "Queijo tipo colonial",
+          "produto_id": "queijo",
+          "unidade": "kg",
+          "quantidade": 100,
+          "preco_unitario": 61.67
+        }
+      ],
+      "tokens_entrada": 127559,
+      "tokens_saida": 9510,
+      "custo_usd": 0.087554
+    },
+    {
+      "arquivo": "10-rs-sao-borja-2025.pdf",
+      "modo": "regras",
+      "origem": "regras",
+      "total_gabarito": 10,
+      "encontrados": 9,
+      "corretos": 9,
+      "prazo_envio": null,
+      "prazo_gabarito": "2025-04-09",
+      "prazo_correto": false,
+      "municipio_uf": [
+        "São Borja",
+        "RS"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 301,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "BOLO SIMPLES",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 800.0,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "CUCA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 800.0,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "DOCE DE LEITE",
+          "produto_id": "leite",
+          "unidade": "un",
+          "quantidade": 600.0,
+          "preco_unitario": 18.0
+        },
+        {
+          "produto": "FRANGO TIPO COLONIAL PICADO",
+          "produto_id": "frango",
+          "unidade": "kg",
+          "quantidade": 600.0,
+          "preco_unitario": 35.0
+        },
+        {
+          "produto": "MANDIOCA DESCASCADA CONGELADA E EMBALADA",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 1500.0,
+          "preco_unitario": 16.0
+        },
+        {
+          "produto": "MEL NATURAL DE ABELHAS",
+          "produto_id": "mel",
+          "unidade": "kg",
+          "quantidade": 400.0,
+          "preco_unitario": 30.0
+        },
+        {
+          "produto": "OVOS IN NATURA TIPO CAIPIRA –",
+          "produto_id": "ovo",
+          "unidade": "dúzia",
+          "quantidade": 3000.0,
+          "preco_unitario": 14.5
+        },
+        {
+          "produto": "QUEIJO COLONIAL",
+          "produto_id": "queijo",
+          "unidade": "kg",
+          "quantidade": 1000.0,
+          "preco_unitario": 55.67
+        },
+        {
+          "produto": "REQUEIJÃO CREMOSO",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 2000.0,
+          "preco_unitario": 11.17
+        }
+      ]
+    },
+    {
+      "arquivo": "10-rs-sao-borja-2025.pdf",
+      "modo": "ia",
+      "origem": "ia",
+      "total_gabarito": 10,
+      "encontrados": 9,
+      "corretos": 9,
+      "prazo_envio": "2025-04-09",
+      "prazo_gabarito": "2025-04-09",
+      "prazo_correto": true,
+      "municipio_uf": [
+        "São Borja",
+        "RS"
+      ],
+      "municipio_uf_correto": true,
+      "duracao_ms": 20246,
+      "avisos": [],
+      "itens": [
+        {
+          "produto": "BOLO SIMPLES",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 800,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "CUCA",
+          "produto_id": null,
+          "unidade": "kg",
+          "quantidade": 800,
+          "preco_unitario": 20.0
+        },
+        {
+          "produto": "DOCE DE LEITE",
+          "produto_id": "leite",
+          "unidade": "un",
+          "quantidade": 600,
+          "preco_unitario": 18.0
+        },
+        {
+          "produto": "FRANGO TIPO COLONIAL PICADO",
+          "produto_id": "frango",
+          "unidade": "kg",
+          "quantidade": 600,
+          "preco_unitario": 35.0
+        },
+        {
+          "produto": "MANDIOCA DESCASCADA CONGELADA E EMBALADA",
+          "produto_id": "mandioca",
+          "unidade": "kg",
+          "quantidade": 1500,
+          "preco_unitario": 16.0
+        },
+        {
+          "produto": "MEL NATURAL DE ABELHAS",
+          "produto_id": "mel",
+          "unidade": "kg",
+          "quantidade": 400,
+          "preco_unitario": 30.0
+        },
+        {
+          "produto": "OVOS IN NATURA TIPO CAIPIRA",
+          "produto_id": "ovo",
+          "unidade": "dz",
+          "quantidade": 3000,
+          "preco_unitario": 14.5
+        },
+        {
+          "produto": "QUEIJO COLONIAL",
+          "produto_id": "queijo",
+          "unidade": "kg",
+          "quantidade": 1000,
+          "preco_unitario": 55.67
+        },
+        {
+          "produto": "REQUEIJÃO CREMOSO",
+          "produto_id": null,
+          "unidade": "un",
+          "quantidade": 2000,
+          "preco_unitario": 11.17
+        },
+        {
+          "produto": "SUCO INTEGRAL DE UVA",
+          "produto_id": null,
+          "unidade": "litros (lt)",
+          "quantidade": 1000,
+          "preco_unitario": 19.54
+        }
+      ],
+      "tokens_entrada": 51769,
+      "tokens_saida": 5409,
+      "custo_usd": 0.007881
+    }
+  ]
+}

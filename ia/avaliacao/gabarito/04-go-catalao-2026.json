@@ -1,0 +1,27 @@
+{
+  "municipio": "Catalão",
+  "uf": "GO",
+  "prazo_envio": "2026-07-30",
+  "notas": [
+    "Itens: tabela do item 1.1 (págs. 1 a 3), 16 itens (quantidade x preço = total em todos); os mesmos de ITENS_CATALAO em ia/tests/test_regras.py. É o mesmo PDF de ia/tests/fixtures/chamada-real.pdf.",
+    "Prazo: \"no período de 09/07/2026 até 30/07/2026\"; a audiência de análise é em 04/08/2026."
+  ],
+  "itens": [
+    {"produto": "Abóbora Cabotiá", "produto_id": "abobora", "unidade": "unidade", "quantidade": 390, "preco_unitario": 7.0},
+    {"produto": "Abóbora verde", "produto_id": "abobora", "unidade": "kg", "quantidade": 1640, "preco_unitario": 6.87},
+    {"produto": "Alface", "produto_id": "alface", "unidade": "pç", "quantidade": 2280, "preco_unitario": 7.03},
+    {"produto": "Alho", "produto_id": "alho", "unidade": "kg", "quantidade": 1276, "preco_unitario": 38.16},
+    {"produto": "Batata Inglesa", "produto_id": "batata-inglesa", "unidade": "kg", "quantidade": 5218, "preco_unitario": 6.04},
+    {"produto": "Brócolis", "produto_id": "brocolis", "unidade": "pç", "quantidade": 300, "preco_unitario": 12.74},
+    {"produto": "Cebola", "produto_id": "cebola", "unidade": "kg", "quantidade": 7540, "preco_unitario": 7.05},
+    {"produto": "Cheiro verde", "produto_id": "cheiro-verde", "unidade": "fx", "quantidade": 2210, "preco_unitario": 8.1},
+    {"produto": "Couve", "produto_id": "couve", "unidade": "pç", "quantidade": 1269, "preco_unitario": 7.37},
+    {"produto": "Couve- flor", "produto_id": "couve-flor", "unidade": "un", "quantidade": 300, "preco_unitario": 15.44},
+    {"produto": "Mandioca", "produto_id": "mandioca", "unidade": "kg", "quantidade": 2800, "preco_unitario": 11.71},
+    {"produto": "Milho", "produto_id": "milho-verde", "unidade": "atilho", "quantidade": 1056, "preco_unitario": 7.69},
+    {"produto": "Pepino Branco", "produto_id": "pepino", "unidade": "kg", "quantidade": 1502, "preco_unitario": 9.25},
+    {"produto": "Tomate", "produto_id": "tomate", "unidade": "kg", "quantidade": 1768, "preco_unitario": 12.04},
+    {"produto": "Pão Enriquecido", "produto_id": "pao-caseiro", "unidade": "kg", "quantidade": 6350, "preco_unitario": 48.84},
+    {"produto": "Biscoito de Queijo", "produto_id": "biscoito-caseiro", "unidade": "kg", "quantidade": 5800, "preco_unitario": 50.09}
+  ]
+}
