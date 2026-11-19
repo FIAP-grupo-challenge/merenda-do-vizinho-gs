@@ -1,4 +1,6 @@
 # git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
+* 7589fc2 fix(entrega): o empacotar.sh acha link simbólico e PDF com pendência mesmo com pipefail
+* f31eb48 chore(entrega): PDF de evidências, grupo.txt e empacotamento
 * c35e858 docs(repo): comentários dizem que a chamada de demonstração e os gabaritos foram conferidos por agente de IA
 * 6faf31b docs(repo): plano de testes com 250 testes, saída dos testes refeita e privacidade precisa em segurança
 * 4ce8b3c docs(repo): roteiro do pitch igual ao aprovado em planejamento/pitch

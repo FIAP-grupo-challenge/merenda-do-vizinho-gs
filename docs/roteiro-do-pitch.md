@@ -30,7 +30,7 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 1. "já dentro do limite de 40 mil reais por ano" (10 palavras);
 2. "respeita o limite de cada um" (6);
 3. "pelo data lake" (3);
-4. "Nenhum dado pessoal vai para a IA." (7);
+4. "Os dados do cadastro não vão para a IA." (8);
 5. "e IA medida em 8 chamadas reais" (7), que só vale se a avaliação da IA rodar (seção 6).
 
 | Tempo | Bloco do edital | Quem fala | Fala exata | O que aparece na tela | Palavras |

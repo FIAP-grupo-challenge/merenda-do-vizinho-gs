@@ -210,7 +210,7 @@ O pipeline (`python -m dados.pipeline tudo`) faz o caminho da coleta ao dado tra
 1. **baixar-fontes:** baixa as planilhas públicas, ou usa a cópia versionada, com `PIPELINE_OFFLINE=1`;
 2. **ingerir-app:** pede a exportação do app (`GET /api/exportar`, com a chave de serviço) e a grava em `raw/app/`;
 3. **gerar-simulado:** gera o histórico simulado de uma cooperativa de Catalão (25 agricultores, 12 escolas, 12 meses e uma leitura da câmara fria por hora);
-4. **tratar:** do raw ao trusted (limpeza, tipos, código IBGE, percentual e pseudônimo; nome, CPF, CAF e e-mail não passam);
+4. **tratar:** do raw ao trusted (limpeza, tipos, código IBGE conferido com a UF, esfera e percentual recalculado; o agricultor chega do app só com o pseudônimo, e nome, CPF, CAF e e-mail não passam);
 5. **refinar:** do trusted ao refined (as seis tabelas do painel e o `.xlsx`).
 
 Saída de uma execução de 19/11/2026, com o app no ar: a exportação do app, com os dados da demonstração dos prints, entra no raw.
@@ -224,7 +224,7 @@ O caminho de produção, com Kafka, NiFi e Spark, está no diagrama da seção 2
 
 O painel é montado no Power BI web, a partir de `refined/merenda_do_vizinho.xlsx`, seguindo `dados/powerbi/guia-do-painel.md`. Tem duas páginas:
 
-- **Página 1, PNAE no Brasil.** Filtros de ano e de UF (e, se o grupo montou, de região e de faixa de cumprimento). Seis indicadores em cartões: o aviso dos dados, o percentual comprado da agricultura familiar, o mínimo do ano, as prefeituras abaixo do mínimo, quanto faltou para o mínimo e quanto faltaria com 45%. Um gráfico com quanto faltou em cada UF. **Ajuda a decidir** onde levar o serviço primeiro: as UFs e as prefeituras em que mais dinheiro do PNAE deixou de chegar à agricultura familiar.
+- **Página 1, PNAE no Brasil.** Filtros de ano e de UF (e, se o grupo montou, de região e de faixa de cumprimento). Cinco indicadores em cartões (o percentual comprado da agricultura familiar, o mínimo do ano, as prefeituras abaixo do mínimo, quanto faltou para o mínimo e quanto faltaria com 45%), mais um cartão com o aviso dos dados (preliminares ou parciais). Um gráfico com quanto faltou em cada UF. **Ajuda a decidir** onde levar o serviço primeiro: as UFs e as prefeituras em que mais dinheiro do PNAE deixou de chegar à agricultura familiar.
 - **Página 2, Cooperativa.** Filtro de produto. Indicadores: entregas no prazo, valor entregue e minutos fora da faixa na câmara fria (e, se o grupo montou, kg entregues, renda por agricultor e agricultores na primeira venda). **Ajuda a decidir** quais produtos e entregas a cooperativa precisa acompanhar e quando a câmara fria pede atenção.
 
 Para conferir a página 1, com o ano 2022: 44,5% comprado da agricultura familiar, 1.531 prefeituras abaixo dos 30%, R$ 97,1 milhões que faltaram para o mínimo e R$ 244,8 milhões que faltariam com 45%. São os números que o teste `test_numeros_de_referencia_de_2022` do pipeline confere.
@@ -347,7 +347,7 @@ Tudo é versionado com Git: commits pequenos, com mensagens em português no for
 
 **Integração contínua no Jenkins.** O `Jenkinsfile` roda sozinho a cada commit, sem passo manual: o Jenkins confere o repositório a cada 2 minutos e roda seis etapas, o checkout, os testes do app (Node 24), os testes de Python (IA, dados e IoT, no Python 3.12), o build das quatro imagens, o smoke e o arquivamento das evidências. O Jenkins local sobe com `devops/jenkins/docker-compose.yml` (passo a passo em `devops/jenkins/README.md`).
 
-![**Print 15.** Uma execução verde do pipeline no Jenkins, iniciada por um commit ("Started by an SCM change"), com as seis etapas.](../devops/evidencias/jenkins.png)
+![**Print 15.** Uma execução do pipeline no Jenkins sobre o ramo da entrega, em 19/11/2026, iniciada por um commit ("Started by an SCM change"): as seis etapas e o bloco `post` (Post Actions, que arquiva as evidências) verdes, em 1 min 38 s.](../devops/evidencias/jenkins.png)
 
 ## Segurança (0,5 ponto)
 
