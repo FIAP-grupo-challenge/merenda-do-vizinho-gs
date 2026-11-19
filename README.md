@@ -97,7 +97,7 @@ chmod 600 .env
 
 Rode esse bloco só se ainda não existe `.env`: ele cria o arquivo do zero. Sem o `openssl`, troque cada `$(openssl rand -hex 32)` por `$(python3 -c 'import secrets; print(secrets.token_hex(32))')`.
 
-Outro jeito é copiar o modelo, `cp .env.example .env`, e editar. O modelo traz os três segredos como `troque-este-valor` (troque cada um por um valor aleatório, como os que o bloco gera) e a `DATA_REFERENCIA=2026-07-15` já preenchida (o motivo está em "Usuários de demonstração e data de referência"). Se o `.env` já existe, abra-o num editor e confira esses mesmos pontos.
+Outro jeito é copiar o modelo, `cp .env.example .env`, e editar. O modelo traz os três segredos como `troque-este-valor` (troque cada um por um valor aleatório, como os que o bloco gera: o app não sobe com o texto de exemplo nem com um segredo de menos de 16 caracteres) e a `DATA_REFERENCIA=2026-07-15` já preenchida (o motivo está em "Usuários de demonstração e data de referência"). Se o `.env` já existe, abra-o num editor e confira esses mesmos pontos.
 
 Para usar a IA com o Claude, cole a chave da API em `ANTHROPIC_API_KEY=`. Sem a chave, tudo funciona no modo de regras.
 
@@ -112,6 +112,8 @@ Para usar a IA com o Claude, cole a chave da API em `ANTHROPIC_API_KEY=`. Sem a 
 | `MODELO_CLAUDE` | não | modelo da IA | `claude-haiku-5-5` |
 | `LIMITE_TEMP_C` | não | temperatura que dispara o alerta da câmara fria | 10 |
 | `MINUTOS_PORTA_ABERTA` | não | minutos com a porta aberta que disparam o alerta | 2 |
+
+Os três segredos precisam ter pelo menos 16 caracteres, e o `troque-este-valor` do modelo não vale: o app diz qual variável trocar e não sobe.
 
 ### 2A. Com Docker
 
@@ -235,6 +237,7 @@ Para parar, aperte `Ctrl+C` em cada terminal.
 - `EADDRINUSE` ou "porta em uso": outro programa usa a porta 3000 ou 3001. Feche esse programa e rode o comando de novo.
 - `port is already allocated` ao subir com Docker: outro programa usa a porta 3000. Feche-o, ou suba o app em outra porta, como `PORTA_APP=3100 docker compose up --build`, e abra http://localhost:3100. As tarefas da seção 2A não mudam: elas falam com o app pela rede do Compose.
 - `falta JWT_SEGREDO no .env` (ou outra chave): o `.env` não tem o segredo, ou não está na raiz. Confira com `cat .env`, sem colar o conteúdo em lugar nenhum.
+- `JWT_SEGREDO no .env é o texto de exemplo ... ou tem menos de 16 caracteres` (ou outra chave): o segredo ainda é o `troque-este-valor` do `.env.example`, ou é curto demais. Troque por um valor aleatório, como o do bloco da seção 1 (`openssl rand -hex 32`).
 - `SEMANAS_PADRAO deve ser um número maior que zero`: a variável tem um valor inválido. Apague a linha ou ponha um número, como `40`.
 - `npm: command not found` ou `engines`: instale o Node.js 24 ou mais novo.
 

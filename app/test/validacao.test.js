@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { validarCpf, validarCaf, validarEmail, mascararCpf, mascararCaf } = require('../src/validacao');
 const { lerConfig } = require('../src/config');
 const { ENV_TESTE } = require('./env-teste');
@@ -40,6 +42,18 @@ test('config sem JWT_SEGREDO lança erro', () => {
   assert.throws(() => lerConfig({ ...ENV_TESTE, CHAVE_SERVICO: '' }), /CHAVE_SERVICO/);
   assert.throws(() => lerConfig({ ...ENV_TESTE, CHAVE_DISPOSITIVO: undefined }), /CHAVE_DISPOSITIVO/);
   assert.throws(() => lerConfig({ ...ENV_TESTE, LIMITE_TEMP_C: 'dez' }), /LIMITE_TEMP_C/);
+});
+
+// O app não sobe com o texto de exemplo do .env.example nem com segredo curto, e a mensagem diz qual variável trocar.
+test('config recusa o texto de exemplo e o segredo com menos de 16 caracteres, e não imprime o valor', () => {
+  const exemplo = fs.readFileSync(path.join(__dirname, '..', '..', '.env.example'), 'utf8');
+  for (const nome of ['JWT_SEGREDO', 'CHAVE_SERVICO', 'CHAVE_DISPOSITIVO']) {
+    const doModelo = exemplo.match(new RegExp(`^${nome}=(.*)$`, 'm'))[1];
+    assert.throws(() => lerConfig({ ...ENV_TESTE, [nome]: doModelo }), new RegExp(`${nome} no \\.env.*exemplo.*16 caracteres`), `${nome} do .env.example`);
+    assert.throws(() => lerConfig({ ...ENV_TESTE, [nome]: 'x'.repeat(15) }), new RegExp(`${nome} no \\.env`));
+    assert.doesNotThrow(() => lerConfig({ ...ENV_TESTE, [nome]: 'x'.repeat(16) })); // 16 caracteres já valem
+  }
+  assert.throws(() => lerConfig({ ...ENV_TESTE, JWT_SEGREDO: 'curto-123' }), (erro) => !erro.message.includes('curto-123'));
 });
 
 test('config usa DATA_REFERENCIA e, vazia, usa hoje', () => {

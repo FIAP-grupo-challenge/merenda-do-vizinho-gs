@@ -2,10 +2,19 @@
 const { validarData } = require('./validacao');
 
 const SEGREDOS = ['JWT_SEGREDO', 'CHAVE_SERVICO', 'CHAVE_DISPOSITIVO'];
+// o texto que o .env.example traz nos três segredos: copiar o modelo sem trocar não pode subir um app com chave pública
+const SEGREDO_DE_EXEMPLO = 'troque-este-valor';
+const MINIMO_DO_SEGREDO = 16;
 
 function lerConfig(env = process.env) {
   for (const nome of SEGREDOS) {
     if (!env[nome]) throw new Error(`falta ${nome} no .env (copie o .env.example e preencha)`);
+    if (env[nome] === SEGREDO_DE_EXEMPLO || env[nome].length < MINIMO_DO_SEGREDO) {
+      throw new Error(
+        `${nome} no .env é o texto de exemplo (${SEGREDO_DE_EXEMPLO}) ou tem menos de ${MINIMO_DO_SEGREDO} caracteres: ` +
+          'troque por um valor aleatório, como o do README (openssl rand -hex 32)',
+      );
+    }
   }
   // o "hoje" das oportunidades: a demonstração usa chamadas reais de 2026 que já fecharam
   const dataReferencia = env.DATA_REFERENCIA || dataDeHoje();
