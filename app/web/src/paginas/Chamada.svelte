@@ -3,7 +3,8 @@
 <script>
   import { api, sair } from '../lib/api.js';
   import Ouvir from '../lib/Ouvir.svelte';
-  import { data, numero } from '../lib/formato.js';
+  import CampoNumero from '../lib/CampoNumero.svelte';
+  import { data, escreverNumero, lerNumero, numero } from '../lib/formato.js';
 
   const id = encodeURIComponent(new URLSearchParams(location.search).get('id') ?? '');
 
@@ -17,7 +18,9 @@
   let checklist = $state([]); // a lista da IA, para quando a chamada não traz a dela
   let chaveDocumentos = $state(''); // as caixas "já tenho" ficam neste navegador, por agricultor e por chamada
   let tenho = $state([]);
-  let quantidades = $state({}); // produto_id -> quanto ele quer vender
+  let quantidades = $state({}); // produto_id -> o que está escrito no campo (texto: "1.000", "10,5")
+  let editados = $state({}); // produto_id -> true quando ele mesmo mexeu no campo: a sugestão do assistente não troca o que ele escreveu
+  let sugeridas = $state({}); // produto_id -> sugestão que não entrou, porque ele já tinha escrito outro número
   let erroOferta = $state('');
   let pronto = $state('');
   let enviando = $state(false);
@@ -37,6 +40,11 @@
     }
     return [...porProduto.values()];
   });
+
+  const vazio = (produto_id) => !(quantidades[produto_id] ?? '').trim();
+  // o aviso "a sugestão não entrou" só vale enquanto o campo tem outro número: se ele apagou o campo ou escreveu o mesmo número, some
+  const sugestaoMantida = (produto_id) =>
+    sugeridas[produto_id] !== undefined && !vazio(produto_id) && lerNumero(quantidades[produto_id]).valor !== sugeridas[produto_id];
 
   function lerTenho() {
     try {
@@ -81,7 +89,15 @@
       mensagens = [...conversa, { papel: 'assistente', texto: resposta.resposta }];
       if (texto && pergunta.trim() === texto) pergunta = ''; // não apaga o que ele escreveu enquanto esperava
       checklist = resposta.checklist ?? [];
-      for (const { produto_id, quantidade } of resposta.sugestao?.itens ?? []) quantidades[produto_id] = quantidade;
+      for (const { produto_id, quantidade } of resposta.sugestao?.itens ?? []) {
+        if (editados[produto_id] && !vazio(produto_id)) {
+          sugeridas[produto_id] = quantidade; // fica o número dele, e a tela avisa
+        } else {
+          quantidades[produto_id] = escreverNumero(quantidade);
+          editados[produto_id] = false; // o número agora é do assistente: a próxima sugestão pode trocá-lo
+          delete sugeridas[produto_id];
+        }
+      }
     } catch (falha) {
       erroChat = falha.message;
     }
@@ -94,13 +110,18 @@
   }
 
   // Grava o interesse (o servidor confere) e depois faz o passo de cada botão.
+  // Os botões não ficam "disabled" enquanto enviam (o foco se perderia): o segundo toque é ignorado aqui.
   async function oferecer(depois) {
+    if (enviando) return;
     erroOferta = '';
     pronto = '';
+    const itens = [];
+    for (const campo of campos) {
+      const { valor, erro: motivo } = lerNumero(quantidades[campo.produto_id]);
+      if (motivo) return (erroOferta = `${campo.nomes.join(' e ')}: ${motivo}`); // número que não deu para ler não some em silêncio
+      if (valor > 0) itens.push({ produto_id: campo.produto_id, quantidade: valor });
+    }
     enviando = true;
-    const itens = campos
-      .filter((campo) => quantidades[campo.produto_id] > 0)
-      .map((campo) => ({ produto_id: campo.produto_id, quantidade: quantidades[campo.produto_id] }));
     try {
       await api('POST', `/api/agricultor/chamadas/${id}/interesse`, { itens });
       depois();
@@ -135,7 +156,7 @@
 
     <section class="cartao" aria-labelledby="titulo-assistente">
       <h2 id="titulo-assistente">Assistente</h2>
-      <p class="dica">Pergunte sobre a chamada. Não escreva CPF, CAF, e-mail nem telefone: o assistente não precisa deles.</p>
+      <p class="dica">Pergunte sobre a chamada.</p>
       <div class="conversa" role="log" aria-label="Conversa com o assistente">
         {#each mensagens as mensagem, i}
           <div class="mensagem" class:assistente={mensagem.papel === 'assistente'}>
@@ -152,8 +173,9 @@
       {/if}
       <form onsubmit={enviar}>
         <label for="pergunta">Sua pergunta</label>
-        <input id="pergunta" bind:value={pergunta} enterkeyhint="send" autocomplete="off" maxlength="1000" required>
-        <button type="submit" disabled={pensando}>Enviar</button>
+        <input id="pergunta" bind:value={pergunta} enterkeyhint="send" autocomplete="off" maxlength="1000" required aria-describedby="aviso-chat">
+        <p class="dica aviso-chat" id="aviso-chat">Não escreva seu nome, telefone, e-mail nem CPF aqui.</p>
+        <button type="submit" aria-disabled={pensando}>Enviar</button>
       </form>
     </section>
 
@@ -180,21 +202,21 @@
       {:else}
         {#each campos as campo (campo.produto_id)}
           <label for="oferta-{campo.produto_id}">Quanto de {campo.nomes.join(' e ')} você quer vender</label>
-          <input
+          <CampoNumero
             id="oferta-{campo.produto_id}"
-            type="number"
-            min="0"
-            step="any"
-            inputmode="decimal"
-            bind:value={quantidades[campo.produto_id]}
-            aria-describedby="pedido-{campo.produto_id}">
+            bind:texto={quantidades[campo.produto_id]}
+            oninput={() => (editados[campo.produto_id] = true)}
+            descricao="pedido-{campo.produto_id}" />
           <p class="dica" id="pedido-{campo.produto_id}">A prefeitura pede {campo.pedidos.join(' e ')}.</p>
+          {#if sugestaoMantida(campo.produto_id)}
+            <p class="dica">O assistente sugeriu {numero(sugeridas[campo.produto_id])}. O número que você escreveu foi mantido.</p>
+          {/if}
         {/each}
         <p class="erro" role="alert">{erroOferta}</p>
         <p role="status">{pronto}</p>
         <div class="acoes">
-          <button type="button" disabled={enviando || !perfil.cooperativa_id} aria-describedby="dica-participar" onclick={participar}>Quero participar</button>
-          <button type="button" class="botao-secundario" disabled={enviando} onclick={individual}>Fazer minha proposta individual</button>
+          <button type="button" disabled={!perfil.cooperativa_id} aria-disabled={enviando} aria-describedby="dica-participar" onclick={participar}>Quero participar</button>
+          <button type="button" class="botao-secundario" aria-disabled={enviando} onclick={individual}>Fazer minha proposta individual</button>
         </div>
         <p class="dica" id="dica-participar">
           {#if perfil.cooperativa_id}
@@ -239,10 +261,21 @@
     white-space: pre-line;
   }
 
+  /* a linha não quebra no meio de "e-mail" ("e-" numa linha e "mail" na outra) */
+  .aviso-chat {
+    text-wrap: balance;
+  }
+
   .acoes {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 1rem;
+  }
+
+  /* enviando: o botão continua com o foco (disabled o tiraria), mas parece desligado, como o button:disabled do estilo.css */
+  button[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: wait;
   }
 </style>

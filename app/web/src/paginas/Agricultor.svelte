@@ -2,8 +2,9 @@
      /agricultor.html#sitio abre direto em Meu sítio. -->
 <script>
   import { api, sair } from '../lib/api.js';
+  import CampoNumero from '../lib/CampoNumero.svelte';
   import Ouvir from '../lib/Ouvir.svelte';
-  import { data, numero, reais } from '../lib/formato.js';
+  import { data, escreverNumero, lerNumero, numero, reais } from '../lib/formato.js';
 
   const ABAS = [
     { id: 'oportunidades', nome: 'Oportunidades' },
@@ -33,6 +34,7 @@
 
   // CPF e CAF começam em branco: só vão no envio quando a pessoa escreve um novo.
   // As listas são cópias: mexer no formulário não muda o perfil salvo antes de salvar.
+  // Os números ficam como texto ("1234,5", como a pessoa escreve), e salvar() os transforma de volta.
   function paraFormulario(p) {
     return {
       municipio: p.municipio ?? '',
@@ -40,13 +42,13 @@
       cpf: '',
       caf: '',
       cooperativa_id: p.cooperativa_id === null ? '' : String(p.cooperativa_id),
-      vendido_no_ano_reais: p.vendido_no_ano_reais,
+      vendido_no_ano_reais: escreverNumero(p.vendido_no_ano_reais),
       ja_vendeu_pnae: p.ja_vendeu_pnae,
       organico: p.organico,
       mulher_titular: p.mulher_titular,
       jovem: p.jovem,
       grupo_prioritario: $state.snapshot(p.grupo_prioritario),
-      produtos: $state.snapshot(p.produtos),
+      produtos: $state.snapshot(p.produtos).map((produto) => ({ ...produto, quantidade_semana: escreverNumero(produto.quantidade_semana) })),
       aceite_termo: false,
     };
   }
@@ -79,13 +81,21 @@
     document.getElementById(`aba-${aba}`).focus();
   }
 
+  // O botão não fica "disabled" enquanto salva (o foco se perderia, e depois de um erro o teclado voltaria ao início da página):
+  // o segundo toque é ignorado aqui. Número que não deu para ler já deixou o campo inválido, e o formulário nem chega aqui.
   async function salvar(evento) {
     evento.preventDefault();
+    if (salvando) return;
     erroForm = '';
     salvo = '';
     salvando = true;
-    const { cpf, caf, cooperativa_id, ...resto } = $state.snapshot(form);
-    const corpo = { ...resto, cooperativa_id: cooperativa_id === '' ? null : Number(cooperativa_id) };
+    const { cpf, caf, cooperativa_id, vendido_no_ano_reais, produtos, ...resto } = $state.snapshot(form);
+    const corpo = {
+      ...resto,
+      cooperativa_id: cooperativa_id === '' ? null : Number(cooperativa_id),
+      vendido_no_ano_reais: lerNumero(vendido_no_ano_reais).valor,
+      produtos: produtos.map((produto) => ({ ...produto, quantidade_semana: lerNumero(produto.quantidade_semana).valor })),
+    };
     if (cpf.trim()) corpo.cpf = cpf.trim();
     if (caf.trim()) corpo.caf = caf.trim();
     try {
@@ -145,15 +155,12 @@
                 {/if}
                 <p class="ganho">Você pode ganhar até <strong>{reais(o.ganho_total)}</strong></p>
                 {#if cortado(o)}
-                  <p>Esse valor para no seu limite anual de vendas para a merenda.</p>
+                  <p>O limite anual corta o total. Neste ano ainda sobram {reais(o.ganho_total)} do seu limite de vendas para a merenda.</p>
                 {/if}
                 <p>Entregue o projeto de venda até {o.prazo_envio ? data(o.prazo_envio) : 'a data do edital'}.</p>
                 <ul>
                   {#each o.itens as item}
-                    <li>
-                      {item.produto}: a prefeitura pede {numero(item.quantidade_pedida)} {item.unidade}{#if cortado(o)}. Você pode entregar até
-                        {numero(item.quantidade_max)} {item.unidade}, até o seu limite anual{/if}.
-                    </li>
+                    <li>{item.produto}: a prefeitura pede {numero(item.quantidade_pedida)} {item.unidade}.</li>
                   {/each}
                 </ul>
                 {#if o.versao_regra === 'res4-original'}
@@ -207,7 +214,7 @@
         <p class="dica" id="dica-cooperativa">A cooperativa junta o que os cooperados querem vender numa proposta só.</p>
 
         <label for="vendido">Quanto você já vendeu para a merenda neste ano (R$)</label>
-        <input id="vendido" type="number" min="0" step="0.01" inputmode="decimal" bind:value={form.vendido_no_ano_reais} required aria-describedby="dica-vendido">
+        <CampoNumero id="vendido" bind:texto={form.vendido_no_ano_reais} formato={reais} descricao="dica-vendido" required />
         <p class="dica" id="dica-vendido">Cada agricultor tem um limite de venda por ano, e o app desconta o que você já vendeu. Se ainda não vendeu, deixe 0.</p>
 
         <fieldset>
@@ -218,7 +225,7 @@
 
         <fieldset aria-describedby="dica-rits">
           <legend>Prioridade na seleção (RITS)</legend>
-          <p class="dica" id="dica-rits">Marque o que vale para você, como está no seu CAF. Isso dá pontos de prioridade e não vai para a IA.</p>
+          <p class="dica" id="dica-rits">Marque o que vale para você, como está no seu CAF. Isso dá pontos de prioridade. A IA só fica sabendo se você tem prioridade (sim ou não), não qual.</p>
           <label class="opcao"><input type="checkbox" bind:checked={form.mulher_titular}> Mulher agricultora, titular no CAF</label>
           <label class="opcao"><input type="checkbox" bind:checked={form.jovem}> Jovem, de 15 a 29 anos</label>
           {#each GRUPOS as [valor, rotulo]}
@@ -239,7 +246,7 @@
               </select>
 
               <label for="quantidade-{i}">Quanto colhe por semana</label>
-              <input id="quantidade-{i}" type="number" min="0.01" step="any" inputmode="decimal" bind:value={produto.quantidade_semana} required>
+              <CampoNumero id="quantidade-{i}" bind:texto={produto.quantidade_semana} required />
 
               <fieldset>
                 <legend>Meses de colheita</legend>
@@ -256,7 +263,7 @@
           <button
             type="button"
             class="botao-secundario adicionar"
-            onclick={() => form.produtos.push({ produto_id: '', quantidade_semana: null, meses_safra: MESES.map((_, m) => m + 1) })}>Adicionar produto</button>
+            onclick={() => form.produtos.push({ produto_id: '', quantidade_semana: '', meses_safra: MESES.map((_, m) => m + 1) })}>Adicionar produto</button>
         </fieldset>
 
         {#if perfil.aceite_termo_em}
@@ -268,7 +275,8 @@
               <li>O app guarda os dados do seu sítio para mostrar as chamadas da merenda e montar o projeto de venda.</li>
               <li>O CPF e o CAF aparecem na tela só em parte. Eles vão no projeto de venda, que é entregue à prefeitura.</li>
               <li>As respostas sobre prioridade (mulher, jovem, assentado, indígena e quilombola) servem só para a seleção.</li>
-              <li>O assistente com IA não recebe o seu nome, CPF, CAF, e-mail nem as respostas sobre prioridade.</li>
+              <li>O assistente com IA recebe só o município, a UF, os produtos (com a quantidade por semana e os meses de colheita), se a produção é orgânica e se você tem prioridade (sim ou não).</li>
+              <li>Ele não recebe o seu nome, CPF, CAF nem e-mail. O que você escrever no chat também vai para a IA: não escreva nome, telefone, e-mail nem CPF.</li>
               <li>A sua cooperativa vê o que você quer vender. As estatísticas do app usam os números sem o seu nome, CPF ou CAF.</li>
             </ul>
             <Ouvir alvo="texto-termo" />
@@ -278,7 +286,7 @@
 
         <p class="erro" role="alert">{erroForm}</p>
         <p role="status">{salvo}</p>
-        <button type="submit" disabled={salvando}>Salvar meu sítio</button>
+        <button type="submit" aria-disabled={salvando}>Salvar meu sítio</button>
       </form>
     </div>
   {:else if !erro}
@@ -287,6 +295,12 @@
 </main>
 
 <style>
+  /* salvando: o botão continua com o foco (disabled o tiraria), mas parece desligado, como o button:disabled do estilo.css */
+  button[aria-disabled='true'] {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
   /* com o recuo padrão do botão, "Oportunidades" não cabe na aba a 375 px e quebra no meio da palavra */
   [role='tab'] {
     padding-right: 0.5rem;

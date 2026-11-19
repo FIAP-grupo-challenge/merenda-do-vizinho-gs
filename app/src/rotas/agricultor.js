@@ -79,6 +79,16 @@ function lerMensagens(mensagens, caf) {
   return mensagens.map(({ papel, texto }) => ({ papel, texto }));
 }
 
+// Quando a IA barra dado pessoal no texto do chat, ela responde 400 com `campos` (ia/privacidade.py). A tela mostra qual
+// dado tirar, em português; o texto fica no campo e não é enviado de novo. Outro erro da IA passa como veio.
+const DADO_BARRADO = { cpf: 'o CPF', email: 'o e-mail', telefone: 'o telefone', banco: 'os dados do banco' };
+function dadoBarradoPelaIa(erro) {
+  if (!(erro instanceof ErroHttp && erro.status === 400 && Array.isArray(erro.campos) && erro.campos.length)) return erro;
+  const nomes = [...new Set(erro.campos.map((campo) => DADO_BARRADO[campo] ?? 'os dados pessoais'))];
+  const lista = nomes.length > 1 ? `${nomes.slice(0, -1).join(', ')} e ${nomes.at(-1)}` : nomes[0];
+  return new ErroHttp(400, `Tire ${lista} do texto e envie de novo.`);
+}
+
 // { itens: [{ produto_id, quantidade }] }: só produto da chamada que ele planta, cada um uma vez, com quantidade > 0.
 function lerInteresse(itens, naChamada, meus) {
   if (!Array.isArray(itens) || itens.length === 0) throw new ErroHttp(400, 'Escreva quanto você quer vender de pelo menos um produto.');
@@ -194,7 +204,13 @@ function registrar(roteador, { db, config, ia }) {
     const mensagens = lerMensagens(ctx.corpo.mensagens, agricultor.caf);
     const { contato, ...chamada } = dados; // o contato da prefeitura fica no app: a IA não precisa dele
     const perfil = perfilParaIa(agricultor, lerProdutos(agricultor.usuario_id));
-    responderJson(res, 200, await ia.assistente({ chamada, perfil, mensagens }));
+    let resposta;
+    try {
+      resposta = await ia.assistente({ chamada, perfil, mensagens });
+    } catch (erro) {
+      throw dadoBarradoPelaIa(erro);
+    }
+    responderJson(res, 200, resposta);
   });
 
   // O interesse dele nesta chamada, que troca o anterior. A cooperativa junta os interesses na proposta (T9),

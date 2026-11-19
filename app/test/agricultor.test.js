@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const http = require('node:http');
 const net = require('node:net');
 const { criarClienteIa } = require('../src/cliente-ia');
 const { perfilParaIa } = require('../src/perfil-ia');
@@ -387,6 +388,70 @@ test('assistente com a IA fora do ar devolve 502 com mensagem em português', as
   const { status, corpo } = await app.pedir('POST', `/api/agricultor/chamadas/${id}/assistente`, { corpo: { mensagens: [] }, token });
   assert.equal(status, 502);
   assert.deepEqual(corpo, { erro: 'O serviço de IA não respondeu. Tente de novo em instantes.' });
+});
+
+// A IA da T4 barra dado pessoal no texto do chat com 400 { erro, campos }: aqui, uma IA de mentira em HTTP, com o cliente de verdade.
+test('assistente: o 400 da IA com campos vira uma frase em português na tela, e o texto não é enviado de novo', async (t) => {
+  let resposta;
+  let pedidos = 0;
+  const iaFalsa = http.createServer((req, res) => {
+    req.resume();
+    req.on('end', () => {
+      pedidos++;
+      res.writeHead(resposta[0], { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(resposta[1]));
+    });
+  });
+  await new Promise((resolve) => iaFalsa.listen(0, '127.0.0.1', resolve));
+  t.after(() => iaFalsa.close());
+  const ia = criarClienteIa(`http://127.0.0.1:${iaFalsa.address().port}`);
+  const barrou = (campos) => [400, { erro: 'dados pessoais não são aceitos', campos }];
+
+  // o cliente guarda os `campos` no erro (antes só ficava a mensagem da IA)
+  resposta = barrou(['email', 'telefone']);
+  await assert.rejects(ia.assistente({}), (erro) => {
+    assert.deepEqual([erro.status, erro.message, erro.campos], [400, 'dados pessoais não são aceitos', ['email', 'telefone']]);
+    return true;
+  });
+  resposta = [400, { erro: 'sem campos', campos: 'cpf' }]; // `campos` que não é lista não vale
+  await assert.rejects(ia.assistente({}), (erro) => erro.status === 400 && erro.message === 'sem campos' && erro.campos === undefined);
+  pedidos = 0;
+
+  const app = await subirApp({ ia });
+  t.after(app.fechar);
+  const id = gravarChamada(app, CATALAO);
+  const token = await app.entrar('ana@demo.br');
+  const texto = 'consigo 30 por semana, meu zap é (64) 99999-8888'; // o app só barra CPF, e-mail e o CAF: o telefone é com a IA
+  const perguntar = () => app.pedir('POST', `/api/agricultor/chamadas/${id}/assistente`, { corpo: { mensagens: [{ papel: 'agricultor', texto }] }, token });
+
+  const frases = [
+    [['telefone'], 'Tire o telefone do texto e envie de novo.'],
+    [['email', 'telefone'], 'Tire o e-mail e o telefone do texto e envie de novo.'],
+    [['banco', 'cpf', 'email', 'telefone'], 'Tire os dados do banco, o CPF, o e-mail e o telefone do texto e envie de novo.'],
+    [['cpf'], 'Tire o CPF do texto e envie de novo.'],
+    [['banco'], 'Tire os dados do banco do texto e envie de novo.'],
+    [['nome', 'caf'], 'Tire os dados pessoais do texto e envie de novo.'], // chave que o app nunca manda, mas a IA sabe barrar
+  ];
+  for (const [campos, frase] of frases) {
+    resposta = barrou(campos);
+    const { status, corpo } = await perguntar();
+    assert.deepEqual([status, corpo], [400, { erro: frase }], campos.join(','));
+  }
+  assert.equal(pedidos, frases.length, 'um pedido à IA por pergunta: o app não envia de novo sozinho');
+
+  // sem `campos` (ou com a lista vazia) o erro da IA passa como veio
+  for (const corpoDaIa of [{ erro: 'envie chamada, perfil e mensagens' }, { erro: 'dados pessoais não são aceitos', campos: [] }]) {
+    resposta = [400, corpoDaIa];
+    const { status, corpo } = await perguntar();
+    assert.deepEqual([status, corpo], [400, { erro: corpoDaIa.erro }]);
+  }
+  // erro da própria IA (500, que o cliente troca por 502) não vira pedido para tirar dado, mesmo com `campos`
+  resposta = [500, { erro: 'erro interno da IA', campos: ['cpf'] }];
+  const falha = await perguntar();
+  assert.deepEqual([falha.status, falha.corpo], [502, { erro: 'erro interno da IA' }]);
+  // controle: a mesma pergunta sem dado barrado volta com a resposta da IA
+  resposta = [200, RESPOSTA_IA];
+  assert.deepEqual((await perguntar()).corpo, RESPOSTA_IA);
 });
 
 test('a tela da chamada recebe a chamada publicada; rascunho e inexistente dão 404', async (t) => {
