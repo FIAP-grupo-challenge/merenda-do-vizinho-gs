@@ -1,6 +1,6 @@
-# Roteiro do pitch: Merenda do Vizinho
+# Roteiro do pitch: Colhe
 
-Global Solution 2026/2 (CitizenTech). Vídeo de até 3 minutos, entrega em 19/11/2026.
+Global Solution 2026/2 (CitizenTech), grupo Equipe Colhe. Vídeo de até 3 minutos, entrega em 19/11/2026.
 
 **Estado:** roteiro aprovado. O valor que a Ana vê na tela (R$ 21.082, chamada de Catalão com DATA_REFERENCIA=2026-07-15) foi conferido no app (o resultado da avaliação da IA está na seção 6: 95,6% dos itens contra 56,1% sem IA).
 
@@ -8,9 +8,9 @@ Global Solution 2026/2 (CitizenTech). Vídeo de até 3 minutos, entrega em 19/11
 
 - **Tempos do edital:** os blocos começam em 0:00 (problema), 0:30 (solução), 0:50 (demonstração), 2:10 (impacto) e 2:40 (fechamento), os mesmos marcos do edital.
 - **Duração-alvo:** 2:50, com 10 segundos de folga. O edital não avalia o que passa de 3:00.
-- **Fala:** 388 palavras faladas (348 escritas). Contei o que a voz diz: números, porcentagens e valores por extenso, e "Contrata+Brasil" como "Contrata Mais Brasil".
-  - A 145 palavras por minuto são 2:40 de voz (2:46 a 140 e 2:35 a 150). Sobram uns 10 segundos para cliques, cortes e respiros.
-  - Sem os trechos em itálico, são 355 palavras, 2:26 de voz e uns 23 segundos de sobra.
+- **Fala:** 386 palavras faladas (346 escritas). Contei o que a voz diz: números, porcentagens e valores por extenso, e "Contrata+Brasil" como "Contrata Mais Brasil".
+  - A 145 palavras por minuto são 2:39 de voz (2:45 a 140 e 2:34 a 150). Sobram uns 10 segundos para cliques, cortes e respiros.
+  - Sem os trechos em itálico, são 353 palavras, 2:26 de voz e uns 24 segundos de sobra.
 - **Vozes:** três integrantes. Com duas pessoas, o Integrante 3 vira o Integrante 2. Com uma só, ela fala tudo e o tempo não muda.
 - **Fio da história:** a Ana, personagem fictícia, apresentada com "Imagine a Ana". É a mesma usuária de demonstração do app (`ana@demo.br`).
 - **Método do curso (capítulo de Pitch, fase 7):**
@@ -36,7 +36,7 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 | Tempo | Bloco do edital | Quem fala | Fala exata | O que aparece na tela | Palavras |
 |---|---|---|---|---|---|
 | 0:00–0:30 | Problema e cidadão | Integrante 1 | Imagine a Ana, agricultora familiar. Desde 2026, a lei manda gastar pelo menos 45% da verba federal da merenda com gente como ela. Antes era 30%. Em 2022, 1.531 municípios nem chegaram a isso. A Ana não sabe quando a prefeitura compra, não entende o edital e sozinha não fecha o pedido. | Power BI web, página 1 (PNAE no Brasil), filtro Ano = 2022. O cursor só para no cartão "Municípios abaixo do mínimo" (1.531) quando a voz diz "1.531" e depois desce para o ranking por município. A página mostra a fonte e o rótulo "dados preliminares". Sem cartela de abertura (seção 4); no máximo o nome do projeto, pequeno, no canto, nos 3 primeiros segundos. | 73 |
-| 0:30–0:50 | Solução | Integrante 1 | A Merenda do Vizinho leva a chamada pública da prefeitura até o sítio. A IA lê o edital, a Ana vê quanto pode ganhar e a cooperativa junta os vizinhos. Sensores cuidam da qualidade, e um painel mostra quanto falta para a cidade chegar à meta. | App em `http://localhost:3000`, aba "Entrar". Login com `prefeitura@demo.br` e `demo1234`. Chega à tela da prefeitura (Chamadas), onde a chamada de Catalão já está publicada. | 44 |
+| 0:30–0:50 | Solução | Integrante 1 | O Colhe leva a chamada pública da prefeitura até o sítio. A IA lê o edital, a Ana vê quanto pode ganhar e a cooperativa junta os vizinhos. Sensores cuidam da qualidade, e um painel mostra quanto falta para a cidade chegar à meta. | App em `http://localhost:3000`, aba "Entrar". Login com `prefeitura@demo.br` e `demo1234`. Chega à tela da prefeitura (Chamadas), onde a chamada de Catalão já está publicada. | 44 |
 | 0:50–1:06 | Demonstração: IA | Integrante 2 | Como prefeitura, subimos uma chamada pública real, de Catalão. O Claude lê o PDF e devolve a tabela. A nutricionista confere e corrige antes de publicar. | Tela da prefeitura: "Enviar PDF" e escolha de `04-go-catalao-2026.pdf`. A espera da leitura é cortada na edição. Surge a tabela de itens, com a origem "IA" e os avisos. O cursor passa pelos itens e clica num campo para editar. Não clicar em "Publicar": a chamada de Catalão já está publicada pela semente. | 26 |
 | 1:06–1:20 | Demonstração: app | Integrante 2 | Agora a Ana, no celular. Em Oportunidades, ela vê quanto pode ganhar: R$ 21.082, *já dentro do limite de 40 mil reais por ano*. | Janela da Ana em modo celular (390 × 844), tela "Oportunidades". Cartão da chamada de Catalão com a quantidade e a unidade do edital, o ganho estimado em reais e o botão "Ouvir" (sem tocar). O cartão traz "seleção anterior, sem RITS": é esperado, não comente. | 27 |
 | 1:20–1:32 | Demonstração: IA | Integrante 2 | Na dúvida, ela pergunta ao assistente, que explica o edital em frases curtas e lista os documentos que faltam. *Os dados do cadastro não vão para a IA.* | Toque em "Ver a chamada e o assistente": abre o assistente. A primeira resposta explica o prazo e os itens. A Ana digita quanto entrega por semana (por exemplo, "50 de alface por semana") e a resposta traz a sugestão e a lista de documentos. Toque em "Quero participar". | 26 |
@@ -45,8 +45,8 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 | 1:57–2:01 | Demonstração: DevOps | Integrante 3 | Tudo isso sobe com um comando no Docker. | Terminal: `docker compose ps`, com app e ia no ar. Se o Jenkins rodar, 3 segundos na aba dele, com o último build verde (ver a nota abaixo da tabela). | 8 |
 | 2:01–2:10 | Demonstração: dados | Integrante 3 | Os dados do app, dos sensores e do FNDE chegam ao Power BI *pelo data lake*. Ele mostra quem está abaixo do mínimo. | Power BI web, página 1, filtro UF = GO. Ranking por município com a faixa de cumprimento. | 23 |
 | 2:10–2:40 | Impacto | Integrante 3 | Quem ganha? A Ana vende perto de casa, os alunos comem comida fresca e a prefeitura cumpre a lei. Se a regra de 45% valesse em 2022, faltariam R$ 244,8 milhões nas prefeituras abaixo dela. A solução atende aos ODS 2, 4 e 10: fome zero, educação de qualidade e menos desigualdade. | Power BI: limpe o filtro de UF e deixe Ano = 2022. O cartão "Faltaria com 45% (R$)" mostra 244,8 mi. Depois, a página 2 "Cooperativa", com o selo "dados simulados": renda por agricultor e entregas no prazo. | 68 |
-| 2:40–2:55 | Fechamento | Integrante 1 | O Contrata+Brasil, do governo, só trata chamadas criadas nele. A gente completa, com quatro áreas integradas *e IA medida em 8 chamadas reais*. Merenda do Vizinho: a merenda da escola pode vir do sítio do vizinho. Obrigado! | Volta à janela da Ana, tela "Oportunidades", com o cartão do ganho. Opcional: cartela de fechamento só no "Obrigado!" (2 s). | 39 |
-| **Total** | | | | | **388** |
+| 2:40–2:55 | Fechamento | Integrante 1 | O Contrata+Brasil, do governo, só trata chamadas criadas nele. A gente completa, com quatro áreas integradas *e IA medida em 8 chamadas reais*. Colhe: a merenda da escola pode vir do sítio do vizinho. Obrigado! | Volta à janela da Ana, tela "Oportunidades", com o cartão do ganho. Opcional: cartela de fechamento só no "Obrigado!" (2 s). | 37 |
+| **Total** | | | | | **386** |
 
 **Se o Jenkins rodar (`devops/jenkins/README.md`):** troque o bloco 1:57 por "Tudo isso sobe com um comando no Docker, e o Jenkins testa a cada mudança." (15 palavras, 7 a mais). Sem o Jenkins rodando, não diga isso.
 
@@ -58,11 +58,11 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 | Solução | 0:30–0:50 | 44 | 18 s | 20 s |
 | Demonstração | 0:50–2:10 | 164 | 68 s | 80 s |
 | Impacto | 2:10–2:40 | 68 | 28 s | 30 s |
-| Fechamento | 2:40–2:55 | 39 | 16 s | 15 s |
-| **Total** | **2:55** | **388** | **2:40** | **2:55** |
+| Fechamento | 2:40–2:55 | 37 | 15 s | 15 s |
+| **Total** | **2:55** | **386** | **2:39** | **2:55** |
 
-- **Como contei:** com um script, bloco a bloco. Escritas são as palavras separadas por espaço (348). Faladas são as que a voz diz (388): "2026" vira "dois mil e vinte e seis", "R$ 244,8 milhões" vira "duzentos e quarenta e quatro vírgula oito milhões de reais", e "R$ 21.082" vira "vinte e um mil e oitenta e dois reais" (três palavras a mais que a estimativa anterior).
-- **Onde aperta:** o Problema (30 de 30 s) e o Fechamento (16 de 15 s). A Solução e o Impacto têm uns 2 segundos de sobra cada um e a Demonstração, uns 12. Se o Problema passar de 0:30, a Solução absorve.
+- **Como contei:** com um script, bloco a bloco. Escritas são as palavras separadas por espaço (346). Faladas são as que a voz diz (386): "2026" vira "dois mil e vinte e seis", "R$ 244,8 milhões" vira "duzentos e quarenta e quatro vírgula oito milhões de reais", e "R$ 21.082" vira "vinte e um mil e oitenta e dois reais" (três palavras a mais que a estimativa anterior).
+- **Onde aperta:** o Problema (30 de 30 s) e o Fechamento (15 de 15 s). A Solução e o Impacto têm uns 2 segundos de sobra cada um e a Demonstração, uns 12. Se o Problema passar de 0:30, a Solução absorve.
 - **Ficaram fora da fala, de propósito:**
   - o modelo de negócio, que não pontua no vídeo e está no slide 9 e no white paper;
   - os números de 2019, trocados pelos de 2022, que o painel do projeto calcula;
@@ -95,7 +95,7 @@ Frases em *itálico* podem ser cortadas se o ensaio passar de 2:50. Os cinco cor
 9. **Terminal:** fonte grande (20 pt ou mais), aberto na raiz do repositório. Antes, carregar a chave do dispositivo com `set -a; source .env; set +a`. O `.env` nunca aparece na tela. Deixar o comando do simulador já digitado, sem rodar.
 10. **TinkerCad:** circuito da câmara fria aberto, com a simulação já iniciada (`iot/camara-fria/ligacoes.md`).
 11. **Power BI web:**
-    - relatório aberto na página 1, filtros limpos;
+    - relatório aberto na página 1, filtros limpos, por este link: <https://app.powerbi.com/groups/me/reports/92c8511e-e8a9-483d-9174-bae407ab6648/bcbc682a2a79063b81e5?experience=power-bi&language=pt-BR>. O `&language=pt-BR` mantém os números no formato brasileiro (1.531 e 44,5%, e não 1,531 e 44.5%);
     - a página 1 tem uma caixa de texto com a fonte ("Fonte: FNDE, dados abertos. Cálculo do grupo.") e mostra "dados preliminares" em 2022;
     - a página 2 tem uma caixa de texto "Dados simulados" e fica numa segunda aba (`dados/powerbi/guia-do-painel.md`).
 12. **Limpar a área de trabalho:** modo "não perturbe", outras abas e programas fechados, barra de favoritos escondida.
@@ -201,7 +201,7 @@ Os números de 2022 são o cálculo do grupo sobre os dados abertos do FNDE (`da
 
 **O que deixar aberto**
 - As três janelas do navegador (prefeitura, Ana, cooperativa).
-- O Power BI com as páginas 1 e 2.
+- O Power BI com as páginas 1 e 2, aberto pelo link do item 11 de "Antes de gravar".
 - O TinkerCad com a simulação rodando.
 - O terminal com o comando do simulador já digitado.
 - O PDF de Catalão numa pasta fácil de achar.
