@@ -14,6 +14,17 @@ def comparar_itens(extraidos: list, gabarito: list) -> dict:
     return {'total_gabarito': len(gabarito), 'encontrados': corretos + encontrados_sem_acerto, 'corretos': corretos}
 
 
+def valores_certos(extraidos: list, gabarito: list) -> int:
+    """Quantos itens do gabarito têm um extraído com a mesma quantidade e o preço diferente em no máximo R$ 0,01, seja
+    qual for o nome ou o produto_id. Cada extraído casa com um item só, como em comparar_itens."""
+    # shortcut: casamento guloso, como em comparar_itens (primeiro livre, na ordem do gabarito); com itens de mesma
+    # quantidade e preços a R$ 0,01 uns dos outros poderia contar um a menos, o que não ocorre nos 228 itens reais;
+    # se um gabarito novo tiver isso, troque pelo casamento máximo
+    def sem_nome(itens):  # todos viram o mesmo produto: sobram só a quantidade e o preço para conferir
+        return [{**item, 'produto': 'x', 'produto_id': 'x'} for item in itens]
+    return comparar_itens(sem_nome(extraidos), sem_nome(gabarito))['corretos']
+
+
 def _casar(item: dict, livres: list, valores_conferem) -> bool:
     """Tira de livres o primeiro extraído do mesmo produto em que valores_conferem; diz se achou."""
     for i, extraido in enumerate(livres):
@@ -55,6 +66,7 @@ def _metricas(linhas: list) -> dict:
     return {
         'pct_encontrados': round(100 * sum(linha['encontrados'] for linha in linhas) / total, 1),
         'pct_corretos': round(100 * sum(linha['corretos'] for linha in linhas) / total, 1),
+        'pct_valores_certos': round(100 * sum(linha['valores_certos'] for linha in linhas) / total, 1),
         'pct_prazo_correto': round(100 * sum(linha['prazo_correto'] for linha in linhas) / len(linhas), 1),
         'tempo_medio_ms': round(sum(linha['duracao_ms'] for linha in linhas) / len(linhas)),
         'chamadas': len(linhas),
