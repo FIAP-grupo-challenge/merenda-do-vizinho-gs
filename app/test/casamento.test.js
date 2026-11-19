@@ -106,3 +106,46 @@ test('a capacidade vale para a soma dos itens do mesmo produto', () => {
   const [pouca] = oportunidades({ agricultor, produtos: abobora(5), chamadas, hoje, limiteRestanteReais: 40000 });
   assert.deepEqual(pouca.itens.map((i) => [i.produto, i.quantidade_max]), [['Abóbora Cabotiá', 200]]);
 });
+
+test('o ganho de cada item e o ganho_total saem em centavos, sem ruído de ponto flutuante', () => {
+  const agricultor = { municipio: 'Catalão', uf: 'GO' };
+  const hoje = '2026-07-15';
+  // 1234,5 × R$ 7,03 = R$ 8.678,535, que arredonda para R$ 8.678,54; 30,9 × 40 semanas = 1236 cobre os 1234,5 pedidos
+  const [a] = oportunidades({
+    agricultor,
+    produtos: [{ produto_id: 'alface', quantidade_semana: 30.9 }],
+    chamadas: [chamada(1, { itens: [item('Alface', 'alface', 'pç', 1234.5, 7.03)] })],
+    hoje,
+    limiteRestanteReais: 40000,
+  });
+  assert.equal(a.itens[0].ganho_estimado, 8678.54);
+  // R$ 0,10 + R$ 0,20 dá 0.30000000000000004 em JavaScript
+  const [b] = oportunidades({
+    agricultor,
+    produtos: [{ produto_id: 'x', quantidade_semana: 30 }, { produto_id: 'y', quantidade_semana: 30 }],
+    chamadas: [chamada(2, { itens: [item('X', 'x', 'kg', 1, 0.1), item('Y', 'y', 'kg', 1, 0.2)] })],
+    hoje,
+    limiteRestanteReais: 40000,
+  });
+  assert.equal(b.ganho_total, 0.3);
+});
+
+test('a capacidade que sobra para o 2º item do mesmo produto sai em centésimos (0,3 − 0,1 = 0,2)', () => {
+  // 0,0075 por semana × 40 semanas = 0,3; e 0,3 - 0,1 dá 0.19999999999999998 em JavaScript
+  const [o] = oportunidades({
+    agricultor: { municipio: 'Catalão', uf: 'GO' },
+    produtos: [{ produto_id: 'x', quantidade_semana: 0.0075 }],
+    chamadas: [chamada(1, { itens: [item('X', 'x', 'kg', 0.1, 10), item('X', 'x', 'kg', 5, 10)] })],
+    hoje: '2026-07-15',
+    limiteRestanteReais: 40000,
+  });
+  assert.deepEqual(o.itens.map((i) => i.quantidade_max), [0.1, 0.2]);
+});
+
+test('sem limiteRestanteReais e sem vendido_no_ano_reais, falha em vez de devolver ganho_total NaN', () => {
+  const chamadas = [chamada(1, { itens: [item('Alface', 'alface', 'kg', 1000, 5.4)] })];
+  assert.throws(
+    () => oportunidades({ agricultor: { municipio: 'Catalão', uf: 'GO' }, produtos: alface, chamadas, hoje: '2026-07-15' }),
+    /vendido_no_ano_reais deve ser um número/,
+  );
+});

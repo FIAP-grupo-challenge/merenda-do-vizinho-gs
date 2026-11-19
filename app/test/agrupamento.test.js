@@ -115,6 +115,46 @@ test('o limite anual vale para a soma dos itens', () => {
   });
 });
 
+test('o limite anual vale para a soma das linhas arredondadas ao centavo (caso de meio centavo)', () => {
+  // 12,5 × R$ 8,01 = R$ 100,125, que o projeto de venda imprime como R$ 100,13; do limite de R$ 200,25 sobram R$ 100,12,
+  // e as duas linhas impressas (100,13 + 100,12) somam o limite, nem um centavo a mais
+  const chamada = {
+    itens: [
+      { produto: 'P', produto_id: 'p', unidade: 'kg', quantidade: 12.5, preco_unitario: 8.01 },
+      { produto: 'Q', produto_id: 'q', unidade: 'kg', quantidade: 1000, preco_unitario: 1 },
+    ],
+  };
+  const cooperados = [{ agricultor_id: 1, nome: 'Ana', prioridade: 0, limite_restante_reais: 200.25, capacidades: { p: 1000, q: 1000 } }];
+  const { itens } = montarPropostaConjunta(chamada, cooperados);
+  assert.deepEqual(itens.map((i) => i.alocacoes[0].quantidade), [12.5, 100.12]);
+});
+
+test('o limite anual vale até o último centavo: o que sobra do 1º item vale inteiro no 2º', () => {
+  // R$ 40.000 - R$ 39.999,90 = R$ 0,10, que em JavaScript dá 0.09999999999854481 e perderia o último centavo
+  const chamada = {
+    itens: [
+      { produto: 'P', produto_id: 'p', unidade: 'kg', quantidade: 39999.9, preco_unitario: 1 },
+      { produto: 'Q', produto_id: 'q', unidade: 'kg', quantidade: 100, preco_unitario: 1 },
+    ],
+  };
+  const cooperados = [{ agricultor_id: 1, nome: 'Ana', prioridade: 0, limite_restante_reais: 40000, capacidades: { p: 1e6, q: 1e6 } }];
+  const { itens } = montarPropostaConjunta(chamada, cooperados);
+  assert.deepEqual(itens.map((i) => i.alocacoes[0].quantidade), [39999.9, 0.1]);
+});
+
+test('a capacidade do produto vale até o último centésimo: o que sobra do 1º item vale inteiro no 2º', () => {
+  // 40000 - 39999,9 = 0,1 (0.09999999999854481 em JavaScript); o mesmo produto em dois itens, sem limite em reais que pese
+  const chamada = {
+    itens: [
+      { produto: 'Abóbora A', produto_id: 'abobora', unidade: 'kg', quantidade: 39999.9, preco_unitario: 1 },
+      { produto: 'Abóbora B', produto_id: 'abobora', unidade: 'kg', quantidade: 100, preco_unitario: 1 },
+    ],
+  };
+  const cooperados = [{ agricultor_id: 1, nome: 'Davi', prioridade: 0, limite_restante_reais: 1e6, capacidades: { abobora: 40000 } }];
+  const { itens } = montarPropostaConjunta(chamada, cooperados);
+  assert.deepEqual(itens.map((i) => i.alocacoes[0].quantidade), [39999.9, 0.1]);
+});
+
 test('a capacidade também vale para a soma dos itens do mesmo produto, e só entra quem produz o item', () => {
   // o edital de Catalão pede abóbora em dois itens
   const chamada = {

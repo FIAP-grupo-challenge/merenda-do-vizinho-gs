@@ -20,6 +20,13 @@ const {
 test('minimoDoAno: 30% até 2025 e 45% a partir de 2026', () => {
   assert.equal(minimoDoAno(2025), 0.3);
   assert.equal(minimoDoAno(2026), 0.45);
+  assert.equal(minimoDoAno('2026'), 0.45); // o ano de uma consulta ?ano=2026
+});
+
+test('minimoDoAno sem ano, ou com um que não é ano, falha em vez de valer 30% em silêncio', () => {
+  for (const ruim of [undefined, null, NaN, Infinity, '', 'abc']) {
+    assert.throws(() => minimoDoAno(ruim), /minimoDoAno: o ano deve ter 4 dígitos/, String(ruim));
+  }
 });
 
 test('constantes de compartilhado/regras-pnae.json, limite restante, capacidade no período e centavos', () => {
@@ -31,6 +38,12 @@ test('constantes de compartilhado/regras-pnae.json, limite restante, capacidade 
   assert.equal(capacidadeNoPeriodo(30, null), 1200); // a chamada não diz as semanas: vale SEMANAS_PADRAO
   assert.equal(arredondar(1.005), 1.01); // 1.005 * 100 dá 100.49999999999999 em JavaScript
   assert.equal(arredondar(0.1 + 0.2), 0.3);
+});
+
+test('limiteRestanteReais sem o vendido no ano falha em vez de devolver NaN', () => {
+  for (const ruim of [undefined, NaN, 'abc']) {
+    assert.throws(() => limiteRestanteReais(ruim), /vendido_no_ano_reais deve ser um número/, String(ruim));
+  }
 });
 
 test('SEMANAS_PADRAO vem do JSON e a variável de ambiente troca', () => {

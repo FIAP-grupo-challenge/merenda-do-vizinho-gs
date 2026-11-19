@@ -3,8 +3,10 @@
 const REGRAS = require('../../compartilhado/regras-pnae.json');
 
 // Mínimo da verba federal do PNAE comprado da agricultura familiar: 45% desde 01/01/2026 e 30% até 2025
-// (Lei 11.947/2009, art. 14, redação da Lei 15.226/2025).
+// (Lei 11.947/2009, art. 14, redação da Lei 15.226/2025). O ano vem como número ou como texto de 4 dígitos
+// (uma consulta ?ano=2026); sem ano, falha em vez de valer 30% em silêncio.
 function minimoDoAno(ano) {
+  if (!/^\d{4}$/.test(ano)) throw new Error('minimoDoAno: o ano deve ter 4 dígitos, como 2026');
   return ano >= 2026 ? 0.45 : 0.3;
 }
 
@@ -60,7 +62,10 @@ function versaoRegra(chamada) {
 }
 
 function limiteRestanteReais(vendidoNoAnoReais) {
-  return arredondar(Math.max(0, LIMITE_ANUAL_AGRICULTOR_REAIS - vendidoNoAnoReais));
+  const restante = LIMITE_ANUAL_AGRICULTOR_REAIS - vendidoNoAnoReais;
+  // sem o vendido_no_ano_reais a conta daria NaN, e o ganho_total e a ordem das oportunidades se perderiam em silêncio
+  if (!Number.isFinite(restante)) throw new Error('vendido_no_ano_reais deve ser um número');
+  return arredondar(Math.max(0, restante));
 }
 
 // Quanto o agricultor entrega no período: quantidade por semana × semanas da chamada (ou SEMANAS_PADRAO).

@@ -89,3 +89,27 @@ test('projeto de venda avisa quando a família não tem mulher titular', () => {
   assert.equal(antigo.avisos.length, 2);
   assert.match(antigo.avisos[1], /sem o RITS/);
 });
+
+// só o que o projeto de venda lê de um item de montarPropostaConjunta(...).itens, com um agricultor para cada quantidade
+const itemDe = (preco_unitario, ...quantidades) => ({
+  produto: 'X',
+  unidade: 'kg',
+  preco_unitario,
+  alocacoes: quantidades.map((quantidade, i) => ({ agricultor_id: i + 1, quantidade })),
+});
+const doisAgricultores = [agricultor(1, 'Ana Souza', 1), agricultor(2, 'Carla Ferreira', 1)];
+
+test('cada linha sai em centavos e os totais somam as linhas arredondadas', () => {
+  // 284,49 × R$ 7,03 = R$ 1.999,9647 e 33,33 × R$ 7,03 = R$ 234,3099
+  const p = montarProjetoVenda({ chamada, proponente, itens: [itemDe(7.03, 284.49, 33.33)], agricultores: doisAgricultores });
+  assert.deepEqual(p.fornecedores.map((f) => f.itens[0].valor), [1999.96, 234.31]);
+  assert.deepEqual(p.fornecedores.map((f) => f.valor_total), [1999.96, 234.31]);
+  assert.equal(p.totais_por_produto[0].valor, 2234.27);
+  assert.equal(p.valor_total, 2234.27);
+});
+
+test('a soma dos totais não traz ruído de ponto flutuante (R$ 0,10 + R$ 0,20)', () => {
+  const p = montarProjetoVenda({ chamada, proponente, itens: [itemDe(0.1, 1, 2)], agricultores: doisAgricultores });
+  assert.equal(p.totais_por_produto[0].valor, 0.3); // 0.1 + 0.2 dá 0.30000000000000004 em JavaScript
+  assert.equal(p.valor_total, 0.3);
+});
