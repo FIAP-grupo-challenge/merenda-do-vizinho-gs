@@ -1,0 +1,195 @@
+// Merenda do Vizinho: tabelas calculadas, coluna calculada e medidas DAX do painel.
+// Passo a passo no Power BI web (ou no Desktop): dados/powerbi/guia-do-painel.md
+//
+// Como usar: cada bloco vai do nome até a linha em branco. Copie só o bloco, sem as linhas
+// que começam com //, e cole na barra de fórmulas:
+//   - seção 1: botão "Nova tabela";
+//   - seção 2: botão "Nova coluna", com a tabela fato_camara_fria selecionada;
+//   - seções 3 a 6: botão "Nova medida", com a tabela do título da seção selecionada.
+// Tabelas e colunas são as da camada refined (dados/datalake/README.md).
+// Separadores do DAX padrão: vírgula entre argumentos e ponto nos decimais.
+// Nomes de variáveis (VAR) só com letras sem acento: o DAX não aceita outros caracteres.
+
+
+// ===== 1. Tabelas calculadas (Nova tabela) =====
+
+// Um ano por linha, de 2018 (primeiro ano da AF) a 2026 (último ano dos repasses).
+// Liga fato_pnae_af[ano] e fato_repasse_uf[ano]: um só filtro de ano vale nas duas tabelas.
+dim_ano =
+SELECTCOLUMNS (
+    GENERATESERIES ( MIN ( fato_pnae_af[ano] ), MAX ( fato_repasse_uf[ano] ), 1 ),
+    "ano", [Value]
+)
+
+// As 27 UFs com a região do IBGE. Liga fato_pnae_af[uf] e fato_repasse_uf[uf]: os filtros
+// de UF e região valem também para as secretarias estaduais, que não têm município.
+// ALLNOBLANKROW deixa de fora a linha em branco que o Power BI cria em dim_municipio
+// para as secretarias (cod_ibge vazio).
+dim_uf =
+SUMMARIZE ( ALLNOBLANKROW ( dim_municipio ), dim_municipio[uf], dim_municipio[regiao] )
+
+
+// ===== 2. Coluna calculada (Nova coluna, na tabela fato_camara_fria) =====
+
+// Ano e mês da leitura ("2025-07"), para o gráfico de minutos fora da faixa por mês.
+// Texto nesse formato fica em ordem de data quando ordenado de A a Z.
+mes =
+FORMAT ( fato_camara_fria[hora], "yyyy-mm" )
+
+
+// ===== 3. Medidas da tabela fato_pnae_af (PNAE, 2018 a 2022) =====
+
+// Repasse do FNDE. O nome não pode ser só "Repasse": o Power BI não aceita medida com o
+// nome de uma coluna do modelo (fato_pnae_af[repasse]) e não diferencia maiúsculas.
+Repasse (R$) =
+SUM ( fato_pnae_af[repasse] )
+
+Compra AF =
+SUM ( fato_pnae_af[compra_af] )
+
+// Percentual comprado da agricultura familiar, de todas as esferas. Só entram as linhas com
+// pct_af preenchido: sem repasse 0, sem repasse em branco e sem valor não numérico.
+// Com as 42 linhas de repasse 0 de 2022, o resultado iria a 45,2%.
+// Em 2022, no Brasil: 44,5%.
+% AF =
+VAR compra = CALCULATE ( [Compra AF], NOT ISBLANK ( fato_pnae_af[pct_af] ) )
+VAR repasse = CALCULATE ( [Repasse (R$)], NOT ISBLANK ( fato_pnae_af[pct_af] ) )
+RETURN
+    DIVIDE ( compra, repasse )
+
+// 30% até 2025 e 45% a partir de 2026 (coluna minimo, de dados/regras.py).
+// De 2023 a 2026 não há linha da AF; o mínimo vem da tabela de repasses.
+Mínimo do ano =
+VAR minimoAF = MAX ( fato_pnae_af[minimo] )
+RETURN
+    IF ( ISBLANK ( minimoAF ), MAX ( fato_repasse_uf[minimo] ), minimoAF )
+
+// Quanto faltou comprar da AF para chegar ao mínimo, linha a linha, nunca negativo.
+// Só prefeituras (esfera MUNICIPAL) e só linhas com pct_af preenchido, como a coluna
+// falta_minimo_reais. Em 2022: R$ 97,1 milhões.
+Faltou para o mínimo (R$) =
+SUMX (
+    FILTER (
+        fato_pnae_af,
+        fato_pnae_af[esfera] = "MUNICIPAL"
+            && NOT ISBLANK ( fato_pnae_af[pct_af] )
+    ),
+    MAX ( 0, fato_pnae_af[minimo] * fato_pnae_af[repasse] - fato_pnae_af[compra_af] )
+)
+
+// Simulação da regra de 2026 (45%) sobre os repasses do ano, só nas prefeituras.
+// Em 2022: R$ 244,8 milhões. Sem o filtro de esfera, as secretarias estaduais
+// levariam o total a R$ 461,3 milhões.
+Faltaria com 45% (R$) =
+CALCULATE (
+    SUM ( fato_pnae_af[falta_45_reais] ),
+    fato_pnae_af[esfera] = "MUNICIPAL"
+)
+
+// Prefeituras abaixo do mínimo do ano: esfera MUNICIPAL, sem repasse 0, com pct_af
+// preenchido e menor que o mínimo (inclui a faixa "sem compra"). Em 2022: 1.531.
+Municípios abaixo do mínimo =
+CALCULATE (
+    DISTINCTCOUNT ( fato_pnae_af[cod_ibge] ),
+    FILTER (
+        fato_pnae_af,
+        fato_pnae_af[esfera] = "MUNICIPAL"
+            && fato_pnae_af[repasse_zero] = FALSE ()
+            && NOT ISBLANK ( fato_pnae_af[pct_af] )
+            && fato_pnae_af[pct_af] < fato_pnae_af[minimo]
+    )
+)
+
+// Faixa do que estiver no filtro (um município, uma UF, o país), com os rótulos e os
+// limites de dados/regras.py. Por município e ano, dá o mesmo que a coluna faixa.
+// O ISBLANK vem antes do "= 0" porque, no DAX, vazio = 0 é verdadeiro.
+Faixa de cumprimento =
+VAR pct = [% AF]
+VAR minimo = [Mínimo do ano]
+RETURN
+    SWITCH (
+        TRUE (),
+        ISEMPTY ( fato_pnae_af ), BLANK (),
+        ISBLANK ( pct ), "sem repasse",
+        pct = 0, "sem compra",
+        pct < minimo, "abaixo do mínimo",
+        pct < minimo + 0.10, "no mínimo",
+        "acima do mínimo"
+    )
+
+// Parte do país no que faltou para o mínimo: o valor do filtro atual (UF, região,
+// município, faixa) dividido pelo total do Brasil nos mesmos anos. ALL tira todos os
+// filtros de fato_pnae_af e das tabelas ligadas a ela; VALUES devolve só o filtro de ano.
+% do total nacional =
+VAR faltouAqui = [Faltou para o mínimo (R$)]
+VAR faltouBrasil =
+    CALCULATE (
+        [Faltou para o mínimo (R$)],
+        ALL ( fato_pnae_af ),
+        VALUES ( fato_pnae_af[ano] )
+    )
+RETURN
+    DIVIDE ( faltouAqui, faltouBrasil )
+
+// Rótulo do ano filtrado: "dados preliminares" de 2020 a 2022 (coluna preliminar, como a
+// planilha do FNDE marca) e "2026 parcial" para 2026.
+// shortcut: o ano parcial é fixo (o arquivo de repasses é de 08/04/2026); troque o 2026
+// quando o pipeline baixar um arquivo de repasses com o ano fechado.
+Aviso dos dados =
+VAR preliminar = NOT ISEMPTY ( FILTER ( fato_pnae_af, fato_pnae_af[preliminar] = TRUE () ) )
+VAR parcial = NOT ISEMPTY ( FILTER ( fato_repasse_uf, fato_repasse_uf[ano] = 2026 ) )
+RETURN
+    SWITCH (
+        TRUE (),
+        preliminar && parcial, "dados preliminares e 2026 parcial",
+        preliminar, "dados preliminares",
+        parcial, "2026 parcial",
+        ""
+    )
+
+
+// ===== 4. Medida da tabela fato_repasse_uf (repasses, 2023 a 2026) =====
+
+// O FNDE ainda não publicou a compra da AF de 2023 em diante. Esta é a verba mínima que a
+// AF deve receber (mínimo do ano vezes o repasse), por UF e ano. 2026 é parcial.
+Verba mínima para a AF (R$) =
+SUM ( fato_repasse_uf[verba_minima_af_reais] )
+
+
+// ===== 5. Medidas da tabela fato_entregas (cooperativa: app e histórico simulado) =====
+
+// Só as entregas em kg: a coluna kg fica vazia nas outras unidades (maço, unidade...).
+Kg entregues =
+SUM ( fato_entregas[kg] )
+
+Valor entregue (R$) =
+SUM ( fato_entregas[valor] )
+
+% Entregas no prazo =
+DIVIDE (
+    CALCULATE ( COUNTROWS ( fato_entregas ), fato_entregas[no_prazo] = TRUE () ),
+    COUNTROWS ( fato_entregas )
+)
+
+// Valor médio recebido por agricultor, só pelo pseudônimo. As entregas do app não têm
+// agricultor (pseudônimo vazio) e ficam fora da conta; no DAX, vazio = "" é verdadeiro.
+Renda por agricultor =
+CALCULATE (
+    DIVIDE ( [Valor entregue (R$)], DISTINCTCOUNT ( fato_entregas[agricultor_pseudonimo] ) ),
+    fato_entregas[agricultor_pseudonimo] <> ""
+)
+
+// Agricultores que vendem ao PNAE pela primeira vez (ja_vendeu_pnae falso no cadastro).
+// No MVP, vem do histórico simulado.
+Agricultores na primeira venda =
+CALCULATE (
+    DISTINCTCOUNT ( fato_entregas[agricultor_pseudonimo] ),
+    fato_entregas[primeira_venda] = TRUE ()
+)
+
+
+// ===== 6. Medida da tabela fato_camara_fria (câmara fria) =====
+
+// Minutos acima de 10 °C (LIMITE_TEMP_C de dados/regras.py), já somados por hora no pipeline.
+Minutos fora da faixa =
+SUM ( fato_camara_fria[minutos_fora_faixa] )
