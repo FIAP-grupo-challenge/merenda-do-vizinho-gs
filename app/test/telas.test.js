@@ -167,9 +167,11 @@ test('os formatadores ficam em formato.js: nenhuma tela tem cópia de reais, num
   assert.match(lerPagina('Prefeitura.svelte'), /nomeDoItem\(proposta, entrega\)/, 'a tabela de entregas usa o nome do item, não o do produto');
 });
 
-test('o termo de uso diz que o CPF e o CAF aparecem só em parte no projeto de venda e que o número completo se escreve à mão', () => {
+test('o termo de uso diz, uma vez só, que o CPF e o CAF aparecem só em parte na tela e no projeto de venda', () => {
   const fonte = lerPagina('Agricultor.svelte');
-  assert.match(fonte, /No projeto de venda, o CPF e o CAF aparecem só em parte: você escreve o número completo à mão\./);
+  const frase = 'O CPF e o CAF aparecem só em parte, na tela e no projeto de venda: você escreve o número completo à mão.';
+  assert.ok(fonte.includes(`<li>${frase}</li>`), 'a frase do termo mudou');
+  assert.equal(fonte.split('só em parte').length - 1, 1, 'o "só em parte" não se repete');
   assert.doesNotMatch(fonte, /vão no projeto de venda/, 'a frase antiga, que dizia que o CPF e o CAF vão no projeto, saiu');
 });
 
