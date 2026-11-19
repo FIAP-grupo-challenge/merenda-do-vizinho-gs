@@ -140,6 +140,21 @@ const fontesSvelte = () =>
     .filter((nome) => nome.endsWith('.svelte'))
     .map((nome) => [nome, fs.readFileSync(path.join(WEB, 'src', nome), 'utf8')]);
 
+// O produto se chama Colhe, com a frase "da roça para a merenda". Merenda do Vizinho era o nome de trabalho: fica só nos
+// nomes técnicos (pasta, repositório, projetos do Docker), nunca no que a pessoa lê na tela.
+test('as telas dizem Colhe e não Merenda do Vizinho', () => {
+  const paginas = fs.readdirSync(WEB).filter((nome) => nome.endsWith('.html'));
+  assert.equal(paginas.length, 7, 'a busca não achou as 7 páginas');
+  for (const pagina of paginas) assert.match(fs.readFileSync(path.join(WEB, pagina), 'utf8'), /<title>[^<|]+ \| Colhe<\/title>/, pagina);
+  for (const nome of fs.readdirSync(path.join(WEB, 'src', 'paginas')).filter((arquivo) => arquivo.endsWith('.svelte'))) {
+    assert.deepEqual(lerPagina(nome).match(/<h1\b[\s\S]*?<\/h1>/g), ['<h1>Colhe</h1>'], nome);
+  }
+  assert.match(lerPagina('Entrar.svelte'), /<h1>Colhe<\/h1>\s*<p class="dica">da roça para a merenda<\/p>/, 'a frase vem embaixo do nome');
+  for (const nome of fs.readdirSync(WEB, { recursive: true }).filter((arquivo) => fs.statSync(path.join(WEB, arquivo)).isFile())) {
+    assert.ok(!fs.readFileSync(path.join(WEB, nome), 'utf8').includes('Merenda do Vizinho'), nome);
+  }
+});
+
 test('nenhuma tela usa <input type="number">: os números são campos de texto lidos por lerNumero', () => {
   const fontes = fontesSvelte();
   assert.ok(fontes.some(([nome]) => nome === path.join('paginas', 'Entrar.svelte')), 'a busca não achou as telas');

@@ -10,5 +10,5 @@ const db = abrirBanco(config.caminhoBanco);
 migrar(db);
 semear(db);
 criarServidor({ db, config, ia: criarClienteIa(config.iaUrl) }).listen(config.porta, () => {
-  console.log(`Merenda do Vizinho em http://localhost:${config.porta}`);
+  console.log(`Colhe em http://localhost:${config.porta}`);
 });

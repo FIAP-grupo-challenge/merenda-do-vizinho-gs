@@ -41,7 +41,8 @@
 </script>
 
 <header class="topo">
-  <h1>Merenda do Vizinho</h1>
+  <h1>Colhe</h1>
+  <p class="dica">da roça para a merenda</p>
 </header>
 
 <main class="estreita">

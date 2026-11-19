@@ -2,7 +2,7 @@
   "name": "merenda-do-vizinho-app",
   "version": "1.0.0",
   "private": true,
-  "description": "App web do Merenda do Vizinho: agricultor, cooperativa e prefeitura no PNAE",
+  "description": "App web do Colhe: agricultor, cooperativa e prefeitura no PNAE",
   "type": "commonjs",
   "main": "src/index.js",
   "scripts": {

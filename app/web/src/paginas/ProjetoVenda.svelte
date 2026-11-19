@@ -72,7 +72,7 @@
 {/snippet}
 
 <header class="topo so-tela">
-  <h1>Merenda do Vizinho</h1>
+  <h1>Colhe</h1>
   <button type="button" class="botao-secundario" onclick={sair}>Sair</button>
 </header>
 
