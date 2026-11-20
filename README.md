@@ -7,6 +7,11 @@ MVP da FIAP Global Solution que ajuda agricultores familiares a vender alimentos
 - **Curso:** Global Solution 2026/2, CitizenTech (FIAP)
 - **Integrantes:** Leonardo Viotti Bonini (RM551716), Enzo de Oliveira Cunha (RM550985), Eduardo Gomes Pinho Junior (RM97919) e Gustavo Ferreira Lopes (RM98887)
 - **Entrega:** o PDF de evidências (`entrega/evidencias.pdf`) e o `.txt` do grupo (`entrega/grupo.txt`) estão na pasta [entrega/](entrega/).
+- **Links da entrega:**
+  - **Vídeo pitch:** <https://www.youtube.com/watch?v=mUssmg5U6LQ>
+  - **Aplicação no ar:** <https://colhe.node-forge.com.br>
+  - **Repositório no GitHub:** <https://github.com/FIAP-grupo-challenge/merenda-do-vizinho-gs>
+  - Os três links também estão no [entrega/grupo.txt](entrega/grupo.txt) e na capa do [entrega/evidencias.pdf](entrega/evidencias.pdf). O link do pitch aparece de novo na seção [Link do pitch](#link-do-pitch), no fim deste README.
 
 ## O que é, para quem e qual problema resolve
 
