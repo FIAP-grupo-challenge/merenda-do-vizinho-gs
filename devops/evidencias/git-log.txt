@@ -1,4 +1,7 @@
 # git log --oneline --graph do ramo desenvolvimento, em 2026-11-19. O .git do .zip tem o histórico todo.
+* b4632e0 docs(repo): tira o roteiro do pitch, que era material de gravação
+* ca63e07 docs(repo): links da entrega no topo do README
+* f9acb90 chore(entrega): PDF de evidências e git-log refeitos com o link do pitch
 * 2ca96d4 docs(entrega): link do pitch no grupo.txt e no README
 * 4289fff docs(entrega): endereço da aplicação no ar e do repositório no grupo.txt
 * a2e2656 docs(repo): roteiro com o tempo de leitura do print novo
