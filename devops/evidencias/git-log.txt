@@ -1,4 +1,9 @@
-# git log --oneline --graph do ramo trilha-entrega, em 2026-11-19. O .git do .zip tem o histórico todo.
+# git log --oneline --graph do ramo desenvolvimento, em 2026-11-19. O .git do .zip tem o histórico todo.
+* 2ca96d4 docs(entrega): link do pitch no grupo.txt e no README
+* 4289fff docs(entrega): endereço da aplicação no ar e do repositório no grupo.txt
+* a2e2656 docs(repo): roteiro com o tempo de leitura do print novo
+* 7afb5bb fix(app): a capa da tela de entrar fica numa coluna só em janela baixa; a licença da Inter é servida como texto
+* 561e1ee docs(entrega): prints e PDF de evidências com o nome e o visual do Colhe
 * 8c5a29e docs(repo): roteiro do pitch com o nome Colhe, igual à versão do planejamento
 * bbece46 docs(repo): 133 testes no app e 262 no total, com a saída refeita numa rodada real; o mapa do código mostra o logo e a fonte
 * 25a317c test(app): a Inter vem do próprio app como font/woff2, e o topo de toda tela tem o prato com 45% dos pontos em laranja
