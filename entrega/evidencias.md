@@ -330,7 +330,7 @@ O repositório é organizado por módulo, um por área:
 | `iot/` | o sketch do Arduino, as ligações, o simulador e os testes |
 | `compartilhado/` | o catálogo de produtos e as regras do PNAE, usados pelo app, pela IA e pelo data lake |
 | `devops/` | o smoke, o Jenkins, o plano de testes, a segurança e as evidências |
-| `docs/` | a arquitetura, os prompts, o canvas, o roteiro do pitch e as fontes |
+| `docs/` | a arquitetura, os prompts, o canvas e as fontes |
 | `entrega/` | este PDF, o `grupo.txt`, os prints e os scripts que geram o PDF e o `.zip` |
 
 Tudo é versionado com Git: commits pequenos, com mensagens em português no formato `tipo(área): descrição`, um ramo por trilha de trabalho e merges na integração. O `.zip` traz a pasta `.git`, com o histórico completo. O histórico, como o `gerar-pdf.sh` grava em `devops/evidencias/git-log.txt`:

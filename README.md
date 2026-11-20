@@ -510,7 +510,7 @@ Por área, os arquivos principais e o que cada um faz. Os caminhos são a partir
 | `.dockerignore` | o que fica de fora das imagens: `.env`, `.git`, bancos e dados gerados |
 | `devops/smoke.sh` | o teste de fumaça do Compose, com `SMOKE OK` no fim (`devops/evidencias/smoke.txt` tem uma execução completa) |
 | `Jenkinsfile`, `devops/jenkins/`, `devops/plano-de-testes.md`, `devops/seguranca.md` | a integração contínua no Jenkins (como subir: `devops/jenkins/README.md`), o plano de testes (15 casos) e o documento de segurança |
-| `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, a conexão com o curso, o roteiro do pitch e as fontes |
+| `docs/` | o diagrama e a arquitetura, os prompts e as regras, o canvas, a conexão com o curso e as fontes |
 
 ## Testes
 
@@ -572,7 +572,6 @@ Sem a chave, ou se a IA falhar, recusar ou demorar, o produto usa o modo de regr
 - [docs/prompts.md](docs/prompts.md): os prompts da IA na íntegra e as regras de casamento e de agrupamento.
 - [docs/canvas.md](docs/canvas.md): o Business Model Canvas do projeto.
 - [docs/conexao-com-o-curso.md](docs/conexao-com-o-curso.md): de qual capítulo do curso vem cada tecnologia do projeto.
-- [docs/roteiro-do-pitch.md](docs/roteiro-do-pitch.md): o roteiro do vídeo de pitch.
 - [docs/fontes.md](docs/fontes.md): as chamadas públicas usadas, os dados abertos com a licença, a legislação, as bibliotecas e as referências.
 - [entrega/](entrega/): o PDF de evidências das quatro áreas, o `grupo.txt`, os prints e os scripts que geram o PDF (`gerar-pdf.sh`) e o `.zip` (`empacotar.sh`).
 

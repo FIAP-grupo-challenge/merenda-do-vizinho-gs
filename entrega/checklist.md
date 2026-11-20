@@ -6,7 +6,7 @@ Prazo: **19/11/2026, até 23h55, na plataforma** (sem prorrogação). Uma entreg
 
 ## 1. Os itens do grupo, no lugar
 
-- [ ] **Pitch:** grave o vídeo de até 3 minutos, mostrando o site funcionando (nada de vídeo de slides; o roteiro está em `docs/roteiro-do-pitch.md`). Publique com acesso aberto (YouTube, Google Drive ou Vimeo) e **teste o link numa aba anônima**: link privado ou quebrado faz o pitch não ser avaliado.
+- [ ] **Pitch:** grave o vídeo de até 3 minutos, mostrando o site funcionando (nada de vídeo de slides). Publique com acesso aberto (YouTube, Google Drive ou Vimeo) e **teste o link numa aba anônima**: link privado ou quebrado faz o pitch não ser avaliado.
 - [ ] **Prints do Power BI:** monte o painel seguindo `dados/powerbi/guia-do-painel.md` e salve com estes nomes exatos:
   - `entrega/prints/powerbi-1.png`: a página 1 (PNAE no Brasil), com o ano 2022;
   - `entrega/prints/powerbi-2.png`: a página 2 (Cooperativa).
