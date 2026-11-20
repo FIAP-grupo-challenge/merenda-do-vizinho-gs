@@ -548,6 +548,11 @@ O grupo usou IA generativa em duas frentes: para **construir** o projeto, com o 
 Cada tarefa foi revisada por um agente separado (o Sonnet), e as correções foram feitas antes de cada entrega. As revisões dos agentes não substituem a revisão do grupo: o grupo define o escopo, aprova os documentos e revisa o código de cada área. O edital não aceita código gerado sem entendimento, e o mapa do código acima existe para isso.
 
 - **Revisado por pessoas:** Gustavo Ferreira Lopes publicou o projeto num servidor de teste seguindo este README e subiu a planilha do data lake no Power BI. Enzo de Oliveira Cunha gravou o pitch. O grupo definiu o escopo e o nome e aprovou cada etapa.
+- **Quem responde por cada área:**
+  - **IA** (leitura da chamada, assistente e avaliação): Leonardo Viotti Bonini
+  - **Dados e painel** (data lake e Power BI): Gustavo Ferreira Lopes
+  - **App e câmara fria** (telas, regras do PNAE e IoT): Eduardo Gomes Pinho Junior
+  - **DevOps e segurança** (Docker, Jenkins, testes e publicação): Enzo de Oliveira Cunha
 - **Conferido por agentes de IA** (o que as pessoas do grupo conferiram por conta própria entra na linha acima):
   - as regras e os números do PNAE vêm das fontes oficiais listadas em [docs/fontes.md](docs/fontes.md); a pesquisa e a leitura das normas foram feitas por agentes;
   - os gabaritos da avaliação (`ia/avaliacao/gabarito/`) foram montados por um agente a partir do texto dos 8 PDFs e conferidos contra eles; um agente revisor separado conferiu dois deles item a item (detalhes em [ia/avaliacao/README.md](ia/avaliacao/README.md));
