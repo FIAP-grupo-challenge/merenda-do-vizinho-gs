@@ -559,7 +559,7 @@ Sem a chave, ou se a IA falhar, recusar ou demorar, o produto usa o modo de regr
 
 ### Link do pitch
 
-_(preencher: o link do vídeo de até 3 minutos, publicado no Drive ou no YouTube, sem login)_
+<https://www.youtube.com/watch?v=mUssmg5U6LQ>
 
 ### Documentos
 

@@ -6,7 +6,7 @@ RM550985 - Enzo de Oliveira Cunha
 RM97919 - Eduardo Gomes Pinho Junior
 RM98887 - Gustavo Ferreira Lopes
 
-Link do pitch: [PREENCHER: link público do vídeo de até 3 minutos (YouTube, Google Drive ou Vimeo), testado numa aba anônima]
+Link do pitch: https://www.youtube.com/watch?v=mUssmg5U6LQ
 
 Extras (o projeto completo já está neste .zip):
 Aplicação no ar: https://colhe.node-forge.com.br
