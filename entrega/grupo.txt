@@ -7,3 +7,7 @@ RM97919 - Eduardo Gomes Pinho Junior
 RM98887 - Gustavo Ferreira Lopes
 
 Link do pitch: [PREENCHER: link público do vídeo de até 3 minutos (YouTube, Google Drive ou Vimeo), testado numa aba anônima]
+
+Extras (o projeto completo já está neste .zip):
+Aplicação no ar: https://colhe.node-forge.com.br
+Repositório no GitHub: https://github.com/FIAP-grupo-challenge/merenda-do-vizinho-gs
